@@ -1,6 +1,6 @@
 --- 
 title: "Survival Data Analysis for Cancer Data"
-author: "Corrado Lanera"
+author: "Corrado Lanera, Danila Azzolina and Daniele Bittigliengo^[Unit of Biostatistics, Epidemiology and Public Health of the Dep. of Cardiac, Thoracic and Vascular Sciences --- Univ. of Padova](http://www.dctv.unipd.it/dipartimento/strutture/biostatistica)"
 date: "02 - 06 October, 2017"
 site: bookdown::bookdown_site
 output: bookdown::gitbook
@@ -17,7 +17,7 @@ description: "Examples and exercise from the Politecnico of Torino (Italy) Ph.D.
 Here, there are the libraries loaded during the course, with the relative
 options.
 
-```{r setup}
+```{r setup, message=FALSE, warning=FALSE}
 # Packages for the analyses
 library(survival)                                            # Survival Analysis
 library(survminer)                     # Drawing Survival Curves using 'ggplot2'
@@ -28,7 +28,12 @@ library(rms)                                      # Regression Modeling Strategy
 library(tidyverse)                    # Imports the principal tidyverse packages
 
 # Document output options
-knitr::opts_chunk$set(echo = TRUE)         # by default, render all the code too
+knitr::opts_chunk$set(
+	echo = TRUE,
+	message = FALSE,
+	warning = FALSE
+)
+         # by default, render all the code too
 ```
 
 The following code create the packages.bib files which is the bibtex lists of
