@@ -1,0 +1,42 @@
+--- 
+title: "Survival Data Analysis for Cancer Data"
+author: "Corrado Lanera"
+date: "02 - 06 October, 2017"
+site: bookdown::bookdown_site
+output: bookdown::gitbook
+documentclass: book
+bibliography: [book.bib, packages.bib]
+biblio-style: apalike
+link-citations: yes
+github-repo: CorradoLanera/SuDACDa
+description: "Examples and exercise from the Politecnico of Torino (Italy) Ph.D. course on Survival Data Analysis for Cancer Data."
+---
+
+# Base Settings {-}
+
+Here, there are the libraries loaded during the course, with the relative
+options.
+
+```{r setup}
+# Packages for the analyses
+library(survival)                                            # Survival Analysis
+library(survminer)                     # Drawing Survival Curves using 'ggplot2'
+library(rms)                                      # Regression Modeling Strategy
+  options(datadist = 'dd')                  # Distribution Summaries used by rms
+
+# Packages for data management 
+library(tidyverse)                    # Imports the principal tidyverse packages
+
+# Document output options
+knitr::opts_chunk$set(echo = TRUE)         # by default, render all the code too
+```
+
+The following code create the packages.bib files which is the bibtex lists of
+all the packages references we have loaded.
+
+```{r}
+# Automatically create a bib database for the loaded packages
+knitr::write_bib(c(.packages(), 'bookdown', 'knitr', 'rmarkdown'),
+  file = 'packages.bib'
+)
+```

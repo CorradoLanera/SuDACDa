@@ -1,0 +1,10 @@
+bookdown::gitbook:
+  css: style.css
+  config:
+    toc:
+      before: |
+        <li><a href="./">Survival Data Analysis for Cancer Data</a></li>
+      after: |
+        <li><a href="https://github.com/CorradoLanera/SuDACDa" target="blank">Published with bookdown</a></li>
+    download: ["epub"]
+bookdown::epub_book: default
