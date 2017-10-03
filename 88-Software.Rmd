@@ -1,6 +1,6 @@
 # Software {-}
 
-## Packages {-}
+## Packages
 
 All the exercise are solved using R (ver. 3.4.2) has been used provided with
 packages: `survival` (@R-survival) for the survival data analyses (reference
@@ -19,7 +19,7 @@ The present book was written in RMarkdown (R-rmarkdown), compiled using `knitr`
 (@R-knitr) and rendered as an HTML book by `bookdown` (@R-bookdown).
 
 
-## System Information {-}
+## System Information
 
 All the code is compiled on a system with the following overall characteristics
 and loaded packages.
