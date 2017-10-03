@@ -1,5 +1,0 @@
-Type: Book
-Title: Survival Data Analysis for Cancer Data.
-Version: 0.0.1
-Imports: bookdown
-Remotes: CorradoLanera/SuDACDa

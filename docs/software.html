@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Survival Data Analysis for Cancer Data</title>
+  <meta name="description" content="Examples and exercise from the Politecnico of Torino (Italy) Ph.D. course on Survival Data Analysis for Cancer Data.">
+  <meta name="generator" content="bookdown 0.5 and GitBook 2.6.7">
+
+  <meta property="og:title" content="Survival Data Analysis for Cancer Data" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Examples and exercise from the Politecnico of Torino (Italy) Ph.D. course on Survival Data Analysis for Cancer Data." />
+  <meta name="github-repo" content="CorradoLanera/SuDACDa" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Survival Data Analysis for Cancer Data" />
+  
+  <meta name="twitter:description" content="Examples and exercise from the Politecnico of Torino (Italy) Ph.D. course on Survival Data Analysis for Cancer Data." />
+  
+
+<meta name="author" content="Corrado Lanera, Danila Azzolina and Daniele Bittigliengo">
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="monday.html">
+<link rel="next" href="references.html">
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Survival Data Analysis for Cancer Data</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Introduction</a><ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#contributions"><i class="fa fa-check"></i>Contributions</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#settings"><i class="fa fa-check"></i>Settings</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="monday.html"><a href="monday.html"><i class="fa fa-check"></i><b>1</b> <em>Monday</em>: Introduction to Survival Analyses and simulation of data</a><ul>
+<li class="chapter" data-level="1.1" data-path="monday.html"><a href="monday.html#simulated-data"><i class="fa fa-check"></i><b>1.1</b> Simulated Data</a></li>
+<li class="chapter" data-level="1.2" data-path="monday.html"><a href="monday.html#mgus-data-from-survival-package"><i class="fa fa-check"></i><b>1.2</b> <code>mgus</code> data from <strong>survival</strong> package</a></li>
+<li class="chapter" data-level="1.3" data-path="monday.html"><a href="monday.html#non-parametric-kalan-meyer-estimation-of-the-survival-function"><i class="fa fa-check"></i><b>1.3</b> Non parametric Kalan-Meyer estimation of the survival function</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="software.html"><a href="software.html"><i class="fa fa-check"></i>Software</a><ul>
+<li class="chapter" data-level="1.4" data-path="software.html"><a href="software.html#packages"><i class="fa fa-check"></i><b>1.4</b> Packages</a></li>
+<li class="chapter" data-level="1.5" data-path="software.html"><a href="software.html#system-information"><i class="fa fa-check"></i><b>1.5</b> System Information</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/CorradoLanera/SuDACDa" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Survival Data Analysis for Cancer Data</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="software" class="section level1 unnumbered">
+<h1>Software</h1>
+<div id="packages" class="section level2">
+<h2><span class="header-section-number">1.4</span> Packages</h2>
+<p>All the exercise are solved using R (ver. 3.4.2) has been used provided with packages: <code>survival</code> (<span class="citation">Therneau (<a href="#ref-R-survival">2017</a>)</span>) for the survival data analyses (reference package), <code>survminer</code> (<span class="citation">Kassambara and Kosinski (<a href="#ref-R-survminer">2017</a>)</span>) for advance survival plot using <code>ggplot2</code> (<span class="citation">Wickham and Chang (<a href="#ref-R-ggplot2">2016</a>)</span>) package, <code>rms</code> (<span class="citation">Harrell, Jr. (<a href="#ref-R-rms">2017</a>)</span>) for additional features on regression modeling strategies (survival ones included).</p>
+<p>With regards to the data management, the collection of package <code>tidyverse</code> (<span class="citation">Wickham (<a href="#ref-R-tidyverse">2017</a>)</span>) is loaded, which includes: <code>dplyr</code> (<span class="citation">Wickham et al. (<a href="#ref-R-dplyr">2017</a>)</span>) for data manipulation, <code>purrr</code> (<span class="citation">Henry and Wickham (<a href="#ref-R-purrr">2017</a>)</span>) for functional programming, <code>readr</code> (R-readr) for data import, <code>tidyr</code> (R-tidyr) for funtions to tidy the data, <code>tibble</code> (R-tibble) to take advantage of the <em>tible</em> data frame class and <code>ggplot2</code> as a interface for the Gramar of Grahics.</p>
+<p>The present book was written in RMarkdown (R-rmarkdown), compiled using <code>knitr</code> (<span class="citation">Xie (<a href="#ref-R-knitr">2017</a><a href="#ref-R-knitr">b</a>)</span>) and rendered as an HTML book by <code>bookdown</code> (<span class="citation">Xie (<a href="#ref-R-bookdown">2017</a><a href="#ref-R-bookdown">a</a>)</span>).</p>
+</div>
+<div id="system-information" class="section level2">
+<h2><span class="header-section-number">1.5</span> System Information</h2>
+<p>All the code is compiled on a system with the following overall characteristics and loaded packages.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools::<span class="kw">session_info</span>()</code></pre></div>
+<pre><code>##  setting  value                       
+##  version  R version 3.4.2 (2017-09-28)
+##  system   x86_64, mingw32             
+##  ui       RTerm                       
+##  language (EN)                        
+##  collate  English_United States.1252  
+##  tz       Europe/Berlin               
+##  date     2017-10-03                  
+## 
+##  package      * version date       source        
+##  acepack        1.4.1   2016-10-29 CRAN (R 3.4.1)
+##  assertthat     0.2.0   2017-04-11 CRAN (R 3.4.1)
+##  backports      1.1.0   2017-05-22 CRAN (R 3.4.0)
+##  base         * 3.4.2   2017-09-28 local         
+##  base64enc      0.1-3   2015-07-28 CRAN (R 3.4.0)
+##  bindr          0.1     2016-11-13 CRAN (R 3.4.1)
+##  bindrcpp       0.2     2017-06-17 CRAN (R 3.4.1)
+##  bookdown       0.5     2017-08-20 CRAN (R 3.4.1)
+##  broom          0.4.2   2017-02-13 CRAN (R 3.4.0)
+##  cellranger     1.1.0   2016-07-27 CRAN (R 3.4.1)
+##  checkmate      1.8.3   2017-07-03 CRAN (R 3.4.1)
+##  cluster        2.0.6   2017-03-16 CRAN (R 3.4.1)
+##  cmprsk         2.2-7   2014-06-17 CRAN (R 3.4.1)
+##  codetools      0.2-15  2016-10-05 CRAN (R 3.4.0)
+##  colorspace     1.3-2   2016-12-14 CRAN (R 3.4.1)
+##  compiler       3.4.2   2017-09-28 local         
+##  data.table     1.10.4  2017-02-01 CRAN (R 3.4.0)
+##  datasets     * 3.4.2   2017-09-28 local         
+##  devtools       1.13.3  2017-08-02 CRAN (R 3.4.1)
+##  digest         0.6.12  2017-01-27 CRAN (R 3.4.1)
+##  dplyr        * 0.7.3   2017-09-09 CRAN (R 3.4.1)
+##  evaluate       0.10.1  2017-06-24 CRAN (R 3.4.1)
+##  forcats        0.2.0   2017-01-23 CRAN (R 3.4.1)
+##  foreign        0.8-69  2017-06-21 CRAN (R 3.4.0)
+##  Formula      * 1.2-2   2017-07-10 CRAN (R 3.4.1)
+##  ggplot2      * 2.2.1   2016-12-30 CRAN (R 3.4.1)
+##  ggpubr       * 0.1.5   2017-08-22 CRAN (R 3.4.1)
+##  glue           1.1.1   2017-06-21 CRAN (R 3.4.1)
+##  graphics     * 3.4.2   2017-09-28 local         
+##  grDevices    * 3.4.2   2017-09-28 local         
+##  grid           3.4.2   2017-09-28 local         
+##  gridExtra      2.3     2017-09-09 CRAN (R 3.4.1)
+##  gtable         0.2.0   2016-02-26 CRAN (R 3.4.1)
+##  haven          1.1.0   2017-07-09 CRAN (R 3.4.1)
+##  Hmisc        * 4.0-3   2017-05-02 CRAN (R 3.4.1)
+##  hms            0.3     2016-11-22 CRAN (R 3.4.1)
+##  htmlTable      1.9     2017-01-26 CRAN (R 3.4.1)
+##  htmltools      0.3.6   2017-04-28 CRAN (R 3.4.1)
+##  htmlwidgets    0.9     2017-07-10 CRAN (R 3.4.1)
+##  httr           1.3.1   2017-08-20 CRAN (R 3.4.1)
+##  jsonlite       1.5     2017-06-01 CRAN (R 3.4.1)
+##  km.ci          0.5-2   2009-08-30 CRAN (R 3.4.1)
+##  KMsurv         0.1-5   2012-12-03 CRAN (R 3.4.0)
+##  knitr          1.17    2017-08-10 CRAN (R 3.4.1)
+##  labeling       0.3     2014-08-23 CRAN (R 3.4.0)
+##  lattice      * 0.20-35 2017-03-25 CRAN (R 3.4.1)
+##  latticeExtra   0.6-28  2016-02-09 CRAN (R 3.4.1)
+##  lazyeval       0.2.0   2016-06-12 CRAN (R 3.4.1)
+##  lubridate      1.6.0   2016-09-13 CRAN (R 3.4.1)
+##  magrittr     * 1.5     2014-11-22 CRAN (R 3.4.1)
+##  MASS           7.3-47  2017-04-21 CRAN (R 3.4.1)
+##  Matrix         1.2-11  2017-08-16 CRAN (R 3.4.1)
+##  MatrixModels   0.4-1   2015-08-22 CRAN (R 3.4.1)
+##  memoise        1.1.0   2017-04-21 CRAN (R 3.4.1)
+##  methods      * 3.4.2   2017-09-28 local         
+##  mnormt         1.5-5   2016-10-15 CRAN (R 3.4.0)
+##  modelr         0.1.1   2017-07-24 CRAN (R 3.4.1)
+##  multcomp       1.4-7   2017-09-07 CRAN (R 3.4.1)
+##  munsell        0.4.3   2016-02-13 CRAN (R 3.4.1)
+##  mvtnorm        1.0-6   2017-03-02 CRAN (R 3.4.0)
+##  nlme           3.1-131 2017-02-06 CRAN (R 3.4.1)
+##  nnet           7.3-12  2016-02-02 CRAN (R 3.4.1)
+##  parallel       3.4.2   2017-09-28 local         
+##  pkgconfig      2.0.1   2017-03-21 CRAN (R 3.4.1)
+##  plyr           1.8.4   2016-06-08 CRAN (R 3.4.1)
+##  polspline      1.1.12  2015-07-14 CRAN (R 3.4.0)
+##  psych          1.7.8   2017-09-09 CRAN (R 3.4.1)
+##  purrr        * 0.2.3   2017-08-02 CRAN (R 3.4.1)
+##  quantreg       5.33    2017-04-18 CRAN (R 3.4.1)
+##  R6             2.2.2   2017-06-17 CRAN (R 3.4.1)
+##  RColorBrewer   1.1-2   2014-12-07 CRAN (R 3.4.0)
+##  Rcpp           0.12.12 2017-07-15 CRAN (R 3.4.1)
+##  readr        * 1.1.1   2017-05-16 CRAN (R 3.4.1)
+##  readxl         1.0.0   2017-04-18 CRAN (R 3.4.1)
+##  reshape2       1.4.2   2016-10-22 CRAN (R 3.4.1)
+##  rlang          0.1.2   2017-08-09 CRAN (R 3.4.1)
+##  rmarkdown      1.6     2017-06-15 CRAN (R 3.4.1)
+##  rms          * 5.1-1   2017-05-03 CRAN (R 3.4.1)
+##  rpart          4.1-11  2017-04-21 CRAN (R 3.4.1)
+##  rprojroot      1.2     2017-01-16 CRAN (R 3.4.1)
+##  rstudioapi     0.7     2017-09-07 CRAN (R 3.4.1)
+##  rvest          0.3.2   2016-06-17 CRAN (R 3.4.1)
+##  sandwich       2.4-0   2017-07-26 CRAN (R 3.4.1)
+##  scales         0.5.0   2017-08-24 CRAN (R 3.4.1)
+##  SparseM      * 1.77    2017-04-23 CRAN (R 3.4.0)
+##  splines        3.4.2   2017-09-28 local         
+##  stats        * 3.4.2   2017-09-28 local         
+##  stringi        1.1.5   2017-04-07 CRAN (R 3.4.0)
+##  stringr        1.2.0   2017-02-18 CRAN (R 3.4.1)
+##  survival     * 2.41-3  2017-04-04 CRAN (R 3.4.1)
+##  survminer    * 0.4.0   2017-06-07 CRAN (R 3.4.1)
+##  survMisc       0.5.4   2016-11-23 CRAN (R 3.4.1)
+##  TH.data        1.0-8   2017-01-23 CRAN (R 3.4.1)
+##  tibble       * 1.3.4   2017-08-22 CRAN (R 3.4.1)
+##  tidyr        * 0.7.1   2017-09-01 CRAN (R 3.4.1)
+##  tidyverse    * 1.1.1   2017-01-27 CRAN (R 3.4.1)
+##  tools          3.4.2   2017-09-28 local         
+##  utils        * 3.4.2   2017-09-28 local         
+##  withr          2.0.0   2017-07-28 CRAN (R 3.4.1)
+##  xml2           1.1.1   2017-01-24 CRAN (R 3.4.1)
+##  xtable         1.8-2   2016-02-05 CRAN (R 3.4.1)
+##  yaml           2.1.14  2016-11-12 CRAN (R 3.4.1)
+##  zoo            1.8-0   2017-04-12 CRAN (R 3.4.1)</code></pre>
+
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references">
+<div id="ref-R-survival">
+<p>Therneau, Terry M. 2017. <em>Survival: Survival Analysis</em>. <a href="https://CRAN.R-project.org/package=survival" class="uri">https://CRAN.R-project.org/package=survival</a>.</p>
+</div>
+<div id="ref-R-survminer">
+<p>Kassambara, Alboukadel, and Marcin Kosinski. 2017. <em>Survminer: Drawing Survival Curves Using ’Ggplot2’</em>. <a href="https://CRAN.R-project.org/package=survminer" class="uri">https://CRAN.R-project.org/package=survminer</a>.</p>
+</div>
+<div id="ref-R-ggplot2">
+<p>Wickham, Hadley, and Winston Chang. 2016. <em>Ggplot2: Create Elegant Data Visualisations Using the Grammar of Graphics</em>. <a href="https://CRAN.R-project.org/package=ggplot2" class="uri">https://CRAN.R-project.org/package=ggplot2</a>.</p>
+</div>
+<div id="ref-R-rms">
+<p>Harrell, Jr., Frank E. 2017. <em>Rms: Regression Modeling Strategies</em>. <a href="https://CRAN.R-project.org/package=rms" class="uri">https://CRAN.R-project.org/package=rms</a>.</p>
+</div>
+<div id="ref-R-tidyverse">
+<p>Wickham, Hadley. 2017. <em>Tidyverse: Easily Install and Load ’Tidyverse’ Packages</em>. <a href="https://CRAN.R-project.org/package=tidyverse" class="uri">https://CRAN.R-project.org/package=tidyverse</a>.</p>
+</div>
+<div id="ref-R-dplyr">
+<p>Wickham, Hadley, Romain Francois, Lionel Henry, and Kirill Müller. 2017. <em>Dplyr: A Grammar of Data Manipulation</em>. <a href="https://CRAN.R-project.org/package=dplyr" class="uri">https://CRAN.R-project.org/package=dplyr</a>.</p>
+</div>
+<div id="ref-R-purrr">
+<p>Henry, Lionel, and Hadley Wickham. 2017. <em>Purrr: Functional Programming Tools</em>. <a href="https://CRAN.R-project.org/package=purrr" class="uri">https://CRAN.R-project.org/package=purrr</a>.</p>
+</div>
+<div id="ref-R-knitr">
+<p>Xie, Yihui. 2017b. <em>Knitr: A General-Purpose Package for Dynamic Report Generation in R</em>. <a href="https://CRAN.R-project.org/package=knitr" class="uri">https://CRAN.R-project.org/package=knitr</a>.</p>
+</div>
+<div id="ref-R-bookdown">
+<p>Xie, Yihui. 2017a. <em>Bookdown: Authoring Books and Technical Documents with R Markdown</em>. <a href="https://CRAN.R-project.org/package=bookdown" class="uri">https://CRAN.R-project.org/package=bookdown</a>.</p>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="monday.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"weibo": false,
+"instapper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"download": ["SuDACDa-notes.epub", "SuDACDa-notes.pdf"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(script.src))
+      script.src  = script.src.replace(/^https?:/, '');
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
