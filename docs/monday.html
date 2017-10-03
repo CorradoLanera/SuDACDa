@@ -22,7 +22,7 @@
   <meta name="twitter:description" content="Examples and exercise from the Politecnico of Torino (Italy) Ph.D. course on Survival Data Analysis for Cancer Data." />
   
 
-<meta name="author" content="Corrado Lanera, Danila Azzolina and Daniele Bittigliengo">
+<meta name="author" content="Corrado Lanera">
 
 
 
@@ -200,12 +200,12 @@ status_cens    &lt;-<span class="st"> </span>status_no_cens -<span class="st"> <
 ## Call:
 ## survreg(formula = Surv(t, status_no_cens) ~ 1, dist = &quot;exponential&quot;)
 ##             Value Std. Error     z p
-## (Intercept) -1.59     0.0316 -50.4 0
+## (Intercept) -1.58     0.0316 -50.1 0
 ## 
 ## Scale fixed at 1 
 ## 
 ## Exponential distribution
-## Loglik(model)= 592.5   Loglik(intercept only)= 592.5
+## Loglik(model)= 584.3   Loglik(intercept only)= 584.3
 ## Number of Newton-Raphson Iterations: 4 
 ## n= 1000</code></pre>
 <ul>
@@ -219,12 +219,12 @@ status_cens    &lt;-<span class="st"> </span>status_no_cens -<span class="st"> <
 ## Call:
 ## survreg(formula = Surv(t_cens, status_cens) ~ 1, dist = &quot;exponential&quot;)
 ##             Value Std. Error     z p
-## (Intercept)  -1.6     0.0395 -40.4 0
+## (Intercept) -1.57     0.0396 -39.8 0
 ## 
 ## Scale fixed at 1 
 ## 
 ## Exponential distribution
-## Loglik(model)= 382   Loglik(intercept only)= 382
+## Loglik(model)= 366.2   Loglik(intercept only)= 366.2
 ## Number of Newton-Raphson Iterations: 4 
 ## n= 1000</code></pre>
 <ol start="4" style="list-style-type: decimal">
@@ -238,7 +238,7 @@ status_cens    &lt;-<span class="st"> </span>status_no_cens -<span class="st"> <
 <pre><code>## Call: survfit(formula = Surv(t, status_no_cens) ~ 1)
 ## 
 ##        n   events   median  0.95LCL  0.95UCL 
-## 1000.000 1000.000    0.147    0.133    0.159</code></pre>
+## 1000.000 1000.000    0.140    0.131    0.153</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Here we would like to compare to approach to survival plots:</span>
 <span class="co"># 1. Using the packege _survival_, so the standard one</span>
 <span class="co"># 2. Uisng the package _rms_, a comprehensive package for regression analyses</span>
@@ -277,7 +277,7 @@ status_cens    &lt;-<span class="st"> </span>status_no_cens -<span class="st"> <
 <pre><code>## Call: survfit(formula = Surv(t_cens, status_cens) ~ 1)
 ## 
 ##        n   events   median  0.95LCL  0.95UCL 
-## 1000.000  640.000    0.151    0.134    0.162</code></pre>
+## 1000.000  638.000    0.140    0.129    0.153</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">survfit</span>(<span class="kw">Surv</span>(t_cens, status_cens) ~<span class="st"> </span><span class="dv">1</span>) %&gt;%
 <span class="st">  </span><span class="kw">plot</span>(
     <span class="dt">xlim     =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="fl">0.55</span>),
@@ -498,7 +498,7 @@ mgus_df</code></pre></div>
 ## 10    10    58   male    65   &lt;NA&gt;     NA   6155     1   3.5   1.0  14.8
 ## # ... with 231 more rows, and 1 more variables: mspike &lt;dbl&gt;</code></pre>
 <ol start="2" style="list-style-type: decimal">
-<li>Non parametric kaplan-Meyer estimation of the survival function</li>
+<li>Non parametric Kaplan-Meier estimation of the survival function</li>
 </ol>
 <ul>
 <li>Estimate the survival function from randomization overall and according to sex.</li>
@@ -608,7 +608,7 @@ cox_model &lt;-<span class="st"> </span><span class="kw">cph</span>(<span class=
 </ol>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">n &lt;-<span class="st"> </span><span class="dv">500</span></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
-<li>Sumulate the dates of entry in the cohort, from January, 2010 to January, 2017</li>
+<li>Simulate the dates of entry in the cohort, from January, 2010 to January, 2017</li>
 </ol>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">n_days &lt;-<span class="st"> </span><span class="fl">365.25</span> *<span class="st"> </span><span class="dv">7</span>              <span class="co"># Seven years, taking into account bissextiles</span>
 time_start &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dt">n =</span> n,
@@ -617,7 +617,7 @@ time_start &lt;-<span class="st"> </span><span class="kw">runif</span>(<span cla
 ) %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">as.Date</span>(<span class="dt">origin =</span> <span class="st">&#39;2010-01-01&#39;</span>)</code></pre></div>
 <ol start="3" style="list-style-type: decimal">
-<li>Simulate the dataset of death, assuming exponential death times of mean <span class="math inline">\(2\)</span> years</li>
+<li>Simulate the data-set of death, assuming exponential death times of mean <span class="math inline">\(2\)</span> years</li>
 </ol>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mean_death_time &lt;-<span class="st"> </span><span class="fl">365.25</span> *<span class="st"> </span><span class="dv">2</span>
 death_t         &lt;-<span class="st"> </span><span class="kw">rexp</span>(n, <span class="dt">rate =</span> <span class="dv">1</span> /<span class="st"> </span>mean_death_time)
