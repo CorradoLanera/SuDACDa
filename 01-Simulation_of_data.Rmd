@@ -176,7 +176,7 @@ mgus_df
 
 
 
-2. Non parametric kaplan-Meyer estimation of the survival function
+2. Non parametric Kaplan-Meyer estimation of the survival function
 
   - Estimate the survival function from randomization overall and
       according to sex.
@@ -279,7 +279,7 @@ Predict(cox_model) %>%          # Compute predicted values and confidence limits
 
 
 
-## Non parametric Kalan-Meyer estimation of the survival function
+## Non parametric Kaplan-Meier estimation of the survival function
 
 1. Let consider a sample of $n = 500$
 
@@ -290,7 +290,7 @@ n <- 500
 
 
 
-2. Sumulate the dates of entry in the cohort, from January, 2010 to January,
+2. Simulate the dates of entry in the cohort, from January, 2010 to January,
    2017
 
 ```{r ex_entry}
@@ -305,7 +305,7 @@ time_start <- runif(n = n,
 
 
 
-3. Simulate the dataset of death, assuming exponential death times of mean $2$
+3. Simulate the data-set of death, assuming exponential death times of mean $2$
    years
 
 ```{r ex_death}
