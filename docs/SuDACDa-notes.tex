@@ -25,7 +25,7 @@
 \usepackage{hyperref}
 \hypersetup{unicode=true,
             pdftitle={Survival Data Analysis for Cancer Data},
-            pdfauthor={Corrado Lanera, Danila Azzolina and Daniele Bittigliengo},
+            pdfauthor={Corrado Lanera},
             pdfborder={0 0 0},
             breaklinks=true}
 \urlstyle{same}  % don't use monospace font for urls
@@ -119,7 +119,7 @@
   \title{Survival Data Analysis for Cancer Data}
   \pretitle{\vspace{\droptitle}\centering\huge}
   \posttitle{\par}
-  \author{Corrado Lanera, Danila Azzolina and Daniele Bittigliengo\footnote{\href{http://www.dctv.unipd.it/dipartimento/strutture/biostatistica}{Unit
+  \author{Corrado Lanera\footnote{\href{http://www.dctv.unipd.it/dipartimento/strutture/biostatistica}{Unit
   of Biostatistics, Epidemiology and Public Health} of the
   \href{http://www.dctv.unipd.it/}{Dep. of Cardiac, Thoracic and
   Vascular Sciences} --- \href{http://www.unipd.it/}{Univ. of Padova}}}
@@ -162,15 +162,19 @@
 \chapter*{Introduction}\label{introduction}
 \addcontentsline{toc}{chapter}{Introduction}
 
-In this book, there are our notes and exercices from the Ph.D.~course on
-\textbf{Survival Data Analysis for Cancer Data} by Prof.~Matthieu
-Resche-Rigon and Prof.~Sylvie Chevret from
-\href{http://www.cress-umr1153.fr/}{ECSTRA Team},
-\href{https://www.inserm.fr/}{Inserm},
+In this book, there are my notes and exercises from the Ph.D.~course on
+\href{http://www.politocomunica.polito.it/events/appuntamenti/(idnews)/9665}{\textbf{Survival
+Data Analysis for Cancer Data}} by Prof.~Matthieu Resche-Rigon and
+Prof.~Sylvie Chevret from \href{http://www.cress-umr1153.fr/}{ECSTRA
+Team}, \href{https://www.inserm.fr/}{Inserm},
 \href{https://www.univ-paris-diderot.fr/}{University of Paris Diderot},
 promoted by the \href{http://www.disma.polito.it/}{Dep. of Mathematical
 Sciences ``G. L. Lagrange''} of the
 \href{http://www.polito.it/}{Politecnico} of Torino (Italy).
+
+From the download button on the top of each (HTML) page you can download
+both the \texttt{epub} and the \texttt{PDF} versions of the present
+book.
 
 \section*{Contributions}\label{contributions}
 \addcontentsline{toc}{section}{Contributions}
@@ -186,13 +190,9 @@ contribute, you have two main options:
   related git repository
   (\url{https://github.com/CorradoLanera/SuDACDa/pulls})
 \item
-  Ask us fo a fix by opening an \emph{issue} to the project
+  Ask me for a fix by opening an \emph{issue} to the project
   (\url{https://github.com/CorradoLanera/SuDACDa/issues})
 \end{enumerate}
-
-From the download button on the top of each (HTML) page you can download
-both the \texttt{epub} and the \texttt{PDF} versions of the present
-book.
 
 \section*{Settings}\label{settings}
 \addcontentsline{toc}{section}{Settings}
@@ -223,7 +223,7 @@ more understandable by humans obtaining nicer output.
 \end{Highlighting}
 \end{Shaded}
 
-The following code create the packages.bib files which is the bibtex
+The following code create the packages.bib files which is the BibTeX
 lists of all the packages references we have loaded.
 
 \begin{Shaded}
@@ -351,13 +351,13 @@ data}{Monday: Introduction to Survival Analyses and simulation of data}}\label{m
 ## 
 ## Call:
 ## survreg(formula = Surv(t, status_no_cens) ~ 1, dist = "exponential")
-##             Value Std. Error   z p
-## (Intercept) -1.61     0.0316 -51 0
+##             Value Std. Error     z p
+## (Intercept) -1.63     0.0316 -51.5 0
 ## 
 ## Scale fixed at 1 
 ## 
 ## Exponential distribution
-## Loglik(model)= 611.6   Loglik(intercept only)= 611.6
+## Loglik(model)= 628.7   Loglik(intercept only)= 628.7
 ## Number of Newton-Raphson Iterations: 4 
 ## n= 1000
 \end{verbatim}
@@ -382,13 +382,13 @@ data}{Monday: Introduction to Survival Analyses and simulation of data}}\label{m
 ## Call:
 ## survreg(formula = Surv(t_cens, status_cens) ~ 1, dist = "exponential")
 ##             Value Std. Error     z p
-## (Intercept) -1.65      0.039 -42.3 0
+## (Intercept)  -1.6     0.0397 -40.3 0
 ## 
 ## Scale fixed at 1 
 ## 
 ## Exponential distribution
-## Loglik(model)= 427.7   Loglik(intercept only)= 427.7
-## Number of Newton-Raphson Iterations: 4 
+## Loglik(model)= 381   Loglik(intercept only)= 381
+## Number of Newton-Raphson Iterations: 5 
 ## n= 1000
 \end{verbatim}
 
@@ -417,7 +417,7 @@ data}{Monday: Introduction to Survival Analyses and simulation of data}}\label{m
 ## Call: survfit(formula = Surv(t, status_no_cens) ~ 1)
 ## 
 ##        n   events   median  0.95LCL  0.95UCL 
-## 1000.000 1000.000    0.134    0.123    0.152
+## 1000.000 1000.000    0.139    0.128    0.156
 \end{verbatim}
 
 \begin{Shaded}
@@ -474,7 +474,7 @@ data}{Monday: Introduction to Survival Analyses and simulation of data}}\label{m
 ## Call: survfit(formula = Surv(t_cens, status_cens) ~ 1)
 ## 
 ##        n   events   median  0.95LCL  0.95UCL 
-## 1000.000  657.000    0.132    0.122    0.151
+## 1000.000  636.000    0.143    0.130    0.158
 \end{verbatim}
 
 \begin{Shaded}
@@ -768,7 +768,7 @@ package}{mgus data from survival package}}\label{mgus-data-from-survival-package
 \setcounter{enumi}{1}
 \tightlist
 \item
-  Non parametric kaplan-Meyer estimation of the survival function
+  Non parametric Kaplan-Meier estimation of the survival function
 \end{enumerate}
 
 \begin{itemize}
@@ -935,7 +935,7 @@ function}\label{non-parametric-kalan-meyer-estimation-of-the-survival-function}
 \setcounter{enumi}{1}
 \tightlist
 \item
-  Sumulate the dates of entry in the cohort, from January, 2010 to
+  Simulate the dates of entry in the cohort, from January, 2010 to
   January, 2017
 \end{enumerate}
 
@@ -955,7 +955,7 @@ function}\label{non-parametric-kalan-meyer-estimation-of-the-survival-function}
 \setcounter{enumi}{2}
 \tightlist
 \item
-  Simulate the dataset of death, assuming exponential death times of
+  Simulate the data-set of death, assuming exponential death times of
   mean \(2\) years
 \end{enumerate}
 
@@ -1010,7 +1010,8 @@ function}\label{non-parametric-kalan-meyer-estimation-of-the-survival-function}
 \chapter*{Software}\label{software}
 \addcontentsline{toc}{chapter}{Software}
 
-\section{Packages}\label{packages}
+\section*{Packages}\label{packages}
+\addcontentsline{toc}{section}{Packages}
 
 All the exercise are solved using R (ver. 3.4.2) has been used provided
 with packages: \texttt{survival} (\citet{R-survival}) for the survival
@@ -1032,7 +1033,8 @@ The present book was written in RMarkdown (R-rmarkdown), compiled using
 \texttt{knitr} (\citet{R-knitr}) and rendered as an HTML book by
 \texttt{bookdown} (\citet{R-bookdown}).
 
-\section{System Information}\label{system-information}
+\section*{System Information}\label{system-information}
+\addcontentsline{toc}{section}{System Information}
 
 All the code is compiled on a system with the following overall
 characteristics and loaded packages.
