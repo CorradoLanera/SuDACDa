@@ -22,7 +22,7 @@
   <meta name="twitter:description" content="Examples and exercise from the Politecnico of Torino (Italy) Ph.D. course on Survival Data Analysis for Cancer Data." />
   
 
-<meta name="author" content="Corrado Lanera, Danila Azzolina and Daniele Bittigliengo">
+<meta name="author" content="Corrado Lanera">
 
 
 
@@ -200,12 +200,12 @@ status_cens    &lt;-<span class="st"> </span>status_no_cens -<span class="st"> <
 ## Call:
 ## survreg(formula = Surv(t, status_no_cens) ~ 1, dist = &quot;exponential&quot;)
 ##             Value Std. Error     z p
-## (Intercept) -1.59     0.0316 -50.3 0
+## (Intercept) -1.56     0.0316 -49.5 0
 ## 
 ## Scale fixed at 1 
 ## 
 ## Exponential distribution
-## Loglik(model)= 590.2   Loglik(intercept only)= 590.2
+## Loglik(model)= 564.8   Loglik(intercept only)= 564.8
 ## Number of Newton-Raphson Iterations: 4 
 ## n= 1000</code></pre>
 <ul>
@@ -219,12 +219,12 @@ status_cens    &lt;-<span class="st"> </span>status_no_cens -<span class="st"> <
 ## Call:
 ## survreg(formula = Surv(t_cens, status_cens) ~ 1, dist = &quot;exponential&quot;)
 ##             Value Std. Error     z p
-## (Intercept) -1.55     0.0404 -38.3 0
+## (Intercept) -1.56     0.0402 -38.9 0
 ## 
 ## Scale fixed at 1 
 ## 
 ## Exponential distribution
-## Loglik(model)= 336   Loglik(intercept only)= 336
+## Loglik(model)= 348.9   Loglik(intercept only)= 348.9
 ## Number of Newton-Raphson Iterations: 4 
 ## n= 1000</code></pre>
 <ol start="4" style="list-style-type: decimal">
@@ -238,7 +238,7 @@ status_cens    &lt;-<span class="st"> </span>status_no_cens -<span class="st"> <
 <pre><code>## Call: survfit(formula = Surv(t, status_no_cens) ~ 1)
 ## 
 ##        n   events   median  0.95LCL  0.95UCL 
-## 1000.000 1000.000    0.138    0.129    0.150</code></pre>
+## 1000.000 1000.000    0.150    0.135    0.160</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Here we would like to compare to approach to survival plots:</span>
 <span class="co"># 1. Using the packege _survival_, so the standard one</span>
 <span class="co"># 2. Uisng the package _rms_, a comprehensive package for regression analyses</span>
@@ -277,7 +277,7 @@ status_cens    &lt;-<span class="st"> </span>status_no_cens -<span class="st"> <
 <pre><code>## Call: survfit(formula = Surv(t_cens, status_cens) ~ 1)
 ## 
 ##        n   events   median  0.95LCL  0.95UCL 
-## 1000.000  614.000    0.146    0.132    0.159</code></pre>
+## 1000.000  618.000    0.145    0.128    0.159</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">survfit</span>(<span class="kw">Surv</span>(t_cens, status_cens) ~<span class="st"> </span><span class="dv">1</span>) %&gt;%
 <span class="st">  </span><span class="kw">plot</span>(
     <span class="dt">xlim     =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="fl">0.55</span>),

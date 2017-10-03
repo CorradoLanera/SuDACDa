@@ -25,7 +25,7 @@
 \usepackage{hyperref}
 \hypersetup{unicode=true,
             pdftitle={Survival Data Analysis for Cancer Data},
-            pdfauthor={Corrado Lanera, Danila Azzolina and Daniele Bittigliengo},
+            pdfauthor={Corrado Lanera},
             pdfborder={0 0 0},
             breaklinks=true}
 \urlstyle{same}  % don't use monospace font for urls
@@ -119,7 +119,7 @@
   \title{Survival Data Analysis for Cancer Data}
   \pretitle{\vspace{\droptitle}\centering\huge}
   \posttitle{\par}
-  \author{Corrado Lanera, Danila Azzolina and Daniele Bittigliengo\footnote{\href{http://www.dctv.unipd.it/dipartimento/strutture/biostatistica}{Unit
+  \author{Corrado Lanera\footnote{\href{http://www.dctv.unipd.it/dipartimento/strutture/biostatistica}{Unit
   of Biostatistics, Epidemiology and Public Health} of the
   \href{http://www.dctv.unipd.it/}{Dep. of Cardiac, Thoracic and
   Vascular Sciences} --- \href{http://www.unipd.it/}{Univ. of Padova}}}
@@ -162,7 +162,7 @@
 \chapter*{Introduction}\label{introduction}
 \addcontentsline{toc}{chapter}{Introduction}
 
-In this book, there are our notes and exercises from the Ph.D.~course on
+In this book, there are my notes and exercises from the Ph.D.~course on
 \href{http://www.politocomunica.polito.it/events/appuntamenti/(idnews)/9665}{\textbf{Survival
 Data Analysis for Cancer Data}} by Prof.~Matthieu Resche-Rigon and
 Prof.~Sylvie Chevret from \href{http://www.cress-umr1153.fr/}{ECSTRA
@@ -190,7 +190,7 @@ contribute, you have two main options:
   related git repository
   (\url{https://github.com/CorradoLanera/SuDACDa/pulls})
 \item
-  Ask us for a fix by opening an \emph{issue} to the project
+  Ask me for a fix by opening an \emph{issue} to the project
   (\url{https://github.com/CorradoLanera/SuDACDa/issues})
 \end{enumerate}
 
@@ -352,12 +352,12 @@ data}{Monday: Introduction to Survival Analyses and simulation of data}}\label{m
 ## Call:
 ## survreg(formula = Surv(t, status_no_cens) ~ 1, dist = "exponential")
 ##             Value Std. Error     z p
-## (Intercept) -1.63     0.0316 -51.6 0
+## (Intercept) -1.59     0.0316 -50.3 0
 ## 
 ## Scale fixed at 1 
 ## 
 ## Exponential distribution
-## Loglik(model)= 630.9   Loglik(intercept only)= 630.9
+## Loglik(model)= 590.4   Loglik(intercept only)= 590.4
 ## Number of Newton-Raphson Iterations: 4 
 ## n= 1000
 \end{verbatim}
@@ -381,13 +381,13 @@ data}{Monday: Introduction to Survival Analyses and simulation of data}}\label{m
 ## 
 ## Call:
 ## survreg(formula = Surv(t_cens, status_cens) ~ 1, dist = "exponential")
-##             Value Std. Error   z p
-## (Intercept)  -1.6     0.0401 -40 0
+##             Value Std. Error     z p
+## (Intercept) -1.58     0.0403 -39.1 0
 ## 
 ## Scale fixed at 1 
 ## 
 ## Exponential distribution
-## Loglik(model)= 374.7   Loglik(intercept only)= 374.7
+## Loglik(model)= 354.6   Loglik(intercept only)= 354.6
 ## Number of Newton-Raphson Iterations: 4 
 ## n= 1000
 \end{verbatim}
@@ -417,7 +417,7 @@ data}{Monday: Introduction to Survival Analyses and simulation of data}}\label{m
 ## Call: survfit(formula = Surv(t, status_no_cens) ~ 1)
 ## 
 ##        n   events   median  0.95LCL  0.95UCL 
-## 1000.000 1000.000    0.142    0.128    0.154
+## 1000.000 1000.000    0.143    0.129    0.157
 \end{verbatim}
 
 \begin{Shaded}
@@ -474,7 +474,7 @@ data}{Monday: Introduction to Survival Analyses and simulation of data}}\label{m
 ## Call: survfit(formula = Surv(t_cens, status_cens) ~ 1)
 ## 
 ##        n   events   median  0.95LCL  0.95UCL 
-## 1000.000  622.000    0.143    0.126    0.156
+## 1000.000  615.000    0.146    0.133    0.162
 \end{verbatim}
 
 \begin{Shaded}
