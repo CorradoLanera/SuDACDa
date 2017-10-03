@@ -51,7 +51,7 @@ by humans obtaining nicer output.
 # Packages for the analyses
 library(survival)                                            # Survival Analysis
 library(survminer)                     # Drawing Survival Curves using 'ggplot2'
-library(rms)                                      # Regression Modeling Strategy
+library(rms)              # Regression Modeling Strategy (include Hmisc package)
   options(datadist = 'dd')                  # Distribution Summaries used by rms
 
 # Packages for data management 

@@ -1,0 +1,358 @@
+# *Thusday*: Cox models {#thusday}
+
+```{r data_load}
+data(pbc)
+?pbc
+pbc_df <- as.tibble(pbc)
+dd <- datadist(pbc_df)
+```
+
+
+## TP1
+
+1. Impact of __sex__ on death
+  - First question: there are non informative censoring. Because there is
+    a final date (i.e. July, 1986) this is completerly non informative about
+    the patients. So we can suspect a non informative censoring. So we can
+    use Cox, KM, ...
+  - What we have to do with the transplant? Considercensored, cases, what?
+    Answere: it is completely random! So, we can beleve that this is a non 
+    informative censoring.^[In reality this is not really true because who
+    stay better is on the top of the list!]
+  - sex is categorical so we have to check (only) the proportional HR
+
+```{r}
+pbc_df
+
+# Using _survival_
+cox_sex <- coxph(Surv(time, status == 2) ~ sex,
+  data = pbc_df
+)
+
+cox.zph(cox_sex)                                      # test for proportional HR
+
+summary(cox_sex)
+
+
+# Using rms
+rms_mod <- cph(Surv(time, status == 2) ~ sex,
+  data = pbc_df
+)
+
+cox.zph(cox_mod)                                      # test for proportional HR
+
+summary(cox_mod)
+
+
+```
+
+So, if you are a female it seams that you have a lower risk to die, but it is
+not significant (CI include $1$).
+
+2. Impact of __age__ on death
+
+  - we have to check for the proportional HR
+  - It is continuous, so we have to check the linearity of the log-linear
+
+```{r}
+cox_age <- coxph(Surv(time, status == 2) ~ age,
+  data = pbc_df
+)
+
+cox.zph(cox_age)                                      # test for proportional HR
+
+cox.zph(cox_age) %>%
+  plot                                              # the plot should seams flat
+
+rcspline.plot(
+  x     = pbc_df$age,
+  y     = pbc_df$time,
+  event = pbc_df$status == 2,
+  model = 'cox',
+  xlab  = 'Age'
+)
+```
+
+> Note: sometimes you __know__ the answer for log-linearity (for any reason), in
+>       those cases do not test for it!! (It is not very powerful so for small
+>       ss it never reject it)
+
+```{r}
+summary(cox_age)
+```
+
+The effect seams quite low, even if significant, so to explain better to a 
+clinicians this fact we can find the effect for ten year and not one
+
+```{r}
+coxph(Surv(time, status == 2) ~ I(age / 10),
+  data = pbc_df
+) %>%
+  summary
+```
+
+
+3. Impact of __ast__ on death
+  - same of age
+  
+```{r}
+cox_ast <- coxph(Surv(time, status == 2) ~ ast,
+  data = pbc_df
+)
+
+cox.zph(cox_ast)                                      # test for proportional HR
+
+cox.zph(cox_ast) %>%
+  plot                                              # the plot should seams flat
+```
+
+The proportional HR assumption is violated, so we cannot use a Cox model as it
+is, we have to transform it.
+
+```{r}
+cox_log_ast <- coxph(Surv(time, status == 2) ~ log(ast),
+  data = pbc_df
+)
+
+cox.zph(cox_log_ast)
+
+cox.zph(cox_log_ast) %>%
+  plot                                              # the plot should seams flat
+```
+There exixt a line live in the middle of the band...so we are not very happy
+but we accept it. 
+
+Let's test for log-linearity
+
+```{r}
+rcspline.plot(
+  x     = log(pbc_df$ast),
+  y     = pbc_df$time,
+  event = pbc_df$status == 2,
+  model = 'cox',
+  xlab  = 'AST'
+)
+```
+
+And finally look at the effect of the log of `ast`
+```{r}
+summary(cox_ast)
+```
+
+3. Impact of __platelet__ on death
+  - same of age
+
+```{r}
+cox_platelet <- coxph(Surv(time, status == 2) ~ platelet,
+  data = pbc_df
+)
+
+cox.zph(cox_platelet)
+
+cox.zph(cox_platelet) %>%
+  plot                                              # the plot should seams flat
+
+rcspline.plot(
+  x     = pbc_df$platelet %>% as.numeric,
+  y     = pbc_df$time,
+  event = pbc_df$status == 2,
+  model = 'cox',
+  xlab  = 'Platelet'
+)
+```
+
+The log-linear plot has a U-shape so, standard transformation are not good.
+We can try to perform a categorization. Two startegy:
+  - look at the log-linear plot and try to find a good cutpoints, but we have
+    to explain how we have defined them (and "use the p-value" is not a good
+    strategy)
+  - Use standard non related cutof, such as median or quartile
+
+
+```{r}
+cox_cut_platelet <- coxph(Surv(time, status == 2) ~ cut(platelet, c(0, 150, 400, 1000)),
+  data = pbc_df
+)
+
+cox.zph(cox_cut_platelet)
+
+cox.zph(cox_cut_platelet) %>%
+  plot                                              # the plot should seams flat
+
+summary(cox_cut_platelet)
+```
+
+But here the reference is the lower level but the interested is what happen if
+we lie above or over the standard values, so we have to relevel the category
+to make the medium level as the reference one, i.e. the first
+
+```{r}
+pbc_df <- pbc_df %>% 
+  mutate(
+    platelet_ref = cut(pbc_df$platelet, c(0, 150, 400, 1000)) %>%
+                      relevel(ref = "(150,400]")
+)
+
+cox_relev_platelet <- coxph(Surv(time, status == 2) ~ platelet_ref,
+  data = pbc_df
+)
+
+summary(cox_relev_platelet)
+```
+
+
+
+## TP2
+
+```{r}
+coxph(Surv(time, status == 2) ~ trt,
+  data = pbc_df
+) %>% 
+  summary
+
+coxph(Surv(time, status == 2) ~ trt + edema,
+  data = pbc_df
+) %>% 
+  summary
+
+coxph(Surv(time, status == 2) ~ trt * edema,
+  data = pbc_df
+) %>% 
+  summary
+
+coxph(Surv(time, status == 2) ~ trt + stage,
+  data = pbc_df %>% mutate(stage = factor(stage, ordered = TRUE))
+) %>% 
+  summary
+
+coxph(Surv(time, status == 2) ~ trt * stage,
+  data = pbc_df %>% mutate(stage = as.factor(stage))
+) %>% 
+  summary
+
+
+Predict(cph(Surv(time, status == 2) ~ trt * stage,
+  data = pbc_df %>% mutate(stage = as.factor(stage))
+)) %>%
+  ggplot
+```
+
+
+
+## TP3
+
+```{r}
+pbcseq_df <- as.tibble(pbcseq)
+dd <- datadist(pbcseq_df)
+
+pbcseq_df
+```
+
+
+- impact of bilurubine of death
+
+```{r}
+pbcseq_full <- pbcseq_df %>%
+  group_by(id) %>%                    # perform all the next according to the id
+  mutate(
+    start  = day,                                 # just to have consistent names
+    end    = lead(day),           # the end is "the next start" (last will be NA)
+    status = if_else(is.na(end), status, 0L), 
+    end    = if_else(is.na(end), futime, end) # fill the NA-ends (i.e. the lasts)
+                                              # with the real end
+)
+```
+```{r}
+bil_mod <- coxph(Surv(time = start, time2 = end, event = status == 2L) ~ log(bili),
+  data = pbcseq_full
+)
+
+summary(bil_mod)
+
+plot(
+  x = pbcseq_full$end,
+  y = residuals(bil_mod, type = 'dfbeta')
+)
+```
+
+
+
+- impact of ast
+```{r}
+ast_mod <- coxph(Surv(time = start, time2 = end, event = status == 2L) ~ ast,
+  data = pbcseq_full
+)
+
+summary(ast_mod)
+
+plot(
+  x = pbcseq_full$end,
+  y = residuals(ast_mod, type = 'dfbeta')
+)
+
+plot(
+  x = pbcseq_full$end,
+  y = residuals(ast_mod, type = 'martingale')
+)
+```
+
+What happen with the strange observations? I  try to find which is the outlier
+
+```{r}
+residuals(ast_mod, type = 'martingale') %>%
+  describe
+
+strange_id <- residuals(ast_mod, type = 'martingale') %>%
+  which.min
+
+pbcseq_full$ast %>% describe
+
+pbcseq_full$ast[[strange_id]]
+```
+
+
+
+## TP4
+
+1. priognostic model with
+  - `àscites`, `edema`, `sex`, `bili`, `ast`, `platelet`, `stage`
+
+```{r}
+pbc_updated <- pbc_df %>% 
+  mutate(
+    bili_log     = log(bili),
+    ast_log      = log(ast),
+    platelet_ref = platelet_ref, # we have already defined it
+    stage_fct    = as.factor(stage)
+  )
+
+dd <- datadist(pbc_updated)
+
+pbc_updated %>% 
+  dplyr::select(
+    ascites, edema, sex, bili_log, ast_log, platelet_ref, stage_fct
+  ) %>% 
+  describe
+# there are 11 df so to use all of them we need at least 110 obs
+
+
+coxph(
+  Surv(time, status == 2) ~
+    sex * (ascites + edema + rcs(bili_log, 3) + rcs(ast_log, 3)) + platelet_ref + stage_fct,
+  data = pbc_updated
+) %>% 
+  summary
+
+
+coxph(
+  Surv(time, status == 2) ~
+    sex + ascites + edema + bili_log + ast_log + platelet_ref + stage_fct,
+  data = pbc_updated %>% 
+    dplyr::select(status, time,
+      sex, ascites, edema, bili_log, ast_log, platelet_ref, stage_fct
+    ) %>% 
+    filter(complete.cases(.))
+) %>% 
+  step(trace = 0)
+```
+
