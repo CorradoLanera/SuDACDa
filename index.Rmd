@@ -1,6 +1,6 @@
 --- 
 title: "Survival Data Analysis for Cancer Data"
-author: "Corrado Lanera^[[Unit of Biostatistics, Epidemiology and Public Health](http://www.dctv.unipd.it/dipartimento/strutture/biostatistica) of the [Dep. of Cardiac, Thoracic and Vascular Sciences](http://www.dctv.unipd.it/) --- [Univ. of Padova](http://www.unipd.it/)]"
+author: "Corrado Lanera, Danila Azzolina, Daniele Bottigliengo^[[Unit of Biostatistics, Epidemiology and Public Health](http://www.dctv.unipd.it/dipartimento/strutture/biostatistica) of the [Dep. of Cardiac, Thoracic and Vascular Sciences](http://www.dctv.unipd.it/) --- [Univ. of Padova](http://www.unipd.it/)]"
 date: "02 - 06 October, 2017"
 site: bookdown::bookdown_site
 output: bookdown::gitbook
@@ -8,13 +8,14 @@ documentclass: book
 bibliography: [book.bib, packages.bib]
 biblio-style: apalike
 link-citations: yes
+url: https\://corradolanera.github.io/SuDACDa/
 github-repo: CorradoLanera/SuDACDa
 description: "Examples and exercise from the Politecnico Ph.D. course by prof. Sylvie Chevret and prof. Matthieu Resche-Rigon."
 ---
 
 # Introduction {-}
 
-In this book, there are my notes and exercises from the Ph.D. course
+This book is designed to collect notes and exercises from the Ph.D. course
 on [__Survival Data Analysis for Cancer Data__](http://www.politocomunica.polito.it/events/appuntamenti/(idnews)/9665)
 by prof. Sylvie Chevret and prof. Matthieu Resche-Rigon from
 [ECSTRA Team](http://www.cress-umr1153.fr/),
@@ -24,20 +25,17 @@ by the
 [Dep. of Mathematical Sciences "G. L. Lagrange"](http://www.disma.polito.it/) of
 the [Politecnico](http://www.polito.it/) of Torino (Italy).
 
-From the download button on the top of each (HTML) page you can download both
-the `epub` and the `PDF` versions of the present book. 
-
-
-
-
 
 ## Contributions {-}
 
-If you find any mistakes, typing errors or if you simply want to contribute, you have two main options:
+Any contribution is welcome! From the download button on the top of each (HTML) page you can download both the `epub` and the `PDF` versions of the present book. 
 
-1. Provide a solution proposal by opening a *pull request* to the related git
-   repository (<https://github.com/CorradoLanera/SuDACDa/pulls>)
-2. Ask me for a fix by opening an *issue* to the project
+
+If you find any mistake/typo or want to share ideas, you can help improve the book in the following way:
+
+  - Providing a solution proposal by opening a pull request to the related git repository  (<https://github.com/CorradoLanera/SuDACDa/pulls>)
+  
+  - Asking for a fix by opening an issue to the project
    (<https://github.com/CorradoLanera/SuDACDa/issues>)
 
 
@@ -61,10 +59,11 @@ library(tidyverse)                    # Imports the principal tidyverse packages
 
 # Document output options
 knitr::opts_chunk$set(
-	echo       = TRUE,
-	message    = FALSE,
-	warning    = FALSE,
-	fig.height = 4.4
+	echo        = TRUE,
+	message     = FALSE,
+	warning     = FALSE,
+	fig.height  = 4.4,
+	cache.extra = knitr::rand_seed
 )
          # by default, render all the code too
 ```

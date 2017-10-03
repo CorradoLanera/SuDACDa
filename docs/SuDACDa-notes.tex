@@ -25,7 +25,7 @@
 \usepackage{hyperref}
 \hypersetup{unicode=true,
             pdftitle={Survival Data Analysis for Cancer Data},
-            pdfauthor={Corrado Lanera},
+            pdfauthor={Corrado Lanera, Danila Azzolina, Daniele Bottigliengo},
             pdfborder={0 0 0},
             breaklinks=true}
 \urlstyle{same}  % don't use monospace font for urls
@@ -119,7 +119,7 @@
   \title{Survival Data Analysis for Cancer Data}
   \pretitle{\vspace{\droptitle}\centering\huge}
   \posttitle{\par}
-  \author{Corrado Lanera\footnote{\href{http://www.dctv.unipd.it/dipartimento/strutture/biostatistica}{Unit
+  \author{Corrado Lanera, Danila Azzolina, Daniele Bottigliengo\footnote{\href{http://www.dctv.unipd.it/dipartimento/strutture/biostatistica}{Unit
   of Biostatistics, Epidemiology and Public Health} of the
   \href{http://www.dctv.unipd.it/}{Dep. of Cardiac, Thoracic and
   Vascular Sciences} --- \href{http://www.unipd.it/}{Univ. of Padova}}}
@@ -162,7 +162,8 @@
 \chapter*{Introduction}\label{introduction}
 \addcontentsline{toc}{chapter}{Introduction}
 
-In this book, there are my notes and exercises from the Ph.D.~course on
+This book is designed to collect notes and exercises from the
+Ph.D.~course on
 \href{http://www.politocomunica.polito.it/events/appuntamenti/(idnews)/9665}{\textbf{Survival
 Data Analysis for Cancer Data}} by prof. Sylvie Chevret and prof.
 Matthieu Resche-Rigon from \href{http://www.cress-umr1153.fr/}{ECSTRA
@@ -172,27 +173,24 @@ promoted by the \href{http://www.disma.polito.it/}{Dep. of Mathematical
 Sciences ``G. L. Lagrange''} of the
 \href{http://www.polito.it/}{Politecnico} of Torino (Italy).
 
-From the download button on the top of each (HTML) page you can download
-both the \texttt{epub} and the \texttt{PDF} versions of the present
-book.
-
 \section*{Contributions}\label{contributions}
 \addcontentsline{toc}{section}{Contributions}
 
-If you find any mistakes, typing errors or if you simply want to
-contribute, you have two main options:
+Any contribution is welcome! From the download button on the top of each
+(HTML) page you can download both the \texttt{epub} and the \texttt{PDF}
+versions of the present book.
 
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\tightlist
+If you find any mistake/typo or want to share ideas, you can help
+improve the book in the following way:
+
+\begin{itemize}
 \item
-  Provide a solution proposal by opening a \emph{pull request} to the
-  related git repository
-  (\url{https://github.com/CorradoLanera/SuDACDa/pulls})
+  Providing a solution proposal by opening a pull request to the related
+  git repository (\url{https://github.com/CorradoLanera/SuDACDa/pulls})
 \item
-  Ask me for a fix by opening an \emph{issue} to the project
+  Asking for a fix by opening an issue to the project
   (\url{https://github.com/CorradoLanera/SuDACDa/issues})
-\end{enumerate}
+\end{itemize}
 
 \section*{Settings}\label{settings}
 \addcontentsline{toc}{section}{Settings}
@@ -214,10 +212,11 @@ more understandable by humans obtaining nicer output.
 
 \CommentTok{# Document output options}
 \NormalTok{knitr::opts_chunk$}\KeywordTok{set}\NormalTok{(}
-    \DataTypeTok{echo       =} \OtherTok{TRUE}\NormalTok{,}
-    \DataTypeTok{message    =} \OtherTok{FALSE}\NormalTok{,}
-    \DataTypeTok{warning    =} \OtherTok{FALSE}\NormalTok{,}
-    \DataTypeTok{fig.height =} \FloatTok{4.4}
+    \DataTypeTok{echo        =} \OtherTok{TRUE}\NormalTok{,}
+    \DataTypeTok{message     =} \OtherTok{FALSE}\NormalTok{,}
+    \DataTypeTok{warning     =} \OtherTok{FALSE}\NormalTok{,}
+    \DataTypeTok{fig.height  =} \FloatTok{4.4}\NormalTok{,}
+    \DataTypeTok{cache.extra =} \NormalTok{knitr::rand_seed}
 \NormalTok{)}
          \CommentTok{# by default, render all the code too}
 \end{Highlighting}
@@ -257,6 +256,7 @@ data}{Monday: Introduction to Survival Analyses and simulation of data}}\label{m
 
 \begin{Shaded}
 \begin{Highlighting}[]
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{171002}\NormalTok{)}
 \NormalTok{n              <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DataTypeTok{thousand =} \DecValTok{1000}\NormalTok{)                                   }\CommentTok{# samples}
 \NormalTok{t              <-}\StringTok{ }\KeywordTok{rexp}\NormalTok{(n, }\DataTypeTok{rate =} \DecValTok{5}\NormalTok{)                   }\CommentTok{# random exponential times}
 \NormalTok{status_no_cens <-}\StringTok{ }\KeywordTok{rep}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DataTypeTok{times =} \NormalTok{n)         }\CommentTok{# no censored data --> all are cases}
@@ -352,12 +352,12 @@ data}{Monday: Introduction to Survival Analyses and simulation of data}}\label{m
 ## Call:
 ## survreg(formula = Surv(t, status_no_cens) ~ 1, dist = "exponential")
 ##             Value Std. Error     z p
-## (Intercept) -1.62     0.0316 -51.3 0
+## (Intercept) -1.58     0.0316 -50.1 0
 ## 
 ## Scale fixed at 1 
 ## 
 ## Exponential distribution
-## Loglik(model)= 623   Loglik(intercept only)= 623
+## Loglik(model)= 584.3   Loglik(intercept only)= 584.3
 ## Number of Newton-Raphson Iterations: 4 
 ## n= 1000
 \end{verbatim}
@@ -382,12 +382,12 @@ data}{Monday: Introduction to Survival Analyses and simulation of data}}\label{m
 ## Call:
 ## survreg(formula = Surv(t_cens, status_cens) ~ 1, dist = "exponential")
 ##             Value Std. Error     z p
-## (Intercept)  -1.6     0.0397 -40.4 0
+## (Intercept) -1.57     0.0401 -39.2 0
 ## 
 ## Scale fixed at 1 
 ## 
 ## Exponential distribution
-## Loglik(model)= 383   Loglik(intercept only)= 383
+## Loglik(model)= 355.9   Loglik(intercept only)= 355.9
 ## Number of Newton-Raphson Iterations: 4 
 ## n= 1000
 \end{verbatim}
@@ -417,7 +417,7 @@ data}{Monday: Introduction to Survival Analyses and simulation of data}}\label{m
 ## Call: survfit(formula = Surv(t, status_no_cens) ~ 1)
 ## 
 ##        n   events   median  0.95LCL  0.95UCL 
-## 1000.000 1000.000    0.138    0.125    0.151
+## 1000.000 1000.000    0.140    0.128    0.158
 \end{verbatim}
 
 \begin{Shaded}
@@ -474,7 +474,7 @@ data}{Monday: Introduction to Survival Analyses and simulation of data}}\label{m
 ## Call: survfit(formula = Surv(t_cens, status_cens) ~ 1)
 ## 
 ##        n   events   median  0.95LCL  0.95UCL 
-## 1000.000  635.000    0.142    0.128    0.154
+## 1000.000  623.000    0.141    0.130    0.158
 \end{verbatim}
 
 \begin{Shaded}

@@ -8,6 +8,7 @@
   - Non censored
 
 ```{r simulation_par}
+set.seed(171002)
 n              <- c(thousand = 1000)                                   # samples
 t              <- rexp(n, rate = 5)                   # random exponential times
 status_no_cens <- rep(1, times = n)         # no censored data --> all are cases

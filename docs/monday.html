@@ -11,7 +11,7 @@
 
   <meta property="og:title" content="Survival Data Analysis for Cancer Data" />
   <meta property="og:type" content="book" />
-  
+  <meta property="og:url" content="https://corradolanera.github.io/SuDACDa/" />
   
   <meta property="og:description" content="Examples and exercise from the Politecnico Ph.D. course by prof. Sylvie Chevret and prof. Matthieu Resche-Rigon." />
   <meta name="github-repo" content="CorradoLanera/SuDACDa" />
@@ -22,7 +22,7 @@
   <meta name="twitter:description" content="Examples and exercise from the Politecnico Ph.D. course by prof. Sylvie Chevret and prof. Matthieu Resche-Rigon." />
   
 
-<meta name="author" content="Corrado Lanera">
+<meta name="author" content="Corrado Lanera, Danila Azzolina, Daniele Bottigliengo">
 
 
 
@@ -146,7 +146,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <ul>
 <li>Non censored</li>
 </ul>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">n              &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dt">thousand =</span> <span class="dv">1000</span>)                                   <span class="co"># samples</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">171002</span>)
+n              &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dt">thousand =</span> <span class="dv">1000</span>)                                   <span class="co"># samples</span>
 t              &lt;-<span class="st"> </span><span class="kw">rexp</span>(n, <span class="dt">rate =</span> <span class="dv">5</span>)                   <span class="co"># random exponential times</span>
 status_no_cens &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">1</span>, <span class="dt">times =</span> n)         <span class="co"># no censored data --&gt; all are cases</span></code></pre></div>
 <ul>
@@ -200,12 +201,12 @@ status_cens    &lt;-<span class="st"> </span>status_no_cens -<span class="st"> <
 ## Call:
 ## survreg(formula = Surv(t, status_no_cens) ~ 1, dist = &quot;exponential&quot;)
 ##             Value Std. Error     z p
-## (Intercept) -1.61     0.0316 -50.9 0
+## (Intercept) -1.58     0.0316 -50.1 0
 ## 
 ## Scale fixed at 1 
 ## 
 ## Exponential distribution
-## Loglik(model)= 608.2   Loglik(intercept only)= 608.2
+## Loglik(model)= 584.3   Loglik(intercept only)= 584.3
 ## Number of Newton-Raphson Iterations: 4 
 ## n= 1000</code></pre>
 <ul>
@@ -219,12 +220,12 @@ status_cens    &lt;-<span class="st"> </span>status_no_cens -<span class="st"> <
 ## Call:
 ## survreg(formula = Surv(t_cens, status_cens) ~ 1, dist = &quot;exponential&quot;)
 ##             Value Std. Error     z p
-## (Intercept)  -1.6     0.0393 -40.7 0
+## (Intercept) -1.57     0.0401 -39.2 0
 ## 
 ## Scale fixed at 1 
 ## 
 ## Exponential distribution
-## Loglik(model)= 387   Loglik(intercept only)= 387
+## Loglik(model)= 355.9   Loglik(intercept only)= 355.9
 ## Number of Newton-Raphson Iterations: 4 
 ## n= 1000</code></pre>
 <ol start="4" style="list-style-type: decimal">
@@ -238,7 +239,7 @@ status_cens    &lt;-<span class="st"> </span>status_no_cens -<span class="st"> <
 <pre><code>## Call: survfit(formula = Surv(t, status_no_cens) ~ 1)
 ## 
 ##        n   events   median  0.95LCL  0.95UCL 
-## 1000.000 1000.000    0.141    0.127    0.154</code></pre>
+## 1000.000 1000.000    0.140    0.128    0.158</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Here we would like to compare to approach to survival plots:</span>
 <span class="co"># 1. Using the packege _survival_, so the standard one</span>
 <span class="co"># 2. Uisng the package _rms_, a comprehensive package for regression analyses</span>
@@ -277,7 +278,7 @@ status_cens    &lt;-<span class="st"> </span>status_no_cens -<span class="st"> <
 <pre><code>## Call: survfit(formula = Surv(t_cens, status_cens) ~ 1)
 ## 
 ##        n   events   median  0.95LCL  0.95UCL 
-## 1000.000  647.000    0.147    0.134    0.162</code></pre>
+## 1000.000  623.000    0.141    0.130    0.158</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">survfit</span>(<span class="kw">Surv</span>(t_cens, status_cens) ~<span class="st"> </span><span class="dv">1</span>) %&gt;%
 <span class="st">  </span><span class="kw">plot</span>(
     <span class="dt">xlim     =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="fl">0.55</span>),

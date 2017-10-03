@@ -11,7 +11,7 @@
 
   <meta property="og:title" content="Survival Data Analysis for Cancer Data" />
   <meta property="og:type" content="book" />
-  
+  <meta property="og:url" content="https://corradolanera.github.io/SuDACDa/" />
   
   <meta property="og:description" content="Examples and exercise from the Politecnico Ph.D. course by prof. Sylvie Chevret and prof. Matthieu Resche-Rigon." />
   <meta name="github-repo" content="CorradoLanera/SuDACDa" />
@@ -22,7 +22,7 @@
   <meta name="twitter:description" content="Examples and exercise from the Politecnico Ph.D. course by prof. Sylvie Chevret and prof. Matthieu Resche-Rigon." />
   
 
-<meta name="author" content="Corrado Lanera">
+<meta name="author" content="Corrado Lanera, Danila Azzolina, Daniele Bottigliengo">
 
 
 
@@ -138,20 +138,20 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
             <section class="normal" id="section-">
 <div id="header">
 <h1 class="title">Survival Data Analysis for Cancer Data</h1>
-<h4 class="author"><em>Corrado Lanera<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></em></h4>
+<h4 class="author"><em>Corrado Lanera, Danila Azzolina, Daniele Bottigliengo<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></em></h4>
 <h4 class="date"><em>02 - 06 October, 2017</em></h4>
 </div>
 <div id="introduction" class="section level1 unnumbered">
 <h1>Introduction</h1>
-<p>In this book, there are my notes and exercises from the Ph.D. course on <a href="http://www.politocomunica.polito.it/events/appuntamenti/(idnews)/9665"><strong>Survival Data Analysis for Cancer Data</strong></a> by prof. Sylvie Chevret and prof. Matthieu Resche-Rigon from <a href="http://www.cress-umr1153.fr/">ECSTRA Team</a>, <a href="https://www.inserm.fr/">Inserm</a>, <a href="https://www.univ-paris-diderot.fr/">University of Paris Diderot</a>, promoted by the <a href="http://www.disma.polito.it/">Dep. of Mathematical Sciences “G. L. Lagrange”</a> of the <a href="http://www.polito.it/">Politecnico</a> of Torino (Italy).</p>
-<p>From the download button on the top of each (HTML) page you can download both the <code>epub</code> and the <code>PDF</code> versions of the present book.</p>
+<p>This book is designed to collect notes and exercises from the Ph.D. course on <a href="http://www.politocomunica.polito.it/events/appuntamenti/(idnews)/9665"><strong>Survival Data Analysis for Cancer Data</strong></a> by prof. Sylvie Chevret and prof. Matthieu Resche-Rigon from <a href="http://www.cress-umr1153.fr/">ECSTRA Team</a>, <a href="https://www.inserm.fr/">Inserm</a>, <a href="https://www.univ-paris-diderot.fr/">University of Paris Diderot</a>, promoted by the <a href="http://www.disma.polito.it/">Dep. of Mathematical Sciences “G. L. Lagrange”</a> of the <a href="http://www.polito.it/">Politecnico</a> of Torino (Italy).</p>
 <div id="contributions" class="section level2 unnumbered">
 <h2>Contributions</h2>
-<p>If you find any mistakes, typing errors or if you simply want to contribute, you have two main options:</p>
-<ol style="list-style-type: decimal">
-<li>Provide a solution proposal by opening a <em>pull request</em> to the related git repository (<a href="https://github.com/CorradoLanera/SuDACDa/pulls" class="uri">https://github.com/CorradoLanera/SuDACDa/pulls</a>)</li>
-<li>Ask me for a fix by opening an <em>issue</em> to the project (<a href="https://github.com/CorradoLanera/SuDACDa/issues" class="uri">https://github.com/CorradoLanera/SuDACDa/issues</a>)</li>
-</ol>
+<p>Any contribution is welcome! From the download button on the top of each (HTML) page you can download both the <code>epub</code> and the <code>PDF</code> versions of the present book.</p>
+<p>If you find any mistake/typo or want to share ideas, you can help improve the book in the following way:</p>
+<ul>
+<li><p>Providing a solution proposal by opening a pull request to the related git repository (<a href="https://github.com/CorradoLanera/SuDACDa/pulls" class="uri">https://github.com/CorradoLanera/SuDACDa/pulls</a>)</p></li>
+<li><p>Asking for a fix by opening an issue to the project (<a href="https://github.com/CorradoLanera/SuDACDa/issues" class="uri">https://github.com/CorradoLanera/SuDACDa/issues</a>)</p></li>
+</ul>
 </div>
 <div id="settings" class="section level2 unnumbered">
 <h2>Settings</h2>
@@ -167,10 +167,11 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <span class="co"># Document output options</span>
 knitr::opts_chunk$<span class="kw">set</span>(
-    <span class="dt">echo       =</span> <span class="ot">TRUE</span>,
-    <span class="dt">message    =</span> <span class="ot">FALSE</span>,
-    <span class="dt">warning    =</span> <span class="ot">FALSE</span>,
-    <span class="dt">fig.height =</span> <span class="fl">4.4</span>
+    <span class="dt">echo        =</span> <span class="ot">TRUE</span>,
+    <span class="dt">message     =</span> <span class="ot">FALSE</span>,
+    <span class="dt">warning     =</span> <span class="ot">FALSE</span>,
+    <span class="dt">fig.height  =</span> <span class="fl">4.4</span>,
+    <span class="dt">cache.extra =</span> knitr::rand_seed
 )
          <span class="co"># by default, render all the code too</span></code></pre></div>
 <p>The following code create the packages.bib files which is the BibTeX lists of all the packages references we have loaded.</p>
