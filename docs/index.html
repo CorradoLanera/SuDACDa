@@ -167,13 +167,12 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <span class="co"># Document output options</span>
 knitr::opts_chunk$<span class="kw">set</span>(
-    <span class="dt">echo        =</span> <span class="ot">TRUE</span>,
-    <span class="dt">message     =</span> <span class="ot">FALSE</span>,
-    <span class="dt">warning     =</span> <span class="ot">FALSE</span>,
-    <span class="dt">fig.height  =</span> <span class="fl">4.4</span>,
-    <span class="dt">cache.extra =</span> knitr::rand_seed
-)
-         <span class="co"># by default, render all the code too</span></code></pre></div>
+    <span class="dt">echo        =</span> <span class="ot">TRUE</span>,                                      <span class="co"># Render all the code</span>
+    <span class="dt">message     =</span> <span class="ot">FALSE</span>,                                  <span class="co"># Do net render messages</span>
+    <span class="dt">warning     =</span> <span class="ot">FALSE</span>,                                  <span class="co"># Do not render warnings</span>
+    <span class="dt">fig.height  =</span> <span class="fl">4.4</span>,   <span class="co"># Right figure height to permit two figures in a PDF page</span>
+    <span class="dt">cache.extra =</span> knitr::rand_seed   <span class="co"># cache random seed to assure reproducibility</span>
+)</code></pre></div>
 <p>The following code create the packages.bib files which is the BibTeX lists of all the packages references we have loaded.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Automatically create a bib database for the loaded packages</span>
 knitr::<span class="kw">write_bib</span>(<span class="kw">c</span>(<span class="kw">.packages</span>(), <span class="st">&#39;bookdown&#39;</span>, <span class="st">&#39;knitr&#39;</span>, <span class="st">&#39;rmarkdown&#39;</span>),

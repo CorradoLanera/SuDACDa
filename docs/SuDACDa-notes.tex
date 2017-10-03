@@ -212,13 +212,12 @@ more understandable by humans obtaining nicer output.
 
 \CommentTok{# Document output options}
 \NormalTok{knitr::opts_chunk$}\KeywordTok{set}\NormalTok{(}
-    \DataTypeTok{echo        =} \OtherTok{TRUE}\NormalTok{,}
-    \DataTypeTok{message     =} \OtherTok{FALSE}\NormalTok{,}
-    \DataTypeTok{warning     =} \OtherTok{FALSE}\NormalTok{,}
-    \DataTypeTok{fig.height  =} \FloatTok{4.4}\NormalTok{,}
-    \DataTypeTok{cache.extra =} \NormalTok{knitr::rand_seed}
+    \DataTypeTok{echo        =} \OtherTok{TRUE}\NormalTok{,                                      }\CommentTok{# Render all the code}
+    \DataTypeTok{message     =} \OtherTok{FALSE}\NormalTok{,                                  }\CommentTok{# Do net render messages}
+    \DataTypeTok{warning     =} \OtherTok{FALSE}\NormalTok{,                                  }\CommentTok{# Do not render warnings}
+    \DataTypeTok{fig.height  =} \FloatTok{4.4}\NormalTok{,   }\CommentTok{# Right figure height to permit two figures in a PDF page}
+    \DataTypeTok{cache.extra =} \NormalTok{knitr::rand_seed   }\CommentTok{# cache random seed to assure reproducibility}
 \NormalTok{)}
-         \CommentTok{# by default, render all the code too}
 \end{Highlighting}
 \end{Shaded}
 

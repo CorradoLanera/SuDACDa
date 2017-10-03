@@ -59,13 +59,12 @@ library(tidyverse)                    # Imports the principal tidyverse packages
 
 # Document output options
 knitr::opts_chunk$set(
-	echo        = TRUE,
-	message     = FALSE,
-	warning     = FALSE,
-	fig.height  = 4.4,
-	cache.extra = knitr::rand_seed
+	echo        = TRUE,                                      # Render all the code
+	message     = FALSE,                                  # Do net render messages
+	warning     = FALSE,                                  # Do not render warnings
+	fig.height  = 4.4,   # Right figure height to permit two figures in a PDF page
+	cache.extra = knitr::rand_seed   # cache random seed to assure reproducibility
 )
-         # by default, render all the code too
 ```
 
 The following code create the packages.bib files which is the BibTeX lists of
