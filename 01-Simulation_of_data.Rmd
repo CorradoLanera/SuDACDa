@@ -1,0 +1,344 @@
+# *Monday*: Introduction to Survival Analyses and simulation of data {#monday}
+
+## Simulated Data
+
+1. Simulate a sample of $n = 100$ or $1000$ exponential survival times, with
+  mean $\theta = 5$.
+
+  - Non censored
+
+```{r simulation_par}
+n              <- c(thousand = 1000)                                   # samples
+t              <- rexp(n, rate = 5)                   # random exponential times
+status_no_cens <- rep(1, times = n)         # no censored data --> all are cases
+```
+
+  - Uniform censoring over $[0, a]$, with $a = 1, a = 0.5$ or $a = 2$
+
+```{r}
+a              <- c(cens_05 = 0.5)   # upper bound of the uniform censoring dist
+cens           <- runif(n, min = 0, max = a)                    # censored times
+t_cens         <- pmin(t, cens)    # censored times are earlier than event times
+status_cens    <- status_no_cens - (t_cens == cens)      # remove censored cases
+```
+
+
+
+
+2. Plot the observed survival times
+
+  - Non censored and censored
+```{r sim_plots, fig.show='hold', out.width='50%'}
+# NOTE: for the plots to be comparable, xlim and ylim have to be the same range
+#       for both the plots. Moreover to drow well adjusted plots, they were set
+#       a posteriori.
+hist(t,
+  main = 'Hystogram of uncensored times',
+  col  = 'green',
+  xlim = c(0, 1.5),
+  ylim = c(0, 400),
+  labels = TRUE                        # add the labels over the top of the bars
+)
+hist(t_cens,
+  main = 'Hystogram of censored times (a = 0.5)',
+  col  = 'red',
+  xlim = c(0, 1.5),
+  ylim = c(0, 400),
+  labels = TRUE
+)
+```
+
+
+
+
+3. Parametric estimation of survival function
+
+  - Uncensored
+  
+```{r sim_survreg_nocens}
+# `?survreg` := "Regression for a Parametric Survival Model"
+# 
+# R formula: y ~ x <--> math formula: y = f(x)
+# 
+# Here we want to model the response (labelled time) as they are, without any
+# furter investigation on the effect on them from some other variable
+survreg(Surv(t, status_no_cens) ~ 1,
+  dist = 'exponential'
+) %>%
+  summary     # here `summary()` add some more statistics to the standard output
+```
+
+  - Censored
+  
+```{r sim_survreg_cens}
+survreg(Surv(t_cens, status_cens) ~ 1,
+  dist = 'exponential'
+) %>%
+  summary
+```
+
+
+
+
+4. Non parametric estimation of survival and the distribution functions
+
+  - Uncensored
+
+```{r survfit_nocens, fig.show='hold'}
+# `?survfit` := "Create survival curves"
+survfit(Surv(t, status_no_cens) ~ 1)
+
+# Here we would like to compare to approach to survival plots:
+# 1. Using the packege _survival_, so the standard one
+# 2. Uisng the package _rms_, a comprehensive package for regression analyses
+
+# Using survival `plot` provided by the _survival_ package
+# (`?survival:::plot.survfit`), we can continue to
+# use the `survfit()` function for nonparametric survival estimation from the
+# same _survival_ package
+survfit(Surv(t, status_no_cens) ~ 1) %>% 
+  plot(
+    xlim     = c(0, 1.55),
+    conf.int  = TRUE,
+    mark.time = TRUE,
+    col       = 'green',
+    main      = 'Uncensored --- survival'
+)
+
+
+# Using the survplot from the _rms_ package (`survplot`), we have to switch to
+# the `npsurv()` function for nonparametric survival estimation from the _rms_
+# package
+npsurv(Surv(t, status_no_cens) ~ 1) %>% 
+  survplot(
+    xlim     = c(0, 1.5),
+    conf.int = TRUE,
+    n.risk   = TRUE,
+    col      = 'green'
+)
+title(main = 'Uncensored --- rms') # unfortunally survplot do not have an
+                                   # integrated option for the title...
+```
+
+  - censored
+    
+```{r survfit_cens, fig.show='hold'}
+survfit(Surv(t_cens, status_cens) ~ 1)
+
+survfit(Surv(t_cens, status_cens) ~ 1) %>%
+  plot(
+    xlim     = c(0, 0.55),
+    conf.int  = TRUE,
+    mark.time = TRUE,
+    col      = 'red',
+    main      = 'Censored (a = 0.5)'
+)
+
+npsurv(Surv(t_cens, status_cens) ~ 1) %>% 
+  survplot(
+    xlim     = c(0, 0.5),
+    conf.int = TRUE,
+    n.risk   = TRUE,
+    col      = 'red'
+)
+title(main = 'Censored (a = 0.5) --- rms')
+```
+
+
+
+
+
+
+
+
+## `mgus` data from __survival__ package
+
+1. Load and explore data
+
+```{r mgus_explore}
+data(mgus)                                                                # load
+head(mgus)                                                       # first 10 rows
+dim(mgus)                                              # number of rows and cols
+names(mgus)                                                # name of the columns
+str(mgus)                                   # R internal structure of the object
+
+summary(mgus)                                              # summary from base R
+ 
+describe(mgus)   # more comprehensive description from _Hisc_ package, loaded by
+                 # the _rms_ one
+
+mgus_df <- as_tibble(mgus)         # tidy data frame (important info printed all
+                                   # together, and visualization auto-adjusted
+                                   # to the consol width)
+mgus_df
+```
+
+
+
+
+2. Non parametric kaplan-Meyer estimation of the survival function
+
+  - Estimate the survival function from randomization overall and
+      according to sex.
+    
+```{r rmgus_survfit, fig.show='hold'}
+survfit(Surv(futime, death) ~ 1,
+  data = mgus_df
+) %>%
+  plot(
+    conf.int  = TRUE,
+    mark.time = TRUE,
+    col       = 'blue',
+    main      = 'Survival function for mgus data'
+)
+
+
+survfit(Surv(futime, death) ~ sex,
+  data = mgus_df
+) %>%
+  plot(
+    conf.int  = TRUE,
+    mark.time = TRUE,
+    main      = 'Survival function for mgus data according to sex',
+    col       = c('red', 'blue'),
+    lty       = c(2, 3)
+)
+legend(
+  x = 10000, y = 1,
+  legend = c("Female", "Male"),
+  col    = c('red', 'blue'),
+  lty    = c(2, 3)
+)
+```
+
+```{r rmgus_survminer, fig.height=10}
+# For survival object the package _survminer_ provide ggplot2 plots
+# (`?ggsurvplot`) which could be very interesting and quite comprehensive.
+
+survfit(Surv(futime, death) ~ sex,
+  data = mgus_df
+) %>% 
+  ggsurvplot(
+    conf.int            = TRUE,                      # draw confidence intervals
+    pval                = TRUE,                                    # show pvalue
+    pval.method         = TRUE,                            # print the test name
+    title               = 'Survival curves for overall death according to sex.',
+    xlab                = 'Days',
+    legend              = 'right',                             # legend position
+    legend.title        = 'Sex',
+    legend.labs         = c('Female', 'Male'),
+    risk.table          = TRUE,     # admits interesting options other than TRUE
+    cumcensor           = TRUE,
+    cumevents           = TRUE,
+    pval.size           = 3.5,   # from here these are options passed to `ggpar`
+    risk.table.fontsize = 3,     # for a better visualization
+    fontsize            = 3,     # (auto-explicatives)
+    xscale              = 30.44
+  )
+```
+
+> Note: No female reaches the end of the f-up!
+
+  - Test the effect of sex
+
+```{r mgus_survdiff_and_rms}
+# Using __survival__ (no plot method is provided for this solution)
+survdiff(Surv(futime, death) ~ sex,
+  data = mgus_df
+)
+
+
+# using __rms__
+dd <- datadist(mgus_df)  # To evaluate cph, _rms_ needs this object which simply
+                         # store statistics about the data.
+                         # 
+                         # Note: the name of the object (i.e. "dd") has to be 
+                         #       exactly the same as the one specified into the
+                         #       option set just after the `library(rms)` call.
+                         #       (See: Chapter settings) 
+cox_model <- cph(Surv(futime, death) ~ sex,
+  data  = mgus_df
+)
+
+summary(cox_model)                           # return effect size and HR with CI
+
+Predict(cox_model) %>%          # Compute predicted values and confidence limits
+                                #
+                                # Note: pay attention to Title-case "P"redict
+  plot(
+    groups = 'sex',
+    anova  = anova(cox_model),       # Compute and print the $\chi^2$ statistics
+    pval   = TRUE                    # print the pvalue 
+)
+```
+
+
+
+
+
+
+
+
+## Non parametric Kalan-Meyer estimation of the survival function
+
+1. Let consider a sample of $n = 500$
+
+```{r ex_ss}
+n <- 500
+```
+
+
+
+
+2. Sumulate the dates of entry in the cohort, from January, 2010 to January,
+   2017
+
+```{r ex_entry}
+n_days <- 365.25 * 7              # Seven years, taking into account bissextiles
+time_start <- runif(n = n,
+  min = 0,
+  max = n_days
+) %>% 
+  as.Date(origin = '2010-01-01')
+```
+
+
+
+
+3. Simulate the dataset of death, assuming exponential death times of mean $2$
+   years
+
+```{r ex_death}
+mean_death_time <- 365.25 * 2
+death_t         <- rexp(n, rate = 1 / mean_death_time)
+status_no_cens  <- rep(1, n)
+```
+
+
+
+
+4. Let fix the reference date of the analyses of June, 2017
+
+```{r ex_end}
+end_date     <- as.Date('2017-06-01')           # Fixed date for the end of f-up
+death_r_cens <- pmin(death_t, end_date - time_start)
+status_cens  <- status_no_cens - (death_t == death_r_cens)
+```
+
+
+
+
+5. Estimate the survival function from randomization
+
+```{r ex_surv_curves}
+survfit(Surv(death_r_cens, status_cens) ~ 1) %>% 
+  plot(
+    conf.int  = TRUE,
+    mark.time = TRUE,
+    main      = 'Survival curve from randomization (right censored at 2017-06-01)',
+    col       = 'blue',
+    xlab      = 'Years',
+    xscale    = 365.25
+)
+```
+

@@ -1,6 +1,6 @@
 --- 
 title: "Survival Data Analysis for Cancer Data"
-author: "Corrado Lanera, Danila Azzolina and Daniele Bittigliengo^[Unit of Biostatistics, Epidemiology and Public Health of the Dep. of Cardiac, Thoracic and Vascular Sciences --- Univ. of Padova](http://www.dctv.unipd.it/dipartimento/strutture/biostatistica)"
+author: "Corrado Lanera, Danila Azzolina and Daniele Bittigliengo^[[Unit of Biostatistics, Epidemiology and Public Health](http://www.dctv.unipd.it/dipartimento/strutture/biostatistica) of the [Dep. of Cardiac, Thoracic and Vascular Sciences](http://www.dctv.unipd.it/) --- [Univ. of Padova](http://www.unipd.it/)]"
 date: "02 - 06 October, 2017"
 site: bookdown::bookdown_site
 output: bookdown::gitbook
@@ -12,10 +12,41 @@ github-repo: CorradoLanera/SuDACDa
 description: "Examples and exercise from the Politecnico of Torino (Italy) Ph.D. course on Survival Data Analysis for Cancer Data."
 ---
 
-# Base Settings {-}
+# Introduction {-}
+
+In this book, there are our notes and exercices from the Ph.D. course
+on __Survival Data Analysis for Cancer Data__ by Prof. Matthieu Resche-Rigon and
+Prof. Sylvie Chevret from [ECSTRA Team](http://www.cress-umr1153.fr/),
+[Inserm](https://www.inserm.fr/),
+[University of Paris Diderot](https://www.univ-paris-diderot.fr/), promoted
+by the
+[Dep. of Mathematical Sciences "G. L. Lagrange"](http://www.disma.polito.it/) of
+the [Politecnico](http://www.polito.it/) of Torino (Italy).
+
+
+
+
+
+## Contributions {-}
+
+If you find any mistakes, typing errors or if you simply want to contribute, you have two main options:
+
+1. Provide a solution proposal by opening a *pull request* to the related git
+   repository (<https://github.com/CorradoLanera/SuDACDa/pulls>)
+2. Ask us fo a fix by opening an *issue* to the project
+   (<https://github.com/CorradoLanera/SuDACDa/issues>)
+
+From the download button on the top of each (HTML) page you can download both
+the `epub` and the `PDF` versions of the present book. 
+
+
+
+
+## Settings {-}
 
 Here, there are the libraries loaded during the course, with the relative
-options.
+options, plus some packages and options useful to write code more understandable
+by humans obtaining nicer output.
 
 ```{r setup, message=FALSE, warning=FALSE}
 # Packages for the analyses
@@ -29,9 +60,10 @@ library(tidyverse)                    # Imports the principal tidyverse packages
 
 # Document output options
 knitr::opts_chunk$set(
-	echo = TRUE,
-	message = FALSE,
-	warning = FALSE
+	echo       = TRUE,
+	message    = FALSE,
+	warning    = FALSE,
+	fig.height = 4.4
 )
          # by default, render all the code too
 ```
