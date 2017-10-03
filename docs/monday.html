@@ -6,20 +6,20 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Survival Data Analysis for Cancer Data</title>
-  <meta name="description" content="Examples and exercise from the Politecnico of Torino (Italy) Ph.D. course on Survival Data Analysis for Cancer Data.">
+  <meta name="description" content="Examples and exercise from the Politecnico Ph.D. course by prof. Sylvie Chevret and prof. Matthieu Resche-Rigon.">
   <meta name="generator" content="bookdown 0.5 and GitBook 2.6.7">
 
   <meta property="og:title" content="Survival Data Analysis for Cancer Data" />
   <meta property="og:type" content="book" />
   
   
-  <meta property="og:description" content="Examples and exercise from the Politecnico of Torino (Italy) Ph.D. course on Survival Data Analysis for Cancer Data." />
+  <meta property="og:description" content="Examples and exercise from the Politecnico Ph.D. course by prof. Sylvie Chevret and prof. Matthieu Resche-Rigon." />
   <meta name="github-repo" content="CorradoLanera/SuDACDa" />
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Survival Data Analysis for Cancer Data" />
   
-  <meta name="twitter:description" content="Examples and exercise from the Politecnico of Torino (Italy) Ph.D. course on Survival Data Analysis for Cancer Data." />
+  <meta name="twitter:description" content="Examples and exercise from the Politecnico Ph.D. course by prof. Sylvie Chevret and prof. Matthieu Resche-Rigon." />
   
 
 <meta name="author" content="Corrado Lanera">
@@ -200,12 +200,12 @@ status_cens    &lt;-<span class="st"> </span>status_no_cens -<span class="st"> <
 ## Call:
 ## survreg(formula = Surv(t, status_no_cens) ~ 1, dist = &quot;exponential&quot;)
 ##             Value Std. Error     z p
-## (Intercept) -1.56     0.0316 -49.5 0
+## (Intercept) -1.61     0.0316 -50.9 0
 ## 
 ## Scale fixed at 1 
 ## 
 ## Exponential distribution
-## Loglik(model)= 564.8   Loglik(intercept only)= 564.8
+## Loglik(model)= 608.2   Loglik(intercept only)= 608.2
 ## Number of Newton-Raphson Iterations: 4 
 ## n= 1000</code></pre>
 <ul>
@@ -219,12 +219,12 @@ status_cens    &lt;-<span class="st"> </span>status_no_cens -<span class="st"> <
 ## Call:
 ## survreg(formula = Surv(t_cens, status_cens) ~ 1, dist = &quot;exponential&quot;)
 ##             Value Std. Error     z p
-## (Intercept) -1.56     0.0402 -38.9 0
+## (Intercept)  -1.6     0.0393 -40.7 0
 ## 
 ## Scale fixed at 1 
 ## 
 ## Exponential distribution
-## Loglik(model)= 348.9   Loglik(intercept only)= 348.9
+## Loglik(model)= 387   Loglik(intercept only)= 387
 ## Number of Newton-Raphson Iterations: 4 
 ## n= 1000</code></pre>
 <ol start="4" style="list-style-type: decimal">
@@ -238,7 +238,7 @@ status_cens    &lt;-<span class="st"> </span>status_no_cens -<span class="st"> <
 <pre><code>## Call: survfit(formula = Surv(t, status_no_cens) ~ 1)
 ## 
 ##        n   events   median  0.95LCL  0.95UCL 
-## 1000.000 1000.000    0.150    0.135    0.160</code></pre>
+## 1000.000 1000.000    0.141    0.127    0.154</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Here we would like to compare to approach to survival plots:</span>
 <span class="co"># 1. Using the packege _survival_, so the standard one</span>
 <span class="co"># 2. Uisng the package _rms_, a comprehensive package for regression analyses</span>
@@ -277,7 +277,7 @@ status_cens    &lt;-<span class="st"> </span>status_no_cens -<span class="st"> <
 <pre><code>## Call: survfit(formula = Surv(t_cens, status_cens) ~ 1)
 ## 
 ##        n   events   median  0.95LCL  0.95UCL 
-## 1000.000  618.000    0.145    0.128    0.159</code></pre>
+## 1000.000  647.000    0.147    0.134    0.162</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">survfit</span>(<span class="kw">Surv</span>(t_cens, status_cens) ~<span class="st"> </span><span class="dv">1</span>) %&gt;%
 <span class="st">  </span><span class="kw">plot</span>(
     <span class="dt">xlim     =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="fl">0.55</span>),

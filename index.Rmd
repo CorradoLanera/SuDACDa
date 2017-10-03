@@ -9,15 +9,15 @@ bibliography: [book.bib, packages.bib]
 biblio-style: apalike
 link-citations: yes
 github-repo: CorradoLanera/SuDACDa
-description: "Examples and exercise from the Politecnico of Torino (Italy) Ph.D. course on Survival Data Analysis for Cancer Data."
+description: "Examples and exercise from the Politecnico Ph.D. course by prof. Sylvie Chevret and prof. Matthieu Resche-Rigon."
 ---
 
 # Introduction {-}
 
 In this book, there are my notes and exercises from the Ph.D. course
 on [__Survival Data Analysis for Cancer Data__](http://www.politocomunica.polito.it/events/appuntamenti/(idnews)/9665)
-by Prof. Matthieu Resche-Rigon and
-Prof. Sylvie Chevret from [ECSTRA Team](http://www.cress-umr1153.fr/),
+by prof. Sylvie Chevret and prof. Matthieu Resche-Rigon from
+[ECSTRA Team](http://www.cress-umr1153.fr/),
 [Inserm](https://www.inserm.fr/),
 [University of Paris Diderot](https://www.univ-paris-diderot.fr/), promoted
 by the

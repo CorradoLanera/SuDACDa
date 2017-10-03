@@ -164,8 +164,8 @@
 
 In this book, there are my notes and exercises from the Ph.D.~course on
 \href{http://www.politocomunica.polito.it/events/appuntamenti/(idnews)/9665}{\textbf{Survival
-Data Analysis for Cancer Data}} by Prof.~Matthieu Resche-Rigon and
-Prof.~Sylvie Chevret from \href{http://www.cress-umr1153.fr/}{ECSTRA
+Data Analysis for Cancer Data}} by prof. Sylvie Chevret and prof.
+Matthieu Resche-Rigon from \href{http://www.cress-umr1153.fr/}{ECSTRA
 Team}, \href{https://www.inserm.fr/}{Inserm},
 \href{https://www.univ-paris-diderot.fr/}{University of Paris Diderot},
 promoted by the \href{http://www.disma.polito.it/}{Dep. of Mathematical
@@ -352,12 +352,12 @@ data}{Monday: Introduction to Survival Analyses and simulation of data}}\label{m
 ## Call:
 ## survreg(formula = Surv(t, status_no_cens) ~ 1, dist = "exponential")
 ##             Value Std. Error     z p
-## (Intercept) -1.59     0.0316 -50.3 0
+## (Intercept) -1.62     0.0316 -51.3 0
 ## 
 ## Scale fixed at 1 
 ## 
 ## Exponential distribution
-## Loglik(model)= 590.4   Loglik(intercept only)= 590.4
+## Loglik(model)= 623   Loglik(intercept only)= 623
 ## Number of Newton-Raphson Iterations: 4 
 ## n= 1000
 \end{verbatim}
@@ -382,12 +382,12 @@ data}{Monday: Introduction to Survival Analyses and simulation of data}}\label{m
 ## Call:
 ## survreg(formula = Surv(t_cens, status_cens) ~ 1, dist = "exponential")
 ##             Value Std. Error     z p
-## (Intercept) -1.58     0.0403 -39.1 0
+## (Intercept)  -1.6     0.0397 -40.4 0
 ## 
 ## Scale fixed at 1 
 ## 
 ## Exponential distribution
-## Loglik(model)= 354.6   Loglik(intercept only)= 354.6
+## Loglik(model)= 383   Loglik(intercept only)= 383
 ## Number of Newton-Raphson Iterations: 4 
 ## n= 1000
 \end{verbatim}
@@ -417,7 +417,7 @@ data}{Monday: Introduction to Survival Analyses and simulation of data}}\label{m
 ## Call: survfit(formula = Surv(t, status_no_cens) ~ 1)
 ## 
 ##        n   events   median  0.95LCL  0.95UCL 
-## 1000.000 1000.000    0.143    0.129    0.157
+## 1000.000 1000.000    0.138    0.125    0.151
 \end{verbatim}
 
 \begin{Shaded}
@@ -474,7 +474,7 @@ data}{Monday: Introduction to Survival Analyses and simulation of data}}\label{m
 ## Call: survfit(formula = Surv(t_cens, status_cens) ~ 1)
 ## 
 ##        n   events   median  0.95LCL  0.95UCL 
-## 1000.000  615.000    0.146    0.133    0.162
+## 1000.000  635.000    0.142    0.128    0.154
 \end{verbatim}
 
 \begin{Shaded}
