@@ -137,11 +137,14 @@ cox.zph(cox_age) %>%
 
 The proportional hazard hypothesis is not invalidated
 
+> The outputs of rcspline.plot are a plot and a very long matrix with the values
+  of xe, lower, upper. The latters are not of our interest, but there are no
+  options to not get them. So we include the command into
+  `invisible(capture.output(.))` box.^[As suggested by *couthcommander* in
+  <https://github.com/CorradoLanera/SuDACDa/issues/2>.]
+
 ```{r}
-# [Note: unfortunately the option `noprint` of the funciton `rcspline.plot`
-#  does not work and the space-waste list of all the coefficients and relative
-#  SE will be printed all the time. Sorry, we are working for a solution.]
-rcspline.plot(
+invisible(capture.output(rcspline.plot(
   x       = pbc_df$age,
   y       = pbc_df$time,
   event   = pbc_df$status == 2,
@@ -149,7 +152,7 @@ rcspline.plot(
 #  model   = 'cox',          # If event is present, model is assumed to be "cox"
   xlab    = 'Age',
   statloc = 'll'
-)
+)))
 ```
 
 The log-linearity is not invalidated
@@ -235,13 +238,13 @@ living in the middle of the band...so we are not very happy but we accept it.
 Let's test for log-linearity
 
 ```{r}
-rcspline.plot(
+invisible(capture.output(rcspline.plot(
   x       = log(pbc_df$ast),
   y       = pbc_df$time,
   event   = pbc_df$status == 2,
   xlab    = 'ast',
   statloc = 'll'
-)
+)))
 ```
 
 The log-linear assumption is not violated.
@@ -272,13 +275,13 @@ cox.zph(rms_platelet) %>%
   plot(col = 'green')
 
 
-rcspline.plot(
+invisible(capture.output(rcspline.plot(
   x       = pbc_df$platelet %>% as.numeric,
   y       = pbc_df$time,
   event   = pbc_df$status == 2,
   xlab    = 'Platelet',
   statloc = 'll'
-)
+)))
 ```
 
 The log-linear plot has a U-shape so, standard transformation are not good.
