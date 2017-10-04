@@ -2,6 +2,7 @@ bookdown::gitbook:
   css: style.css
   config:
     toc:
+      collapse: section
       before: |
         <li><a href="./">Survival Data Analysis for Cancer Data</a></li>
       after: |
@@ -14,4 +15,5 @@ bookdown::pdf_book:
   citation_package: natbib
   keep_tex: yes
 bookdown::epub_book: default
+# bookdown::kindlegen(epub = 'docs/SuDACDa-notes.epub', exec = 'C:/KindleGen') # run on the R console
 

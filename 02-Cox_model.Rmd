@@ -1,4 +1,4 @@
-# *Thusday*: Cox models {#thusday}
+# *Tuesday*: Cox models {#cox}
 
 
 ## Key (operative) concepts {#key2}

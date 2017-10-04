@@ -1,1205 +1,220 @@
-\documentclass[]{book}
-\usepackage{lmodern}
-\usepackage{amssymb,amsmath}
-\usepackage{ifxetex,ifluatex}
-\usepackage{fixltx2e} % provides \textsubscript
-\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
-  \usepackage[T1]{fontenc}
-  \usepackage[utf8]{inputenc}
-\else % if luatex or xelatex
-  \ifxetex
-    \usepackage{mathspec}
-  \else
-    \usepackage{fontspec}
-  \fi
-  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
-\fi
-% use upquote if available, for straight quotes in verbatim environments
-\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
-% use microtype if available
-\IfFileExists{microtype.sty}{%
-\usepackage{microtype}
-\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
-}{}
-\usepackage[margin=1in]{geometry}
-\usepackage{hyperref}
-\hypersetup{unicode=true,
-            pdftitle={Survival Data Analysis for Cancer Data},
-            pdfauthor={Corrado Lanera, Danila Azzolina, Daniele Bottigliengo},
-            pdfborder={0 0 0},
-            breaklinks=true}
-\urlstyle{same}  % don't use monospace font for urls
-\usepackage{natbib}
-\bibliographystyle{apalike}
-\usepackage{color}
-\usepackage{fancyvrb}
-\newcommand{\VerbBar}{|}
-\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
-\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
-% Add ',fontsize=\small' for more characters per line
-\usepackage{framed}
-\definecolor{shadecolor}{RGB}{248,248,248}
-\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
-\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{{#1}}}}
-\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{{#1}}}
-\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{{#1}}}
-\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{{#1}}}
-\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{{#1}}}
-\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{{#1}}}
-\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{{#1}}}
-\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{{#1}}}
-\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{{#1}}}
-\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{{#1}}}
-\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{{#1}}}
-\newcommand{\ImportTok}[1]{{#1}}
-\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{{#1}}}}
-\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{{#1}}}}}
-\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{{#1}}}}}
-\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{{#1}}}}}
-\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{{#1}}}
-\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{{#1}}}
-\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{{#1}}}
-\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{{#1}}}}
-\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{{#1}}}}
-\newcommand{\BuiltInTok}[1]{{#1}}
-\newcommand{\ExtensionTok}[1]{{#1}}
-\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{{#1}}}}
-\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{{#1}}}
-\newcommand{\RegionMarkerTok}[1]{{#1}}
-\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{{#1}}}}}
-\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{{#1}}}}}
-\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{{#1}}}
-\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{{#1}}}}
-\newcommand{\NormalTok}[1]{{#1}}
-\usepackage{longtable,booktabs}
-\usepackage{graphicx,grffile}
-\makeatletter
-\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
-\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
-\makeatother
-% Scale images if necessary, so that they will not overflow the page
-% margins by default, and it is still possible to overwrite the defaults
-% using explicit options in \includegraphics[width, height, ...]{}
-\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
-\IfFileExists{parskip.sty}{%
-\usepackage{parskip}
-}{% else
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{6pt plus 2pt minus 1pt}
-}
-\setlength{\emergencystretch}{3em}  % prevent overfull lines
-\providecommand{\tightlist}{%
-  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
-\setcounter{secnumdepth}{5}
-% Redefines (sub)paragraphs to behave more like sections
-\ifx\paragraph\undefined\else
-\let\oldparagraph\paragraph
-\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
-\fi
-\ifx\subparagraph\undefined\else
-\let\oldsubparagraph\subparagraph
-\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
-\fi
-
-%%% Use protect on footnotes to avoid problems with footnotes in titles
-\let\rmarkdownfootnote\footnote%
-\def\footnote{\protect\rmarkdownfootnote}
-
-%%% Change title format to be more compact
-\usepackage{titling}
-
-% Create subtitle command for use in maketitle
-\newcommand{\subtitle}[1]{
-  \posttitle{
-    \begin{center}\large#1\end{center}
-    }
-}
-
-\setlength{\droptitle}{-2em}
-  \title{Survival Data Analysis for Cancer Data}
-  \pretitle{\vspace{\droptitle}\centering\huge}
-  \posttitle{\par}
-  \author{Corrado Lanera, Danila Azzolina, Daniele Bottigliengo\footnote{\href{http://www.dctv.unipd.it/dipartimento/strutture/biostatistica}{Unit
-  of Biostatistics, Epidemiology and Public Health} of the
-  \href{http://www.dctv.unipd.it/}{Dep. of Cardiac, Thoracic and
-  Vascular Sciences} --- \href{http://www.unipd.it/}{Univ. of Padova}}}
-  \preauthor{\centering\large\emph}
-  \postauthor{\par}
-  \predate{\centering\large\emph}
-  \postdate{\par}
-  \date{02 - 06 October, 2017}
-
-\usepackage{booktabs}
-\usepackage{amsthm}
-\makeatletter
-\def\thm@space@setup{%
-  \thm@preskip=8pt plus 2pt minus 4pt
-  \thm@postskip=\thm@preskip
-}
-\makeatother
-
-\usepackage{amsthm}
-\newtheorem{theorem}{Theorem}[chapter]
-\newtheorem{lemma}{Lemma}[chapter]
-\theoremstyle{definition}
-\newtheorem{definition}{Definition}[chapter]
-\newtheorem{corollary}{Corollary}[chapter]
-\newtheorem{proposition}{Proposition}[chapter]
-\theoremstyle{definition}
-\newtheorem{example}{Example}[chapter]
-\theoremstyle{definition}
-\newtheorem{exercise}{Exercise}[chapter]
-\theoremstyle{remark}
-\newtheorem*{remark}{Remark}
-\newtheorem*{solution}{Solution}
-\begin{document}
-\maketitle
-
-{
-\setcounter{tocdepth}{1}
-\tableofcontents
-}
-\chapter*{Introduction}\label{introduction}
-\addcontentsline{toc}{chapter}{Introduction}
-
-This book is designed to collect notes and exercises from the
-Ph.D.~course on
-\href{http://www.politocomunica.polito.it/events/appuntamenti/(idnews)/9665}{\textbf{Survival
-Data Analysis for Cancer Data}} by prof. Sylvie Chevret and prof.
-Matthieu Resche-Rigon from \href{http://www.cress-umr1153.fr/}{ECSTRA
-Team}, \href{https://www.inserm.fr/}{Inserm},
-\href{https://www.univ-paris-diderot.fr/}{University of Paris Diderot},
-promoted by the \href{http://www.disma.polito.it/}{Dep. of Mathematical
-Sciences ``G. L. Lagrange''} of the
-\href{http://www.polito.it/}{Politecnico} of Torino (Italy).
-
-\section*{Contributions}\label{contributions}
-\addcontentsline{toc}{section}{Contributions}
-
-Any contribution is welcome! From the download button on the top of each
-(HTML) page you can download both the \texttt{epub} and the \texttt{PDF}
-versions of the present book.
-
-If you find any mistake/typo or want to share ideas, you can help
-improve the book in the following way:
-
-\begin{itemize}
-\item
-  Providing a solution proposal by opening a pull request to the related
-  git repository (\url{https://github.com/CorradoLanera/SuDACDa/pulls})
-\item
-  Asking for a fix by opening an issue to the project
-  (\url{https://github.com/CorradoLanera/SuDACDa/issues})
-\end{itemize}
-
-\section*{Settings}\label{settings}
-\addcontentsline{toc}{section}{Settings}
-
-Here, there are the libraries loaded during the course, with the
-relative options, plus some packages and options useful to write code
-more understandable by humans obtaining nicer output.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# Packages for the analyses}
-\KeywordTok{library}\NormalTok{(survival)                                            }\CommentTok{# Survival Analysis}
-\KeywordTok{library}\NormalTok{(survminer)                     }\CommentTok{# Drawing Survival Curves using 'ggplot2'}
-\KeywordTok{library}\NormalTok{(rms)              }\CommentTok{# Regression Modeling Strategy (include Hmisc package)}
-  \KeywordTok{options}\NormalTok{(}\DataTypeTok{datadist =} \StringTok{'dd'}\NormalTok{)                  }\CommentTok{# Distribution Summaries used by rms}
-
-\CommentTok{# Packages for data management }
-\KeywordTok{library}\NormalTok{(tidyverse)                    }\CommentTok{# Imports the principal tidyverse packages}
-
-\CommentTok{# Document output options}
-\NormalTok{knitr::opts_chunk$}\KeywordTok{set}\NormalTok{(}
-    \DataTypeTok{echo        =} \OtherTok{TRUE}\NormalTok{,                                      }\CommentTok{# Render all the code}
-    \DataTypeTok{message     =} \OtherTok{FALSE}\NormalTok{,                                  }\CommentTok{# Do net render messages}
-    \DataTypeTok{warning     =} \OtherTok{FALSE}\NormalTok{,                                  }\CommentTok{# Do not render warnings}
-    \DataTypeTok{fig.height  =} \FloatTok{4.4}\NormalTok{,   }\CommentTok{# Right figure height to permit two figures in a PDF page}
-    \DataTypeTok{cache.extra =} \NormalTok{knitr::rand_seed   }\CommentTok{# cache random seed to assure reproducibility}
-\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-The following code create the packages.bib files which is the BibTeX
-lists of all the packages references we have loaded.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# Automatically create a bib database for the loaded packages}
-\NormalTok{knitr::}\KeywordTok{write_bib}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{.packages}\NormalTok{(), }\StringTok{'bookdown'}\NormalTok{, }\StringTok{'knitr'}\NormalTok{, }\StringTok{'rmarkdown'}\NormalTok{),}
-  \DataTypeTok{file =} \StringTok{'packages.bib'}
-\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\chapter{\texorpdfstring{\emph{Monday}: Introduction to Survival
-Analyses and simulation of
-data}{Monday: Introduction to Survival Analyses and simulation of data}}\label{survival}
-
-\section{Key (operative) concepts}\label{key1}
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\tightlist
-\item
-  Time has asymmetric density and can be censored:
-\end{enumerate}
-
-\begin{itemize}
-\tightlist
-\item
-  not possible to summarize it by the means
-\item
-  cannot be normal distributed
-\item
-  use exponential family
-\end{itemize}
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{1}
-\item
-  Plot the log-plot to check the distribution assumptions
-\item
-  Censoring can be:
-\end{enumerate}
-
-\begin{itemize}
-\tightlist
-\item
-  Right: event not (yet) occurred at f-up
-
-  \begin{itemize}
-  \tightlist
-  \item
-    Fixed (identical f-up for anyone)
-  \item
-    Sequential (\(min(T_i, C_i)\))
-  \item
-    Random
-  \end{itemize}
-\item
-  Left: the event has occurred before the observed period (all
-  population but not all information, e.g.~menarche date)
-\item
-  Interval: the event can be occurred between two times (but don't know
-  when)
-\item
-  Left truncated: starting point is after the beginning (different from
-  Left, all the information but not complete population)
-\end{itemize}
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{3}
-\tightlist
-\item
-  Models:
-\end{enumerate}
-
-\begin{itemize}
-\tightlist
-\item
-  statistical: non-informative censoring (Kaplan-Meier, Cox model,
-  \ldots{})
-\item
-  probabilistic: independent censoring (life tables)
-\item
-  parametric (\texttt{survival::survreg()}, need to define the
-  distribution) VS non-parametric (\texttt{survival::survfit()} or
-  \texttt{rms::npsurv()}, no need to define distribution)
-\end{itemize}
-
-\section{Simulated Data}\label{sumulation1}
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\tightlist
-\item
-  Simulate a sample of \(n = 100\) or \(1000\) exponential survival
-  times, with mean \(\theta = 5\).
-\end{enumerate}
-
-\begin{itemize}
-\tightlist
-\item
-  Non censored
-\end{itemize}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{set.seed}\NormalTok{(}\DecValTok{171002}\NormalTok{)}
-\NormalTok{n              <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DataTypeTok{thousand =} \DecValTok{1000}\NormalTok{)                                   }\CommentTok{# samples}
-\NormalTok{t              <-}\StringTok{ }\KeywordTok{rexp}\NormalTok{(n, }\DataTypeTok{rate =} \DecValTok{5}\NormalTok{)                   }\CommentTok{# random exponential times}
-\NormalTok{status_no_cens <-}\StringTok{ }\KeywordTok{rep}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DataTypeTok{times =} \NormalTok{n)         }\CommentTok{# no censored data --> all are cases}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{itemize}
-\tightlist
-\item
-  Uniform censoring over \([0, a]\), with \(a = 1, a = 0.5\) or
-  \(a = 2\)
-\end{itemize}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{a              <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DataTypeTok{cens_05 =} \FloatTok{0.5}\NormalTok{)   }\CommentTok{# upper bound of the uniform censoring dist}
-\NormalTok{cens           <-}\StringTok{ }\KeywordTok{runif}\NormalTok{(n, }\DataTypeTok{min =} \DecValTok{0}\NormalTok{, }\DataTypeTok{max =} \NormalTok{a)                    }\CommentTok{# censored times}
-\NormalTok{t_cens         <-}\StringTok{ }\KeywordTok{pmin}\NormalTok{(t, cens)    }\CommentTok{# censored times are earlier than event times}
-\NormalTok{status_cens    <-}\StringTok{ }\NormalTok{status_no_cens -}\StringTok{ }\NormalTok{(t_cens ==}\StringTok{ }\NormalTok{cens)      }\CommentTok{# remove censored cases}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{1}
-\tightlist
-\item
-  Plot the observed survival times
-\end{enumerate}
-
-\begin{itemize}
-\tightlist
-\item
-  Non censored and censored
-\end{itemize}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# NOTE: for the plots to be comparable, xlim and ylim have to be the same range}
-\CommentTok{#       for both the plots. Moreover to drow well adjusted plots, they were set}
-\CommentTok{#       a posteriori.}
-\KeywordTok{hist}\NormalTok{(t,}
-  \DataTypeTok{main =} \StringTok{'Hystogram of uncensored times'}\NormalTok{,}
-  \DataTypeTok{col  =} \StringTok{'green'}\NormalTok{,}
-  \DataTypeTok{xlim =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\FloatTok{1.5}\NormalTok{),}
-  \DataTypeTok{ylim =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{400}\NormalTok{),}
-  \DataTypeTok{labels =} \OtherTok{TRUE}                        \CommentTok{# add the labels over the top of the bars}
-\NormalTok{)}
-\KeywordTok{hist}\NormalTok{(t_cens,}
-  \DataTypeTok{main =} \StringTok{'Hystogram of censored times (a = 0.5)'}\NormalTok{,}
-  \DataTypeTok{col  =} \StringTok{'red'}\NormalTok{,}
-  \DataTypeTok{xlim =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\FloatTok{1.5}\NormalTok{),}
-  \DataTypeTok{ylim =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{400}\NormalTok{),}
-  \DataTypeTok{labels =} \OtherTok{TRUE}
-\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics[width=0.5\linewidth]{SuDACDa-notes_files/figure-latex/sim_plots-1}
-\includegraphics[width=0.5\linewidth]{SuDACDa-notes_files/figure-latex/sim_plots-2}
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{2}
-\tightlist
-\item
-  Parametric estimation of survival function
-\end{enumerate}
-
-\begin{itemize}
-\tightlist
-\item
-  Uncensored
-\end{itemize}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# `?survreg` := "Regression for a Parametric Survival Model"}
-\CommentTok{# }
-\CommentTok{# R formula: y ~ x <--> math formula: y = f(x)}
-\CommentTok{# }
-\CommentTok{# Here we want to model the response (labelled time) as they are, without any}
-\CommentTok{# furter investigation on the effect on them from some other variable}
-\KeywordTok{survreg}\NormalTok{(}\KeywordTok{Surv}\NormalTok{(t, status_no_cens) ~}\StringTok{ }\DecValTok{1}\NormalTok{,}
-  \DataTypeTok{dist =} \StringTok{'exponential'}
-\NormalTok{) %>%}
-\StringTok{  }\NormalTok{summary     }\CommentTok{# here `summary()` add some more statistics to the standard output}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## 
-## Call:
-## survreg(formula = Surv(t, status_no_cens) ~ 1, dist = "exponential")
-##             Value Std. Error     z p
-## (Intercept) -1.58     0.0316 -50.1 0
-## 
-## Scale fixed at 1 
-## 
-## Exponential distribution
-## Loglik(model)= 584.3   Loglik(intercept only)= 584.3
-## Number of Newton-Raphson Iterations: 4 
-## n= 1000
-\end{verbatim}
-
-\begin{itemize}
-\tightlist
-\item
-  Censored
-\end{itemize}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{survreg}\NormalTok{(}\KeywordTok{Surv}\NormalTok{(t_cens, status_cens) ~}\StringTok{ }\DecValTok{1}\NormalTok{,}
-  \DataTypeTok{dist =} \StringTok{'exponential'}
-\NormalTok{) %>%}
-\StringTok{  }\NormalTok{summary}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## 
-## Call:
-## survreg(formula = Surv(t_cens, status_cens) ~ 1, dist = "exponential")
-##             Value Std. Error     z p
-## (Intercept) -1.57     0.0401 -39.2 0
-## 
-## Scale fixed at 1 
-## 
-## Exponential distribution
-## Loglik(model)= 355.9   Loglik(intercept only)= 355.9
-## Number of Newton-Raphson Iterations: 4 
-## n= 1000
-\end{verbatim}
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{3}
-\tightlist
-\item
-  Non parametric estimation of survival and the distribution functions
-\end{enumerate}
-
-\begin{itemize}
-\tightlist
-\item
-  Uncensored
-\end{itemize}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# `?survfit` := "Create survival curves"}
-\KeywordTok{survfit}\NormalTok{(}\KeywordTok{Surv}\NormalTok{(t, status_no_cens) ~}\StringTok{ }\DecValTok{1}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## Call: survfit(formula = Surv(t, status_no_cens) ~ 1)
-## 
-##        n   events   median  0.95LCL  0.95UCL 
-## 1000.000 1000.000    0.140    0.128    0.158
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# Here we would like to compare to approach to survival plots:}
-\CommentTok{# 1. Using the packege _survival_, so the standard one}
-\CommentTok{# 2. Uisng the package _rms_, a comprehensive package for regression analyses}
-
-\CommentTok{# Using survival `plot` provided by the _survival_ package}
-\CommentTok{# (`?survival:::plot.survfit`), we can continue to}
-\CommentTok{# use the `survfit()` function for nonparametric survival estimation from the}
-\CommentTok{# same _survival_ package}
-\KeywordTok{survfit}\NormalTok{(}\KeywordTok{Surv}\NormalTok{(t, status_no_cens) ~}\StringTok{ }\DecValTok{1}\NormalTok{) %>%}\StringTok{ }
-\StringTok{  }\KeywordTok{plot}\NormalTok{(}
-    \DataTypeTok{xlim     =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\FloatTok{1.55}\NormalTok{),}
-    \DataTypeTok{conf.int  =} \OtherTok{TRUE}\NormalTok{,}
-    \DataTypeTok{mark.time =} \OtherTok{TRUE}\NormalTok{,}
-    \DataTypeTok{col       =} \StringTok{'green'}\NormalTok{,}
-    \DataTypeTok{main      =} \StringTok{'Uncensored --- survival'}
-\NormalTok{)}
-
-
-\CommentTok{# Using the survplot from the _rms_ package (`survplot`), we have to switch to}
-\CommentTok{# the `npsurv()` function for nonparametric survival estimation from the _rms_}
-\CommentTok{# package}
-\KeywordTok{npsurv}\NormalTok{(}\KeywordTok{Surv}\NormalTok{(t, status_no_cens) ~}\StringTok{ }\DecValTok{1}\NormalTok{) %>%}\StringTok{ }
-\StringTok{  }\KeywordTok{survplot}\NormalTok{(}
-    \DataTypeTok{xlim     =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\FloatTok{1.5}\NormalTok{),}
-    \DataTypeTok{conf.int =} \OtherTok{TRUE}\NormalTok{,}
-    \DataTypeTok{n.risk   =} \OtherTok{TRUE}\NormalTok{,}
-    \DataTypeTok{col      =} \StringTok{'green'}
-\NormalTok{)}
-\KeywordTok{title}\NormalTok{(}\DataTypeTok{main =} \StringTok{'Uncensored --- rms'}\NormalTok{) }\CommentTok{# unfortunally survplot do not have an}
-                                   \CommentTok{# integrated option for the title...}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{SuDACDa-notes_files/figure-latex/survfit_nocens-1.pdf}
-\includegraphics{SuDACDa-notes_files/figure-latex/survfit_nocens-2.pdf}
-
-\begin{itemize}
-\tightlist
-\item
-  censored
-\end{itemize}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{survfit}\NormalTok{(}\KeywordTok{Surv}\NormalTok{(t_cens, status_cens) ~}\StringTok{ }\DecValTok{1}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## Call: survfit(formula = Surv(t_cens, status_cens) ~ 1)
-## 
-##        n   events   median  0.95LCL  0.95UCL 
-## 1000.000  623.000    0.141    0.130    0.158
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{survfit}\NormalTok{(}\KeywordTok{Surv}\NormalTok{(t_cens, status_cens) ~}\StringTok{ }\DecValTok{1}\NormalTok{) %>%}
-\StringTok{  }\KeywordTok{plot}\NormalTok{(}
-    \DataTypeTok{xlim     =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\FloatTok{0.55}\NormalTok{),}
-    \DataTypeTok{conf.int  =} \OtherTok{TRUE}\NormalTok{,}
-    \DataTypeTok{mark.time =} \OtherTok{TRUE}\NormalTok{,}
-    \DataTypeTok{col      =} \StringTok{'red'}\NormalTok{,}
-    \DataTypeTok{main      =} \StringTok{'Censored (a = 0.5)'}
-\NormalTok{)}
-
-\KeywordTok{npsurv}\NormalTok{(}\KeywordTok{Surv}\NormalTok{(t_cens, status_cens) ~}\StringTok{ }\DecValTok{1}\NormalTok{) %>%}\StringTok{ }
-\StringTok{  }\KeywordTok{survplot}\NormalTok{(}
-    \DataTypeTok{xlim     =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\FloatTok{0.5}\NormalTok{),}
-    \DataTypeTok{conf.int =} \OtherTok{TRUE}\NormalTok{,}
-    \DataTypeTok{n.risk   =} \OtherTok{TRUE}\NormalTok{,}
-    \DataTypeTok{col      =} \StringTok{'red'}
-\NormalTok{)}
-\KeywordTok{title}\NormalTok{(}\DataTypeTok{main =} \StringTok{'Censored (a = 0.5) --- rms'}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{SuDACDa-notes_files/figure-latex/survfit_cens-1.pdf}
-\includegraphics{SuDACDa-notes_files/figure-latex/survfit_cens-2.pdf}
-
-\section{\texorpdfstring{\texttt{mgus} data from \textbf{survival}
-package}{mgus data from survival package}}\label{mgus}
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\tightlist
-\item
-  Load and explore data
-\end{enumerate}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{data}\NormalTok{(mgus)                                                                }\CommentTok{# load}
-\KeywordTok{head}\NormalTok{(mgus)                                                       }\CommentTok{# first 10 rows}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-##   id age    sex dxyr pcdx pctime futime death alb creat  hgb mspike
-## 1  1  78 female   68 <NA>     NA    748     1 2.8   1.2 11.5    2.0
-## 2  2  73 female   66   LP   1310   6751     1  NA    NA   NA    1.3
-## 3  3  87   male   68 <NA>     NA    277     1 2.2   1.1 11.2    1.3
-## 4  4  86   male   69 <NA>     NA   1815     1 2.8   1.3 15.3    1.8
-## 5  5  74 female   68 <NA>     NA   2587     1 3.0   0.8  9.8    1.4
-## 6  6  81   male   68 <NA>     NA    563     1 2.9   0.9 11.5    1.8
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{dim}\NormalTok{(mgus)                                              }\CommentTok{# number of rows and cols}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## [1] 241  12
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{names}\NormalTok{(mgus)                                                }\CommentTok{# name of the columns}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-##  [1] "id"     "age"    "sex"    "dxyr"   "pcdx"   "pctime" "futime"
-##  [8] "death"  "alb"    "creat"  "hgb"    "mspike"
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{str}\NormalTok{(mgus)                                   }\CommentTok{# R internal structure of the object}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## 'data.frame':    241 obs. of  12 variables:
-##  $ id    : num  1 2 3 4 5 6 7 8 9 10 ...
-##  $ age   : atomic  78 73 87 86 74 81 72 79 85 58 ...
-##   ..- attr(*, "label")= chr "AGE AT date_on"
-##  $ sex   : Factor w/ 2 levels "female","male": 1 1 2 2 1 2 1 1 1 2 ...
-##   ..- attr(*, "label")= chr "Sex"
-##  $ dxyr  : num  68 66 68 69 68 68 68 69 70 65 ...
-##  $ pcdx  : Factor w/ 4 levels "AM","LP","MA",..: NA 2 NA NA NA NA NA NA NA NA ...
-##  $ pctime: atomic  NA 1310 NA NA NA NA NA NA NA NA ...
-##   ..- attr(*, "label")= chr "Progression to Group 4 (days)"
-##  $ futime: atomic  748 6751 277 1815 2587 ...
-##   ..- attr(*, "label")= chr "Follow-Up Time"
-##  $ death : num  1 1 1 1 1 1 1 1 1 1 ...
-##  $ alb   : atomic  2.8 NA 2.2 2.8 3 2.9 3 3.1 3.2 3.5 ...
-##   ..- attr(*, "label")= chr "Serum Albumin"
-##  $ creat : atomic  1.2 NA 1.1 1.3 0.8 0.9 0.8 0.8 1 1 ...
-##   ..- attr(*, "label")= chr "Serum Creatinine"
-##  $ hgb   : atomic  11.5 NA 11.2 15.3 9.8 11.5 13.5 15.5 12.4 14.8 ...
-##   ..- attr(*, "label")= chr "Hemoglobin"
-##  $ mspike: atomic  2 1.3 1.3 1.8 1.4 1.8 1.3 1.4 1.5 2.2 ...
-##   ..- attr(*, "label")= chr "Serum M-Spike"
-##  - attr(*, "formats")=List of 1
-##   ..$ death:List of 2
-##   .. ..$ values: num  0 1
-##   .. ..$ labels: chr  "Alive" "Dead"
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{summary}\NormalTok{(mgus)                                              }\CommentTok{# summary from base R}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-##        id           age            sex           dxyr        pcdx    
-##  Min.   :  1   Min.   :34.00   female:104   Min.   :56.0   AM  :  8  
-##  1st Qu.: 61   1st Qu.:55.00   male  :137   1st Qu.:66.0   LP  :  5  
-##  Median :121   Median :63.00                Median :68.0   MA  :  7  
-##  Mean   :121   Mean   :62.87                Mean   :67.4   MM  : 44  
-##  3rd Qu.:181   3rd Qu.:72.00                3rd Qu.:70.0   NA's:177  
-##  Max.   :241   Max.   :90.00                Max.   :73.0             
-##                                                                      
-##      pctime          futime          death             alb       
-##  Min.   :  365   Min.   :    6   Min.   :0.0000   Min.   :1.800  
-##  1st Qu.: 2469   1st Qu.: 2422   1st Qu.:1.0000   1st Qu.:2.900  
-##  Median : 3778   Median : 5022   Median :1.0000   Median :3.200  
-##  Mean   : 4342   Mean   : 5425   Mean   :0.9336   Mean   :3.204  
-##  3rd Qu.: 5750   3rd Qu.: 8264   3rd Qu.:1.0000   3rd Qu.:3.500  
-##  Max.   :11685   Max.   :14325   Max.   :1.0000   Max.   :5.100  
-##  NA's   :177                                      NA's   :31     
-##      creat            hgb            mspike     
-##  Min.   :0.600   Min.   : 7.40   Min.   :0.300  
-##  1st Qu.:0.900   1st Qu.:12.20   1st Qu.:1.500  
-##  Median :1.000   Median :13.20   Median :1.700  
-##  Mean   :1.095   Mean   :13.15   Mean   :1.764  
-##  3rd Qu.:1.100   3rd Qu.:14.50   3rd Qu.:2.000  
-##  Max.   :6.400   Max.   :16.60   Max.   :3.200  
-##  NA's   :43      NA's   :1
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{describe}\NormalTok{(mgus)   }\CommentTok{# more comprehensive description from _Hisc_ package, loaded by}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## mgus 
-## 
-##  12  Variables      241  Observations
-## ---------------------------------------------------------------------------
-## id 
-##        n  missing distinct     Info     Mean      Gmd      .05      .10 
-##      241        0      241        1      121    80.67       13       25 
-##      .25      .50      .75      .90      .95 
-##       61      121      181      217      229 
-## 
-## lowest :   1   2   3   4   5, highest: 237 238 239 240 241
-## ---------------------------------------------------------------------------
-## age : AGE AT date_on 
-##        n  missing distinct     Info     Mean      Gmd      .05      .10 
-##      241        0       53    0.999    62.87    13.42       44       48 
-##      .25      .50      .75      .90      .95 
-##       55       63       72       78       81 
-## 
-## lowest : 34 35 36 37 38, highest: 84 85 86 87 90
-## ---------------------------------------------------------------------------
-## sex : Sex 
-##        n  missing distinct 
-##      241        0        2 
-##                         
-## Value      female   male
-## Frequency     104    137
-## Proportion  0.432  0.568
-## ---------------------------------------------------------------------------
-## dxyr 
-##        n  missing distinct     Info     Mean      Gmd      .05      .10 
-##      241        0       17     0.97     67.4    3.073       61       63 
-##      .25      .50      .75      .90      .95 
-##       66       68       70       70       70 
-##                                                                       
-## Value         56    58    59    60    61    62    63    64    65    66
-## Frequency      1     1     5     5     2     7     7    10    10    18
-## Proportion 0.004 0.004 0.021 0.021 0.008 0.029 0.029 0.041 0.041 0.075
-##                                                     
-## Value         67    68    69    70    71    72    73
-## Frequency     24    40    45    62     2     1     1
-## Proportion 0.100 0.166 0.187 0.257 0.008 0.004 0.004
-## ---------------------------------------------------------------------------
-## pcdx 
-##        n  missing distinct 
-##       64      177        4 
-##                                   
-## Value         AM    LP    MA    MM
-## Frequency      8     5     7    44
-## Proportion 0.125 0.078 0.109 0.688
-## ---------------------------------------------------------------------------
-## pctime : Progression to Group 4 (days) 
-##        n  missing distinct     Info     Mean      Gmd      .05      .10 
-##       64      177       63        1     4342     3030     1223     1409 
-##      .25      .50      .75      .90      .95 
-##     2469     3778     5750     8946    10051 
-## 
-## lowest :   365   700   954  1218  1249, highest:  9723 10109 10359 11354 11685
-## ---------------------------------------------------------------------------
-## futime : Follow-Up Time 
-##        n  missing distinct     Info     Mean      Gmd      .05      .10 
-##      241        0      237        1     5425     4222      283      779 
-##      .25      .50      .75      .90      .95 
-##     2422     5022     8264    11425    12140 
-## 
-## lowest :     6     7    31    32    39, highest: 12931 13019 13152 14111 14325
-## ---------------------------------------------------------------------------
-## death 
-##        n  missing distinct     Info      Sum     Mean      Gmd 
-##      241        0        2    0.186      225   0.9336   0.1245 
-## 
-## ---------------------------------------------------------------------------
-## alb : Serum Albumin 
-##        n  missing distinct     Info     Mean      Gmd      .05      .10 
-##      210       31       26    0.995    3.204   0.5293      2.3      2.6 
-##      .25      .50      .75      .90      .95 
-##      2.9      3.2      3.5      3.8      3.9 
-## 
-## lowest : 1.8 1.9 2.1 2.2 2.3, highest: 4.0 4.1 4.3 4.5 5.1
-## ---------------------------------------------------------------------------
-## creat : Serum Creatinine 
-##        n  missing distinct     Info     Mean      Gmd      .05      .10 
-##      198       43       19    0.978    1.095     0.39    0.700    0.800 
-##      .25      .50      .75      .90      .95 
-##    0.900    1.000    1.100    1.300    1.615 
-##                                                                       
-## Value        0.6   0.7   0.8   0.9   1.0   1.1   1.2   1.3   1.4   1.5
-## Frequency      4    13    26    42    35    29    18    12     4     4
-## Proportion 0.020 0.066 0.131 0.212 0.177 0.146 0.091 0.061 0.020 0.020
-##                                                                 
-## Value        1.6   1.7   2.0   2.5   2.6   3.5   3.6   3.7   6.4
-## Frequency      1     3     1     1     1     1     1     1     1
-## Proportion 0.005 0.015 0.005 0.005 0.005 0.005 0.005 0.005 0.005
-## ---------------------------------------------------------------------------
-## hgb : Hemoglobin 
-##        n  missing distinct     Info     Mean      Gmd      .05      .10 
-##      240        1       66    0.999    13.15    1.865    10.20    11.09 
-##      .25      .50      .75      .90      .95 
-##    12.20    13.20    14.50    15.11    15.51 
-## 
-## lowest :  7.4  7.7  8.4  9.5  9.6, highest: 15.9 16.1 16.2 16.5 16.6
-## ---------------------------------------------------------------------------
-## mspike : Serum M-Spike 
-##        n  missing distinct     Info     Mean      Gmd      .05      .10 
-##      241        0       23    0.993    1.764   0.4687      1.1      1.3 
-##      .25      .50      .75      .90      .95 
-##      1.5      1.7      2.0      2.3      2.5 
-## 
-## lowest : 0.3 0.8 0.9 1.0 1.1, highest: 2.5 2.6 2.7 2.9 3.2
-## ---------------------------------------------------------------------------
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-                 \CommentTok{# the _rms_ one}
-
-\NormalTok{mgus_df <-}\StringTok{ }\KeywordTok{as_tibble}\NormalTok{(mgus)         }\CommentTok{# tidy data frame (important info printed all}
-                                   \CommentTok{# together, and visualization auto-adjusted}
-                                   \CommentTok{# to the consol width)}
-\NormalTok{mgus_df}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## # A tibble: 241 x 12
-##       id   age    sex  dxyr   pcdx pctime futime death   alb creat   hgb
-##  * <dbl> <dbl> <fctr> <dbl> <fctr>  <dbl>  <dbl> <dbl> <dbl> <dbl> <dbl>
-##  1     1    78 female    68   <NA>     NA    748     1   2.8   1.2  11.5
-##  2     2    73 female    66     LP   1310   6751     1    NA    NA    NA
-##  3     3    87   male    68   <NA>     NA    277     1   2.2   1.1  11.2
-##  4     4    86   male    69   <NA>     NA   1815     1   2.8   1.3  15.3
-##  5     5    74 female    68   <NA>     NA   2587     1   3.0   0.8   9.8
-##  6     6    81   male    68   <NA>     NA    563     1   2.9   0.9  11.5
-##  7     7    72 female    68   <NA>     NA   1135     1   3.0   0.8  13.5
-##  8     8    79 female    69   <NA>     NA   2016     1   3.1   0.8  15.5
-##  9     9    85 female    70   <NA>     NA   2422     1   3.2   1.0  12.4
-## 10    10    58   male    65   <NA>     NA   6155     1   3.5   1.0  14.8
-## # ... with 231 more rows, and 1 more variables: mspike <dbl>
-\end{verbatim}
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{1}
-\tightlist
-\item
-  Non parametric Kaplan-Meyer estimation of the survival function
-\end{enumerate}
-
-\begin{itemize}
-\tightlist
-\item
-  Estimate the survival function from randomization overall and
-  according to sex.
-\end{itemize}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{survfit}\NormalTok{(}\KeywordTok{Surv}\NormalTok{(futime, death) ~}\StringTok{ }\DecValTok{1}\NormalTok{,}
-  \DataTypeTok{data =} \NormalTok{mgus_df}
-\NormalTok{) %>%}
-\StringTok{  }\KeywordTok{plot}\NormalTok{(}
-    \DataTypeTok{conf.int  =} \OtherTok{TRUE}\NormalTok{,}
-    \DataTypeTok{mark.time =} \OtherTok{TRUE}\NormalTok{,}
-    \DataTypeTok{col       =} \StringTok{'blue'}\NormalTok{,}
-    \DataTypeTok{main      =} \StringTok{'Survival function for mgus data'}
-\NormalTok{)}
-
-
-\KeywordTok{survfit}\NormalTok{(}\KeywordTok{Surv}\NormalTok{(futime, death) ~}\StringTok{ }\NormalTok{sex,}
-  \DataTypeTok{data =} \NormalTok{mgus_df}
-\NormalTok{) %>%}
-\StringTok{  }\KeywordTok{plot}\NormalTok{(}
-    \DataTypeTok{conf.int  =} \OtherTok{TRUE}\NormalTok{,}
-    \DataTypeTok{mark.time =} \OtherTok{TRUE}\NormalTok{,}
-    \DataTypeTok{main      =} \StringTok{'Survival function for mgus data according to sex'}\NormalTok{,}
-    \DataTypeTok{col       =} \KeywordTok{c}\NormalTok{(}\StringTok{'red'}\NormalTok{, }\StringTok{'blue'}\NormalTok{),}
-    \DataTypeTok{lty       =} \KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{3}\NormalTok{)}
-\NormalTok{)}
-\KeywordTok{legend}\NormalTok{(}
-  \DataTypeTok{x =} \DecValTok{10000}\NormalTok{, }\DataTypeTok{y =} \DecValTok{1}\NormalTok{,}
-  \DataTypeTok{legend =} \KeywordTok{c}\NormalTok{(}\StringTok{"Female"}\NormalTok{, }\StringTok{"Male"}\NormalTok{),}
-  \DataTypeTok{col    =} \KeywordTok{c}\NormalTok{(}\StringTok{'red'}\NormalTok{, }\StringTok{'blue'}\NormalTok{),}
-  \DataTypeTok{lty    =} \KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{3}\NormalTok{)}
-\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{SuDACDa-notes_files/figure-latex/rmgus_survfit-1.pdf}
-\includegraphics{SuDACDa-notes_files/figure-latex/rmgus_survfit-2.pdf}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# For survival object the package _survminer_ provide ggplot2 plots}
-\CommentTok{# (`?ggsurvplot`) which could be very interesting and quite comprehensive.}
-
-\KeywordTok{survfit}\NormalTok{(}\KeywordTok{Surv}\NormalTok{(futime, death) ~}\StringTok{ }\NormalTok{sex,}
-  \DataTypeTok{data =} \NormalTok{mgus_df}
-\NormalTok{) %>%}\StringTok{ }
-\StringTok{  }\KeywordTok{ggsurvplot}\NormalTok{(}
-    \DataTypeTok{conf.int            =} \OtherTok{TRUE}\NormalTok{,                      }\CommentTok{# draw confidence intervals}
-    \DataTypeTok{pval                =} \OtherTok{TRUE}\NormalTok{,                                    }\CommentTok{# show pvalue}
-    \DataTypeTok{pval.method         =} \OtherTok{TRUE}\NormalTok{,                            }\CommentTok{# print the test name}
-    \DataTypeTok{title               =} \StringTok{'Survival curves for overall death according to sex.'}\NormalTok{,}
-    \DataTypeTok{xlab                =} \StringTok{'Days'}\NormalTok{,}
-    \DataTypeTok{legend              =} \StringTok{'right'}\NormalTok{,                             }\CommentTok{# legend position}
-    \DataTypeTok{legend.title        =} \StringTok{'Sex'}\NormalTok{,}
-    \DataTypeTok{legend.labs         =} \KeywordTok{c}\NormalTok{(}\StringTok{'Female'}\NormalTok{, }\StringTok{'Male'}\NormalTok{),}
-    \DataTypeTok{risk.table          =} \OtherTok{TRUE}\NormalTok{,     }\CommentTok{# admits interesting options other than TRUE}
-    \DataTypeTok{cumcensor           =} \OtherTok{TRUE}\NormalTok{,}
-    \DataTypeTok{cumevents           =} \OtherTok{TRUE}\NormalTok{,}
-    \DataTypeTok{pval.size           =} \FloatTok{3.5}\NormalTok{,   }\CommentTok{# from here these are options passed to `ggpar`}
-    \DataTypeTok{risk.table.fontsize =} \DecValTok{3}\NormalTok{,     }\CommentTok{# for a better visualization}
-    \DataTypeTok{fontsize            =} \DecValTok{3}\NormalTok{,     }\CommentTok{# (auto-explicatives)}
-    \DataTypeTok{xscale              =} \FloatTok{30.44}
-  \NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{SuDACDa-notes_files/figure-latex/rmgus_survminer-1.pdf}
-
-\begin{quote}
-Note: No female reaches the end of the f-up!
-\end{quote}
-
-\begin{itemize}
-\tightlist
-\item
-  Test the effect of sex
-\end{itemize}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# Using __survival__ (no plot method is provided for this solution)}
-\KeywordTok{survdiff}\NormalTok{(}\KeywordTok{Surv}\NormalTok{(futime, death) ~}\StringTok{ }\NormalTok{sex,}
-  \DataTypeTok{data =} \NormalTok{mgus_df}
-\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## Call:
-## survdiff(formula = Surv(futime, death) ~ sex, data = mgus_df)
-## 
-##              N Observed Expected (O-E)^2/E (O-E)^2/V
-## sex=female 104       94      113      3.08      6.25
-## sex=male   137      131      112      3.08      6.25
-## 
-##  Chisq= 6.2  on 1 degrees of freedom, p= 0.0124
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# using __rms__}
-\NormalTok{dd <-}\StringTok{ }\KeywordTok{datadist}\NormalTok{(mgus_df)  }\CommentTok{# To evaluate cph, _rms_ needs this object which simply}
-                         \CommentTok{# store statistics about the data.}
-                         \CommentTok{# }
-                         \CommentTok{# Note: the name of the object (i.e. "dd") has to be }
-                         \CommentTok{#       exactly the same as the one specified into the}
-                         \CommentTok{#       option set just after the `library(rms)` call.}
-                         \CommentTok{#       (See: Chapter settings) }
-\NormalTok{cox_model <-}\StringTok{ }\KeywordTok{cph}\NormalTok{(}\KeywordTok{Surv}\NormalTok{(futime, death) ~}\StringTok{ }\NormalTok{sex,}
-  \DataTypeTok{data  =} \NormalTok{mgus_df}
-\NormalTok{)}
-
-\KeywordTok{summary}\NormalTok{(cox_model)                           }\CommentTok{# return effect size and HR with CI}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-##              Effects              Response : Surv(futime, death) 
-## 
-##  Factor            Low High Diff. Effect   S.E.    Lower 0.95 Upper 0.95
-##  sex - female:male 2   1    NA    -0.33853 0.13603 -0.60514   -0.071916 
-##   Hazard Ratio     2   1    NA     0.71282      NA  0.54600    0.930610
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{Predict}\NormalTok{(cox_model) %>%}\StringTok{          }\CommentTok{# Compute predicted values and confidence limits}
-\StringTok{                                }\CommentTok{#}
-\StringTok{                                }\CommentTok{# Note: pay attention to Title-case "P"redict}
-\StringTok{  }\KeywordTok{plot}\NormalTok{(}
-    \DataTypeTok{groups =} \StringTok{'sex'}\NormalTok{,}
-    \DataTypeTok{anova  =} \KeywordTok{anova}\NormalTok{(cox_model),       }\CommentTok{# Compute and print the $\textbackslash{}chi^2$ statistics}
-    \DataTypeTok{pval   =} \OtherTok{TRUE}                    \CommentTok{# print the pvalue }
-\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{SuDACDa-notes_files/figure-latex/mgus_survdiff_and_rms-1.pdf}
-
-\section{Non parametric Kaplan-Meier estimation of the survival
-function}\label{km1}
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\tightlist
-\item
-  Let consider a sample of \(n = 500\)
-\end{enumerate}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{n <-}\StringTok{ }\DecValTok{500}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{1}
-\tightlist
-\item
-  Simulate the dates of entry in the cohort, from January, 2010 to
-  January, 2017
-\end{enumerate}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{n_days <-}\StringTok{ }\FloatTok{365.25} \NormalTok{*}\StringTok{ }\DecValTok{7}              \CommentTok{# Seven years, taking into account bissextiles}
-\NormalTok{time_start <-}\StringTok{ }\KeywordTok{runif}\NormalTok{(}\DataTypeTok{n =} \NormalTok{n,}
-  \DataTypeTok{min =} \DecValTok{0}\NormalTok{,}
-  \DataTypeTok{max =} \NormalTok{n_days}
-\NormalTok{) %>%}\StringTok{ }
-\StringTok{  }\KeywordTok{as.Date}\NormalTok{(}\DataTypeTok{origin =} \StringTok{'2010-01-01'}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{2}
-\tightlist
-\item
-  Simulate the data-set of death, assuming exponential death times of
-  mean \(2\) years
-\end{enumerate}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{mean_death_time <-}\StringTok{ }\FloatTok{365.25} \NormalTok{*}\StringTok{ }\DecValTok{2}
-\NormalTok{death_t         <-}\StringTok{ }\KeywordTok{rexp}\NormalTok{(n, }\DataTypeTok{rate =} \DecValTok{1} \NormalTok{/}\StringTok{ }\NormalTok{mean_death_time)}
-\NormalTok{status_no_cens  <-}\StringTok{ }\KeywordTok{rep}\NormalTok{(}\DecValTok{1}\NormalTok{, n)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{3}
-\tightlist
-\item
-  Let fix the reference date of the analyses of June, 2017
-\end{enumerate}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{end_date     <-}\StringTok{ }\KeywordTok{as.Date}\NormalTok{(}\StringTok{'2017-06-01'}\NormalTok{)           }\CommentTok{# Fixed date for the end of f-up}
-\NormalTok{death_r_cens <-}\StringTok{ }\KeywordTok{pmin}\NormalTok{(death_t, end_date -}\StringTok{ }\NormalTok{time_start)}
-\NormalTok{status_cens  <-}\StringTok{ }\NormalTok{status_no_cens -}\StringTok{ }\NormalTok{(death_t ==}\StringTok{ }\NormalTok{death_r_cens)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{4}
-\tightlist
-\item
-  Estimate the survival function from randomization
-\end{enumerate}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{survfit}\NormalTok{(}\KeywordTok{Surv}\NormalTok{(death_r_cens, status_cens) ~}\StringTok{ }\DecValTok{1}\NormalTok{) %>%}\StringTok{ }
-\StringTok{  }\KeywordTok{plot}\NormalTok{(}
-    \DataTypeTok{conf.int  =} \OtherTok{TRUE}\NormalTok{,}
-    \DataTypeTok{mark.time =} \OtherTok{TRUE}\NormalTok{,}
-    \DataTypeTok{main      =} \StringTok{'Survival curve from randomization (right censored at 2017-06-01)'}\NormalTok{,}
-    \DataTypeTok{col       =} \StringTok{'blue'}\NormalTok{,}
-    \DataTypeTok{xlab      =} \StringTok{'Years'}\NormalTok{,}
-    \DataTypeTok{xscale    =} \FloatTok{365.25}
-\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{SuDACDa-notes_files/figure-latex/ex_surv_curves-1.pdf}
-
-\chapter{\texorpdfstring{\emph{Tuesday}: Cox
-models}{Tuesday: Cox models}}\label{cox}
-
-\section{Key (operative) concepts}\label{key2}
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\tightlist
-\item
-  Non-informative censoring assumption!
-\end{enumerate}
-
-\begin{quote}
-We cannot test for it, but we can be convinced of it
-\end{quote}
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{1}
-\tightlist
-\item
-  Test any covariates for proportional hazard. If fail:
-\end{enumerate}
-
-\begin{itemize}
-\tightlist
-\item
-  If \(H_0\) is valid, it is not a problem
-\item
-  Is it due to outliers?
-\item
-  Does this variable really need?
-\item
-  \ldots{} do you really think that proportional of hazard should hold?
-  What about shift to a different model?
-\end{itemize}
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{2}
-\tightlist
-\item
-  Test continuous variable for log-linearity. If fail:
-\end{enumerate}
-
-\begin{itemize}
-\tightlist
-\item
-  try a transformation of the variable (i.e., log, spline, \ldots{})
-\item
-  if it is not possible (e.g. \emph{U-shape}) perform a categorization
-\end{itemize}
-
-\begin{quote}
-When performing categorization do not base it on the p-value: you have
-to explain why this choiche is clinically relevant and not statistically
-significant!
-\end{quote}
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{3}
-\tightlist
-\item
-  The biggest problem with databases with more observations for each
-  patients is not the model but to produce a table with the right
-  information in the right position. In particular we need the following
-  columns
-\end{enumerate}
-
-\begin{itemize}
-\tightlist
-\item
-  id
-\item
-  start
-\item
-  end
-\item
-  event
-\item
-  covariates\ldots{}
-\end{itemize}
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{4}
-\tightlist
-\item
-  Get results easy to explain to / understand by a clinician!
-\end{enumerate}
-
-\section{Basic tests and funtions}\label{test2}
-
-For this part we will use the data \texttt{pbc} (\texttt{?pbc}) from the
-package \textbf{survival}.
-
-\begin{quote}
-Note: \texttt{data(pbc)} load the \texttt{pbc} data-set and the
-\texttt{pbcseq} one, so on one side we do not need to call
-\texttt{data(pbcseq)} to load the letter, on the other side
-\texttt{data(pbcseq)} will throw an error because to load it we have to
-call \texttt{data(pbc)}. (We will use both data-sets.)
-\end{quote}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{data}\NormalTok{(pbc)                                                    }\CommentTok{# load the data-set}
-\CommentTok{# ?pbc}
-\NormalTok{pbc_df <-}\StringTok{ }\KeywordTok{as.tibble}\NormalTok{(pbc)                       }\CommentTok{# create the tibble version of it}
-\NormalTok{dd <-}\StringTok{ }\KeywordTok{datadist}\NormalTok{(pbc_df)     }\CommentTok{# store in the dd variable its `datadist()` for _rms_}
-
-\NormalTok{pbc_df                                                       }\CommentTok{# give a look at it}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## # A tibble: 418 x 20
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Survival Data Analysis for Cancer Data</title>
+  <meta name="description" content="Examples and exercise from the Politecnico Ph.D. course by prof. Sylvie Chevret and prof. Matthieu Resche-Rigon.">
+  <meta name="generator" content="bookdown 0.5 and GitBook 2.6.7">
+
+  <meta property="og:title" content="Survival Data Analysis for Cancer Data" />
+  <meta property="og:type" content="book" />
+  <meta property="og:url" content="https://corradolanera.github.io/SuDACDa/" />
+  
+  <meta property="og:description" content="Examples and exercise from the Politecnico Ph.D. course by prof. Sylvie Chevret and prof. Matthieu Resche-Rigon." />
+  <meta name="github-repo" content="CorradoLanera/SuDACDa" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Survival Data Analysis for Cancer Data" />
+  
+  <meta name="twitter:description" content="Examples and exercise from the Politecnico Ph.D. course by prof. Sylvie Chevret and prof. Matthieu Resche-Rigon." />
+  
+
+<meta name="author" content="Corrado Lanera, Danila Azzolina, Daniele Bottigliengo">
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="survival.html">
+<link rel="next" href="heterogeneity.html">
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Survival Data Analysis for Cancer Data</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Introduction</a><ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#contributions"><i class="fa fa-check"></i>Contributions</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#settings"><i class="fa fa-check"></i>Settings</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="survival.html"><a href="survival.html"><i class="fa fa-check"></i><b>1</b> <em>Monday</em>: Introduction to Survival Analyses and simulation of data</a><ul>
+<li class="chapter" data-level="1.1" data-path="survival.html"><a href="survival.html#key1"><i class="fa fa-check"></i><b>1.1</b> Key (operative) concepts</a></li>
+<li class="chapter" data-level="1.2" data-path="survival.html"><a href="survival.html#sumulation1"><i class="fa fa-check"></i><b>1.2</b> Simulated Data</a></li>
+<li class="chapter" data-level="1.3" data-path="survival.html"><a href="survival.html#mgus"><i class="fa fa-check"></i><b>1.3</b> <code>mgus</code> data from <strong>survival</strong> package</a></li>
+<li class="chapter" data-level="1.4" data-path="survival.html"><a href="survival.html#km1"><i class="fa fa-check"></i><b>1.4</b> Non parametric Kaplan-Meier estimation of the survival function</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="cox.html"><a href="cox.html"><i class="fa fa-check"></i><b>2</b> <em>Tuesday</em>: Cox models</a><ul>
+<li class="chapter" data-level="2.1" data-path="cox.html"><a href="cox.html#key2"><i class="fa fa-check"></i><b>2.1</b> Key (operative) concepts</a></li>
+<li class="chapter" data-level="2.2" data-path="cox.html"><a href="cox.html#test2"><i class="fa fa-check"></i><b>2.2</b> Basic tests and funtions</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="cox.html"><a href="cox.html#impact-of-sex-on-death-sex2"><i class="fa fa-check"></i><b>2.2.1</b> Impact of sex on death {sex2}</a></li>
+<li class="chapter" data-level="2.2.2" data-path="cox.html"><a href="cox.html#age2"><i class="fa fa-check"></i><b>2.2.2</b> Impact of age on death</a></li>
+<li class="chapter" data-level="2.2.3" data-path="cox.html"><a href="cox.html#ast2"><i class="fa fa-check"></i><b>2.2.3</b> Impact of aspartate aminotransferase (<code>ast</code>) on death</a></li>
+<li class="chapter" data-level="2.2.4" data-path="cox.html"><a href="cox.html#platelet2"><i class="fa fa-check"></i><b>2.2.4</b> Impact of <strong>platelet</strong> on death</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="cox.html"><a href="cox.html#adjusted2"><i class="fa fa-check"></i><b>2.3</b> Investigation on adjusted variables and interactions</a></li>
+<li class="chapter" data-level="2.4" data-path="cox.html"><a href="cox.html#longitudinal"><i class="fa fa-check"></i><b>2.4</b> Longitudinal suvival data analayses</a><ul>
+<li class="chapter" data-level="2.4.1" data-path="cox.html"><a href="cox.html#bilurubine2"><i class="fa fa-check"></i><b>2.4.1</b> Impact of bilurubine of death</a></li>
+<li class="chapter" data-level="2.4.2" data-path="cox.html"><a href="cox.html#ast_full2"><i class="fa fa-check"></i><b>2.4.2</b> Impact of ast</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="cox.html"><a href="cox.html#prognostic2"><i class="fa fa-check"></i><b>2.5</b> Prognostic model</a><ul>
+<li class="chapter" data-level="2.5.1" data-path="cox.html"><a href="cox.html#prognostic-model-with-ascites-edema-sex-bili-ast-platelet-stage"><i class="fa fa-check"></i><b>2.5.1</b> prognostic model with <code>àscites</code>, <code>edema</code>, <code>sex</code>, <code>bili</code>, <code>ast</code>, <code>platelet</code>, <code id="model2">stage</code></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="heterogeneity.html"><a href="heterogeneity.html"><i class="fa fa-check"></i><b>3</b> <em>Wednesday</em>: Heterogeneity of treatment effects</a><ul>
+<li class="chapter" data-level="3.1" data-path="heterogeneity.html"><a href="heterogeneity.html#key3"><i class="fa fa-check"></i><b>3.1</b> Key (operative) concepts</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="software.html"><a href="software.html"><i class="fa fa-check"></i>Software</a><ul>
+<li class="chapter" data-level="" data-path="software.html"><a href="software.html#packages"><i class="fa fa-check"></i>Packages</a></li>
+<li class="chapter" data-level="" data-path="software.html"><a href="software.html#system-information"><i class="fa fa-check"></i>System Information</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/CorradoLanera/SuDACDa" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Survival Data Analysis for Cancer Data</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="cox" class="section level1">
+<h1><span class="header-section-number">Chapter 2</span> <em>Tuesday</em>: Cox models</h1>
+<div id="key2" class="section level2">
+<h2><span class="header-section-number">2.1</span> Key (operative) concepts</h2>
+<ol style="list-style-type: decimal">
+<li>Non-informative censoring assumption!</li>
+</ol>
+<blockquote>
+<p>We cannot test for it, but we can be convinced of it</p>
+</blockquote>
+<ol start="2" style="list-style-type: decimal">
+<li>Test any covariates for proportional hazard. If fail:</li>
+</ol>
+<ul>
+<li>If <span class="math inline">\(H_0\)</span> is valid, it is not a problem</li>
+<li>Is it due to outliers?</li>
+<li>Does this variable really need?</li>
+<li>… do you really think that proportional of hazard should hold? What about shift to a different model?</li>
+</ul>
+<ol start="3" style="list-style-type: decimal">
+<li>Test continuous variable for log-linearity. If fail:</li>
+</ol>
+<ul>
+<li>try a transformation of the variable (i.e., log, spline, …)</li>
+<li>if it is not possible (e.g. <em>U-shape</em>) perform a categorization</li>
+</ul>
+<blockquote>
+<p>When performing categorization do not base it on the p-value: you have to explain why this choiche is clinically relevant and not statistically significant!</p>
+</blockquote>
+<ol start="4" style="list-style-type: decimal">
+<li>The biggest problem with databases with more observations for each patients is not the model but to produce a table with the right information in the right position. In particular we need the following columns</li>
+</ol>
+<ul>
+<li>id</li>
+<li>start</li>
+<li>end</li>
+<li>event</li>
+<li>covariates…</li>
+</ul>
+<ol start="5" style="list-style-type: decimal">
+<li>Get results easy to explain to / understand by a clinician!</li>
+</ol>
+</div>
+<div id="test2" class="section level2">
+<h2><span class="header-section-number">2.2</span> Basic tests and funtions</h2>
+<p>For this part we will use the data <code>pbc</code> (<code>?pbc</code>) from the package <strong>survival</strong>.</p>
+<blockquote>
+<p>Note: <code>data(pbc)</code> load the <code>pbc</code> data-set and the <code>pbcseq</code> one, so on one side we do not need to call <code>data(pbcseq)</code> to load the letter, on the other side <code>data(pbcseq)</code> will throw an error because to load it we have to call <code>data(pbc)</code>. (We will use both data-sets.)</p>
+</blockquote>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(pbc)                                                    <span class="co"># load the data-set</span>
+<span class="co"># ?pbc</span>
+pbc_df &lt;-<span class="st"> </span><span class="kw">as.tibble</span>(pbc)                       <span class="co"># create the tibble version of it</span>
+dd &lt;-<span class="st"> </span><span class="kw">datadist</span>(pbc_df)     <span class="co"># store in the dd variable its `datadist()` for _rms_</span>
+
+pbc_df                                                       <span class="co"># give a look at it</span></code></pre></div>
+<pre><code>## # A tibble: 418 x 20
 ##       id  time status   trt      age    sex ascites hepato spiders edema
-##    <int> <int>  <int> <int>    <dbl> <fctr>   <int>  <int>   <int> <dbl>
+##    &lt;int&gt; &lt;int&gt;  &lt;int&gt; &lt;int&gt;    &lt;dbl&gt; &lt;fctr&gt;   &lt;int&gt;  &lt;int&gt;   &lt;int&gt; &lt;dbl&gt;
 ##  1     1   400      2     1 58.76523      f       1      1       1   1.0
 ##  2     2  4500      0     1 56.44627      f       0      1       1   0.0
 ##  3     3  1012      2     1 70.07255      m       0      0       0   0.5
@@ -1210,19 +225,11 @@ call \texttt{data(pbc)}. (We will use both data-sets.)
 ##  8     8  2466      2     2 53.05681      f       0      0       0   0.0
 ##  9     9  2400      2     1 42.50787      f       0      0       1   0.0
 ## 10    10    51      2     2 70.55989      f       1      0       1   1.0
-## # ... with 408 more rows, and 10 more variables: bili <dbl>, chol <int>,
-## #   albumin <dbl>, copper <int>, alk.phos <dbl>, ast <dbl>, trig <int>,
-## #   platelet <int>, protime <dbl>, stage <int>
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{describe}\NormalTok{(pbc_df)                                 }\CommentTok{# and whatch at some statistics}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## pbc_df 
+## # ... with 408 more rows, and 10 more variables: bili &lt;dbl&gt;, chol &lt;int&gt;,
+## #   albumin &lt;dbl&gt;, copper &lt;int&gt;, alk.phos &lt;dbl&gt;, ast &lt;dbl&gt;, trig &lt;int&gt;,
+## #   platelet &lt;int&gt;, protime &lt;dbl&gt;, stage &lt;int&gt;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">describe</span>(pbc_df)                                 <span class="co"># and whatch at some statistics</span></code></pre></div>
+<pre><code>## pbc_df 
 ## 
 ##  20  Variables      418  Observations
 ## ---------------------------------------------------------------------------
@@ -1378,82 +385,40 @@ call \texttt{data(pbc)}. (We will use both data-sets.)
 ## Value          1     2     3     4
 ## Frequency     21    92   155   144
 ## Proportion 0.051 0.223 0.376 0.350
-## ---------------------------------------------------------------------------
-\end{verbatim}
+## ---------------------------------------------------------------------------</code></pre>
+<div id="impact-of-sex-on-death-sex2" class="section level3">
+<h3><span class="header-section-number">2.2.1</span> Impact of sex on death {sex2}</h3>
+<p>First of all we have to ask to our self, and to the clinicians, some questions:</p>
+<ol style="list-style-type: decimal">
+<li><p>There are non-informative censoring? Yes, because there is a final data-independent date (i.e. July, 1986). This is completely non-informative with regards to the patients. So we can suspect a non-informative censoring and start investigations using Cox model.</p></li>
+<li><p>What we have to do with the transplant? I.e., <code>event</code> has three levels: censored, transplant, dead; how we have to consider transplanted patients? In this case, clinicians answered that the transplant status is completely random! So, we can believe that it is a non-informative censoring.<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></p></li>
+</ol>
+<p>Moreover we have to consider, before to start, that <code>sex</code> is a categorical variable, so we have to check (only) the proportionality of the hazards.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Using _survival_ (Cox model for proportional hazard against sex)</span>
+cox_sex &lt;-<span class="st"> </span><span class="kw">coxph</span>(<span class="kw">Surv</span>(time, status ==<span class="st"> </span><span class="dv">2</span>) ~<span class="st"> </span>sex,
+  <span class="dt">data =</span> pbc_df
+)
 
-\subsection{Impact of sex on death
-\{sex2\}}\label{impact-of-sex-on-death-sex2}
-
-First of all we have to ask to our self, and to the clinicians, some
-questions:
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\item
-  There are non-informative censoring? Yes, because there is a final
-  data-independent date (i.e.~July, 1986). This is completely
-  non-informative with regards to the patients. So we can suspect a
-  non-informative censoring and start investigations using Cox model.
-\item
-  What we have to do with the transplant? I.e., \texttt{event} has three
-  levels: censored, transplant, dead; how we have to consider
-  transplanted patients? In this case, clinicians answered that the
-  transplant status is completely random! So, we can believe that it is
-  a non-informative censoring.\footnote{In reality this is not really
-    true because who stay better is on the top of the list!}
-\end{enumerate}
-
-Moreover we have to consider, before to start, that \texttt{sex} is a
-categorical variable, so we have to check (only) the proportionality of
-the hazards.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# Using _survival_ (Cox model for proportional hazard against sex)}
-\NormalTok{cox_sex <-}\StringTok{ }\KeywordTok{coxph}\NormalTok{(}\KeywordTok{Surv}\NormalTok{(time, status ==}\StringTok{ }\DecValTok{2}\NormalTok{) ~}\StringTok{ }\NormalTok{sex,}
-  \DataTypeTok{data =} \NormalTok{pbc_df}
-\NormalTok{)}
-
-\KeywordTok{cox.zph}\NormalTok{(cox_sex)                           }\CommentTok{# test for proportionality of hazards}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-##          rho chisq     p
-## sexf -0.0563 0.502 0.479
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{cox.zph}\NormalTok{(cox_sex) %>%}\StringTok{ }
-\StringTok{  }\KeywordTok{plot}\NormalTok{(}
-    \DataTypeTok{main =} \StringTok{'Graph of the scaled Schoenfeld residuals for sex, along with a smooth curve'}\NormalTok{,}
-    \DataTypeTok{col =} \StringTok{'blue'}
-\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{SuDACDa-notes_files/figure-latex/unnamed-chunk-3-1.pdf}
-
-The proportional hazard assumption is not invalidate so we can continue
-with the analyses.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{summary}\NormalTok{(cox_sex)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## Call:
+<span class="kw">cox.zph</span>(cox_sex)                           <span class="co"># test for proportionality of hazards</span></code></pre></div>
+<pre><code>##          rho chisq     p
+## sexf -0.0563 0.502 0.479</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cox.zph</span>(cox_sex) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">plot</span>(
+    <span class="dt">main =</span> <span class="st">&#39;Graph of the scaled Schoenfeld residuals for sex, along with a smooth curve&#39;</span>,
+    <span class="dt">col =</span> <span class="st">&#39;blue&#39;</span>
+)</code></pre></div>
+<p><img src="SuDACDa-notes_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>The proportional hazard assumption is not invalidate so we can continue with the analyses.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(cox_sex)</code></pre></div>
+<pre><code>## Call:
 ## coxph(formula = Surv(time, status == 2) ~ sex, data = pbc_df)
 ## 
 ##   n= 418, number of events= 161 
 ## 
-##         coef exp(coef) se(coef)      z Pr(>|z|)  
+##         coef exp(coef) se(coef)      z Pr(&gt;|z|)  
 ## sexf -0.3809    0.6833   0.2221 -1.714   0.0864 .
 ## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
 ##      exp(coef) exp(-coef) lower .95 upper .95
 ## sexf    0.6833      1.464    0.4421     1.056
@@ -1462,124 +427,65 @@ with the analyses.
 ## Rsquare= 0.006   (max possible= 0.985 )
 ## Likelihood ratio test= 2.69  on 1 df,   p=0.101
 ## Wald test            = 2.94  on 1 df,   p=0.08645
-## Score (logrank) test = 2.97  on 1 df,   p=0.08459
-\end{verbatim}
+## Score (logrank) test = 2.97  on 1 df,   p=0.08459</code></pre>
+<p>The effect of sex, viewed as hazard ration, say that if you are a female it seems that you have a lower risk to die, but it is not significant (i.e., <span class="math inline">\(p\)</span>-value <span class="math inline">\(&gt; 0.05\)</span> and CI include <span class="math inline">\(1\)</span>).</p>
+<blockquote>
+<p>Anyone have the same risk, 1, to die… What the hazard ration say is that if at the begin of a day you are alive, if you a re a woman you have 32% less probability to die before the end of the day respect a men.</p>
+</blockquote>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Using rms</span>
+rms_sex &lt;-<span class="st"> </span><span class="kw">cph</span>(<span class="kw">Surv</span>(time, status ==<span class="st"> </span><span class="dv">2</span>) ~<span class="st"> </span>sex,
+  <span class="dt">data =</span> pbc_df,
+  <span class="dt">x    =</span> <span class="ot">TRUE</span>,                    <span class="co"># to compute cox.zph, we need to store x and y</span>
+  <span class="dt">y    =</span> <span class="ot">TRUE</span>
+)
 
-The effect of sex, viewed as hazard ration, say that if you are a female
-it seems that you have a lower risk to die, but it is not significant
-(i.e., \(p\)-value \(> 0.05\) and CI include \(1\)).
-
-\begin{quote}
-Anyone have the same risk, 1, to die\ldots{} What the hazard ration say
-is that if at the begin of a day you are alive, if you a re a woman you
-have 32\% less probability to die before the end of the day respect a
-men.
-\end{quote}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# Using rms}
-\NormalTok{rms_sex <-}\StringTok{ }\KeywordTok{cph}\NormalTok{(}\KeywordTok{Surv}\NormalTok{(time, status ==}\StringTok{ }\DecValTok{2}\NormalTok{) ~}\StringTok{ }\NormalTok{sex,}
-  \DataTypeTok{data =} \NormalTok{pbc_df,}
-  \DataTypeTok{x    =} \OtherTok{TRUE}\NormalTok{,                    }\CommentTok{# to compute cox.zph, we need to store x and y}
-  \DataTypeTok{y    =} \OtherTok{TRUE}
-\NormalTok{)}
-
-\KeywordTok{cox.zph}\NormalTok{(rms_sex)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-##           rho chisq     p
-## sex=f -0.0563 0.501 0.479
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{cox.zph}\NormalTok{(rms_sex) %>%}\StringTok{ }
-\StringTok{  }\KeywordTok{plot}\NormalTok{(}\DataTypeTok{col =} \StringTok{'green'}\NormalTok{)                       }\CommentTok{# exactly the same results as before!}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{SuDACDa-notes_files/figure-latex/unnamed-chunk-5-1.pdf}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{summary}\NormalTok{(rms_sex)       }\CommentTok{# a cleaner and more informative output, note Low and High}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-##              Effects              Response : Surv(time, status == 2) 
+<span class="kw">cox.zph</span>(rms_sex)</code></pre></div>
+<pre><code>##           rho chisq     p
+## sex=f -0.0563 0.501 0.479</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cox.zph</span>(rms_sex) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">plot</span>(<span class="dt">col =</span> <span class="st">&#39;green&#39;</span>)                       <span class="co"># exactly the same results as before!</span></code></pre></div>
+<p><img src="SuDACDa-notes_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(rms_sex)       <span class="co"># a cleaner and more informative output, note Low and High</span></code></pre></div>
+<pre><code>##              Effects              Response : Surv(time, status == 2) 
 ## 
 ##  Factor        Low High Diff. Effect  S.E.    Lower 0.95 Upper 0.95
 ##  sex - m:f     2   1    NA    0.38206 0.22205 -0.053149  0.81727   
-##   Hazard Ratio 2   1    NA    1.46530      NA  0.948240  2.26430
-\end{verbatim}
+##   Hazard Ratio 2   1    NA    1.46530      NA  0.948240  2.26430</code></pre>
+</div>
+<div id="age2" class="section level3">
+<h3><span class="header-section-number">2.2.2</span> Impact of age on death</h3>
+<ul>
+<li>we have to check for the proportional HR</li>
+<li>It is continuous variable, we have to check the the log-linearity too</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Using survival</span>
+cox_age &lt;-<span class="st"> </span><span class="kw">coxph</span>(<span class="kw">Surv</span>(time, status ==<span class="st"> </span><span class="dv">2</span>) ~<span class="st"> </span>age,
+  <span class="dt">data =</span> pbc_df
+)
 
-\subsection{Impact of age on death}\label{age2}
-
-\begin{itemize}
-\tightlist
-\item
-  we have to check for the proportional HR
-\item
-  It is continuous variable, we have to check the the log-linearity too
-\end{itemize}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# Using survival}
-\NormalTok{cox_age <-}\StringTok{ }\KeywordTok{coxph}\NormalTok{(}\KeywordTok{Surv}\NormalTok{(time, status ==}\StringTok{ }\DecValTok{2}\NormalTok{) ~}\StringTok{ }\NormalTok{age,}
-  \DataTypeTok{data =} \NormalTok{pbc_df}
-\NormalTok{)}
-
-\KeywordTok{cox.zph}\NormalTok{(cox_age)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-##         rho chisq    p
-## age -0.0304 0.139 0.71
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{cox.zph}\NormalTok{(cox_age) %>%}
-\StringTok{  }\KeywordTok{plot}\NormalTok{(}\DataTypeTok{col =} \StringTok{'blue'}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{SuDACDa-notes_files/figure-latex/unnamed-chunk-6-1.pdf}
-
-The proportional hazard hypothesis is not invalidated
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# [Note: unfortunately the option `noprint` of the funciton `rcspline.plot`}
-\CommentTok{#  does not work and the space-waste list of all the coefficients and relative}
-\CommentTok{#  SE will be printed all the time. Sorry, we are working for a solution.]}
-\KeywordTok{rcspline.plot}\NormalTok{(}
-  \DataTypeTok{x       =} \NormalTok{pbc_df$age,}
-  \DataTypeTok{y       =} \NormalTok{pbc_df$time,}
-  \DataTypeTok{event   =} \NormalTok{pbc_df$status ==}\StringTok{ }\DecValTok{2}\NormalTok{,}
-  \DataTypeTok{nk      =} \DecValTok{3}\NormalTok{,                   }\CommentTok{# default are 5 knots, too mutch for this model}
-\CommentTok{#  model   = 'cox',          # If event is present, model is assumed to be "cox"}
-  \DataTypeTok{xlab    =} \StringTok{'Age'}
-\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-##           x             
+<span class="kw">cox.zph</span>(cox_age)</code></pre></div>
+<pre><code>##         rho chisq    p
+## age -0.0304 0.139 0.71</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cox.zph</span>(cox_age) %&gt;%
+<span class="st">  </span><span class="kw">plot</span>(<span class="dt">col =</span> <span class="st">&#39;blue&#39;</span>)</code></pre></div>
+<p><img src="SuDACDa-notes_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>The proportional hazard hypothesis is not invalidated</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># [Note: unfortunately the option `noprint` of the funciton `rcspline.plot`</span>
+<span class="co">#  does not work and the space-waste list of all the coefficients and relative</span>
+<span class="co">#  SE will be printed all the time. Sorry, we are working for a solution.]</span>
+<span class="kw">rcspline.plot</span>(
+  <span class="dt">x       =</span> pbc_df$age,
+  <span class="dt">y       =</span> pbc_df$time,
+  <span class="dt">event   =</span> pbc_df$status ==<span class="st"> </span><span class="dv">2</span>,
+  <span class="dt">nk      =</span> <span class="dv">3</span>,                   <span class="co"># default are 5 knots, too mutch for this model</span>
+<span class="co">#  model   = &#39;cox&#39;,          # If event is present, model is assumed to be &quot;cox&quot;</span>
+  <span class="dt">xlab    =</span> <span class="st">&#39;Age&#39;</span>
+)</code></pre></div>
+<pre><code>##           x             
 ##  0.05307827 -0.01469916 
-## [1] -873.4721 -860.6518
-\end{verbatim}
-
-\includegraphics{SuDACDa-notes_files/figure-latex/unnamed-chunk-7-1.pdf}
-
-\begin{verbatim}
-## 
+## [1] -873.4721 -860.6518</code></pre>
+<p><img src="SuDACDa-notes_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<pre><code>## 
 ## cbind(xe, lower, upper)
 ## 
 ##              xe                   
@@ -2182,33 +1088,21 @@ The proportional hazard hypothesis is not invalidated
 ## [597,] 69.89599 1.3544385 5.172153
 ## [598,] 69.95873 1.3571127 5.173241
 ## [599,] 70.02147 1.3597853 5.174330
-## [600,] 70.08421 1.3624561 5.175421
-\end{verbatim}
-
-The log-linearity is not invalidated
-
-\begin{quote}
-Note: sometimes you \emph{know} the answer for log-linearity (for any
-reason), in those cases do not test for it!! (It is not very powerful so
-for small sample sizes it never reject it)
-\end{quote}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{summary}\NormalTok{(cox_age)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## Call:
+## [600,] 70.08421 1.3624561 5.175421</code></pre>
+<p>The log-linearity is not invalidated</p>
+<blockquote>
+<p>Note: sometimes you <em>know</em> the answer for log-linearity (for any reason), in those cases do not test for it!! (It is not very powerful so for small sample sizes it never reject it)</p>
+</blockquote>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(cox_age)</code></pre></div>
+<pre><code>## Call:
 ## coxph(formula = Surv(time, status == 2) ~ age, data = pbc_df)
 ## 
 ##   n= 418, number of events= 161 
 ## 
-##         coef exp(coef) se(coef)     z Pr(>|z|)    
+##         coef exp(coef) se(coef)     z Pr(&gt;|z|)    
 ## age 0.039185  1.039963 0.007847 4.994 5.92e-07 ***
 ## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
 ##     exp(coef) exp(-coef) lower .95 upper .95
 ## age      1.04     0.9616     1.024     1.056
@@ -2217,31 +1111,21 @@ for small sample sizes it never reject it)
 ## Rsquare= 0.058   (max possible= 0.985 )
 ## Likelihood ratio test= 25.19  on 1 df,   p=5.205e-07
 ## Wald test            = 24.94  on 1 df,   p=5.922e-07
-## Score (logrank) test = 25.3  on 1 df,   p=4.918e-07
-\end{verbatim}
-
-The effect is significant but too low to understand, so we can change
-the ``measure of time'' to expand it.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{coxph}\NormalTok{(}\KeywordTok{Surv}\NormalTok{(time, status ==}\StringTok{ }\DecValTok{2}\NormalTok{) ~}\StringTok{ }\KeywordTok{I}\NormalTok{(age /}\StringTok{ }\DecValTok{10}\NormalTok{),          }\CommentTok{# consider 10 years as one}
-  \DataTypeTok{data =} \NormalTok{pbc_df}
-\NormalTok{) %>%}
-\StringTok{  }\NormalTok{summary}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## Call:
+## Score (logrank) test = 25.3  on 1 df,   p=4.918e-07</code></pre>
+<p>The effect is significant but too low to understand, so we can change the “measure of time” to expand it.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">coxph</span>(<span class="kw">Surv</span>(time, status ==<span class="st"> </span><span class="dv">2</span>) ~<span class="st"> </span><span class="kw">I</span>(age /<span class="st"> </span><span class="dv">10</span>),          <span class="co"># consider 10 years as one</span>
+  <span class="dt">data =</span> pbc_df
+) %&gt;%
+<span class="st">  </span>summary</code></pre></div>
+<pre><code>## Call:
 ## coxph(formula = Surv(time, status == 2) ~ I(age/10), data = pbc_df)
 ## 
 ##   n= 418, number of events= 161 
 ## 
-##              coef exp(coef) se(coef)     z Pr(>|z|)    
+##              coef exp(coef) se(coef)     z Pr(&gt;|z|)    
 ## I(age/10) 0.39185   1.47972  0.07847 4.994 5.92e-07 ***
 ## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
 ##           exp(coef) exp(-coef) lower .95 upper .95
 ## I(age/10)      1.48     0.6758     1.269     1.726
@@ -2250,147 +1134,72 @@ the ``measure of time'' to expand it.
 ## Rsquare= 0.058   (max possible= 0.985 )
 ## Likelihood ratio test= 25.19  on 1 df,   p=5.205e-07
 ## Wald test            = 24.94  on 1 df,   p=5.922e-07
-## Score (logrank) test = 25.3  on 1 df,   p=4.918e-07
-\end{verbatim}
+## Score (logrank) test = 25.3  on 1 df,   p=4.918e-07</code></pre>
+<p>Here, the effect is increased, but we have to pay attention the an increment of “one”, here, corresponds to an increment of ten years!</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Using rms</span>
+rms_age &lt;-<span class="st"> </span><span class="kw">cph</span>(<span class="kw">Surv</span>(time, status ==<span class="st"> </span><span class="dv">2</span>) ~<span class="st"> </span>age,
+  <span class="dt">data =</span> pbc_df,
+  <span class="dt">x    =</span> <span class="ot">TRUE</span>,                    <span class="co"># to compute cox.zph, we need to store x and y</span>
+  <span class="dt">y    =</span> <span class="ot">TRUE</span>
+)
 
-Here, the effect is increased, but we have to pay attention the an
-increment of ``one'', here, corresponds to an increment of ten years!
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# Using rms}
-\NormalTok{rms_age <-}\StringTok{ }\KeywordTok{cph}\NormalTok{(}\KeywordTok{Surv}\NormalTok{(time, status ==}\StringTok{ }\DecValTok{2}\NormalTok{) ~}\StringTok{ }\NormalTok{age,}
-  \DataTypeTok{data =} \NormalTok{pbc_df,}
-  \DataTypeTok{x    =} \OtherTok{TRUE}\NormalTok{,                    }\CommentTok{# to compute cox.zph, we need to store x and y}
-  \DataTypeTok{y    =} \OtherTok{TRUE}
-\NormalTok{)}
-
-\KeywordTok{Predict}\NormalTok{(rms_age) %>%}
-\StringTok{  }\NormalTok{plot}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{SuDACDa-notes_files/figure-latex/unnamed-chunk-10-1.pdf}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{summary}\NormalTok{(rms_age)  }\CommentTok{# _rms_ show effects from the Lower to the Higher limit of IQR}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-##              Effects              Response : Surv(time, status == 2) 
+<span class="kw">Predict</span>(rms_age) %&gt;%
+<span class="st">  </span>plot</code></pre></div>
+<p><img src="SuDACDa-notes_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(rms_age)  <span class="co"># _rms_ show effects from the Lower to the Higher limit of IQR</span></code></pre></div>
+<pre><code>##              Effects              Response : Surv(time, status == 2) 
 ## 
 ##  Factor        Low    High   Diff.  Effect  S.E.    Lower 0.95 Upper 0.95
 ##  age           42.832 58.241 15.409 0.60379 0.12091 0.36681    0.84076   
-##   Hazard Ratio 42.832 58.241 15.409 1.82900      NA 1.44310    2.31810
-\end{verbatim}
+##   Hazard Ratio 42.832 58.241 15.409 1.82900      NA 1.44310    2.31810</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">                  <span class="co"># and report the different between them as well as the HR, so</span>
+                  <span class="co"># we do not need to perform triky transformation which asks</span>
+                  <span class="co"># for an alterate interpretation of the result</span></code></pre></div>
+<p>In particular, the effect quite doubled in fifteen years.<a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a>.</p>
+</div>
+<div id="ast2" class="section level3">
+<h3><span class="header-section-number">2.2.3</span> Impact of aspartate aminotransferase (<code>ast</code>) on death</h3>
+<ul>
+<li>same of age</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rms_ast &lt;-<span class="st"> </span><span class="kw">cph</span>(<span class="kw">Surv</span>(time, status ==<span class="st"> </span><span class="dv">2</span>) ~<span class="st"> </span>ast,
+  <span class="dt">data =</span> pbc_df,
+  <span class="dt">x    =</span> <span class="ot">TRUE</span>,
+  <span class="dt">y    =</span> <span class="ot">TRUE</span>
+)
 
-\begin{Shaded}
-\begin{Highlighting}[]
-                  \CommentTok{# and report the different between them as well as the HR, so}
-                  \CommentTok{# we do not need to perform triky transformation which asks}
-                  \CommentTok{# for an alterate interpretation of the result}
-\end{Highlighting}
-\end{Shaded}
+<span class="kw">cox.zph</span>(rms_ast)</code></pre></div>
+<pre><code>##         rho chisq     p
+## ast -0.0641 0.274 0.601</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cox.zph</span>(rms_ast) %&gt;%
+<span class="st">  </span><span class="kw">plot</span>(<span class="dt">col =</span> <span class="st">&#39;green&#39;</span>)</code></pre></div>
+<p><img src="SuDACDa-notes_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p>The proportional hazard assumption is not violated, but by the graph it seams not that linear. Try to transform it using the <span class="math inline">\(log()\)</span> transformation.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">log_ast &lt;-<span class="st"> </span><span class="kw">cph</span>(<span class="kw">Surv</span>(time, status ==<span class="st"> </span><span class="dv">2</span>) ~<span class="st"> </span><span class="kw">log</span>(ast),
+  <span class="dt">data =</span> pbc_df,
+  <span class="dt">x    =</span> <span class="ot">TRUE</span>,
+  <span class="dt">y    =</span> <span class="ot">TRUE</span>
+)
 
-In particular, the effect quite doubled in fifteen years.\footnote{Good
-  example in which only the clinicians know if it is an effect
-  clinically relevant (deciding it \textbf{before} the analyses) or not}.
-
-\subsection{\texorpdfstring{Impact of aspartate aminotransferase
-(\texttt{ast}) on
-death}{Impact of aspartate aminotransferase (ast) on death}}\label{ast2}
-
-\begin{itemize}
-\tightlist
-\item
-  same of age
-\end{itemize}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{rms_ast <-}\StringTok{ }\KeywordTok{cph}\NormalTok{(}\KeywordTok{Surv}\NormalTok{(time, status ==}\StringTok{ }\DecValTok{2}\NormalTok{) ~}\StringTok{ }\NormalTok{ast,}
-  \DataTypeTok{data =} \NormalTok{pbc_df,}
-  \DataTypeTok{x    =} \OtherTok{TRUE}\NormalTok{,}
-  \DataTypeTok{y    =} \OtherTok{TRUE}
-\NormalTok{)}
-
-\KeywordTok{cox.zph}\NormalTok{(rms_ast)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-##         rho chisq     p
-## ast -0.0641 0.274 0.601
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{cox.zph}\NormalTok{(rms_ast) %>%}
-\StringTok{  }\KeywordTok{plot}\NormalTok{(}\DataTypeTok{col =} \StringTok{'green'}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{SuDACDa-notes_files/figure-latex/unnamed-chunk-11-1.pdf}
-
-The proportional hazard assumption is not violated, but by the graph it
-seams not that linear. Try to transform it using the \(log()\)
-transformation.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{log_ast <-}\StringTok{ }\KeywordTok{cph}\NormalTok{(}\KeywordTok{Surv}\NormalTok{(time, status ==}\StringTok{ }\DecValTok{2}\NormalTok{) ~}\StringTok{ }\KeywordTok{log}\NormalTok{(ast),}
-  \DataTypeTok{data =} \NormalTok{pbc_df,}
-  \DataTypeTok{x    =} \OtherTok{TRUE}\NormalTok{,}
-  \DataTypeTok{y    =} \OtherTok{TRUE}
-\NormalTok{)}
-
-\KeywordTok{cox.zph}\NormalTok{(log_ast)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-##      rho chisq     p
-## ast -0.1  1.13 0.289
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{cox.zph}\NormalTok{(log_ast) %>%}
-\StringTok{  }\KeywordTok{plot}\NormalTok{(}\DataTypeTok{col =} \StringTok{'green'}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{SuDACDa-notes_files/figure-latex/unnamed-chunk-12-1.pdf}
-
-The situation is not much better\ldots{}but we can say that there exists
-a line living in the middle of the band\ldots{}so we are not very happy
-but we accept it.
-
-Let's test for log-linearity
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{rcspline.plot}\NormalTok{(}
-  \DataTypeTok{x       =} \KeywordTok{log}\NormalTok{(pbc_df$ast),}
-  \DataTypeTok{y       =} \NormalTok{pbc_df$time,}
-  \DataTypeTok{event   =} \NormalTok{pbc_df$status ==}\StringTok{ }\DecValTok{2}\NormalTok{,}
-  \DataTypeTok{xlab    =} \StringTok{'ast'}
-\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-##           x                                     
+<span class="kw">cox.zph</span>(log_ast)</code></pre></div>
+<pre><code>##      rho chisq     p
+## ast -0.1  1.13 0.289</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cox.zph</span>(log_ast) %&gt;%
+<span class="st">  </span><span class="kw">plot</span>(<span class="dt">col =</span> <span class="st">&#39;green&#39;</span>)</code></pre></div>
+<p><img src="SuDACDa-notes_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p>The situation is not much better…but we can say that there exists a line living in the middle of the band…so we are not very happy but we accept it.</p>
+<p>Let’s test for log-linearity</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rcspline.plot</span>(
+  <span class="dt">x       =</span> <span class="kw">log</span>(pbc_df$ast),
+  <span class="dt">y       =</span> pbc_df$time,
+  <span class="dt">event   =</span> pbc_df$status ==<span class="st"> </span><span class="dv">2</span>,
+  <span class="dt">xlab    =</span> <span class="st">&#39;ast&#39;</span>
+)</code></pre></div>
+<pre><code>##           x                                     
 ## -0.04133714  4.00548693 -7.69016846 -8.96495717 
-## [1] -639.9665 -622.2519
-\end{verbatim}
-
-\includegraphics{SuDACDa-notes_files/figure-latex/unnamed-chunk-13-1.pdf}
-
-\begin{verbatim}
-## 
+## [1] -639.9665 -622.2519</code></pre>
+<p><img src="SuDACDa-notes_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<pre><code>## 
 ## cbind(xe, lower, upper)
 ## 
 ##              xe                    
@@ -2993,86 +1802,45 @@ Let's test for log-linearity
 ## [597,] 5.461218 -7.899776 10.410286
 ## [598,] 5.463779 -7.899538 10.409962
 ## [599,] 5.466340 -7.899302 10.409639
-## [600,] 5.468902 -7.899067 10.409319
-\end{verbatim}
-
-The log-linear assumption is not violated.
-
-Finally, look at the effect of the log of \texttt{ast}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{summary}\NormalTok{(log_ast)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-##              Effects              Response : Surv(time, status == 2) 
+## [600,] 5.468902 -7.899067 10.409319</code></pre>
+<p>The log-linear assumption is not violated.</p>
+<p>Finally, look at the effect of the log of <code>ast</code></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(log_ast)</code></pre></div>
+<pre><code>##              Effects              Response : Surv(time, status == 2) 
 ## 
 ##  Factor        Low  High  Diff. Effect  S.E.    Lower 0.95 Upper 0.95
 ##  ast           80.6 151.9 71.3  0.69872 0.12499 0.45374    0.9437    
-##   Hazard Ratio 80.6 151.9 71.3  2.01120      NA 1.57420    2.5695
-\end{verbatim}
+##   Hazard Ratio 80.6 151.9 71.3  2.01120      NA 1.57420    2.5695</code></pre>
+<p>It is significantly protective, with doubling the effect between the borders of the IQR.</p>
+</div>
+<div id="platelet2" class="section level3">
+<h3><span class="header-section-number">2.2.4</span> Impact of <strong>platelet</strong> on death</h3>
+<ul>
+<li>same of age</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rms_platelet &lt;-<span class="st"> </span><span class="kw">cph</span>(<span class="kw">Surv</span>(time, status ==<span class="st"> </span><span class="dv">2</span>) ~<span class="st"> </span>platelet,
+  <span class="dt">data =</span> pbc_df,
+  <span class="dt">x    =</span> <span class="ot">TRUE</span>,
+  <span class="dt">y    =</span> <span class="ot">TRUE</span>
+)
 
-It is significantly protective, with doubling the effect between the
-borders of the IQR.
-
-\subsection{\texorpdfstring{Impact of \textbf{platelet} on
-death}{Impact of platelet on death}}\label{platelet2}
-
-\begin{itemize}
-\tightlist
-\item
-  same of age
-\end{itemize}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{rms_platelet <-}\StringTok{ }\KeywordTok{cph}\NormalTok{(}\KeywordTok{Surv}\NormalTok{(time, status ==}\StringTok{ }\DecValTok{2}\NormalTok{) ~}\StringTok{ }\NormalTok{platelet,}
-  \DataTypeTok{data =} \NormalTok{pbc_df,}
-  \DataTypeTok{x    =} \OtherTok{TRUE}\NormalTok{,}
-  \DataTypeTok{y    =} \OtherTok{TRUE}
-\NormalTok{)}
-
-\KeywordTok{cox.zph}\NormalTok{(rms_platelet)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-##             rho chisq     p
-## platelet 0.0688     1 0.316
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{cox.zph}\NormalTok{(rms_platelet) %>%}
-\StringTok{  }\KeywordTok{plot}\NormalTok{(}\DataTypeTok{col =} \StringTok{'green'}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{SuDACDa-notes_files/figure-latex/unnamed-chunk-15-1.pdf}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{rcspline.plot}\NormalTok{(}
-  \DataTypeTok{x       =} \NormalTok{pbc_df$platelet %>%}\StringTok{ }\NormalTok{as.numeric,}
-  \DataTypeTok{y       =} \NormalTok{pbc_df$time,}
-  \DataTypeTok{event   =} \NormalTok{pbc_df$status ==}\StringTok{ }\DecValTok{2}\NormalTok{,}
-  \DataTypeTok{xlab    =} \StringTok{'Platelet'}
-\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-##            x                                        
+<span class="kw">cox.zph</span>(rms_platelet)</code></pre></div>
+<pre><code>##             rho chisq     p
+## platelet 0.0688     1 0.316</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cox.zph</span>(rms_platelet) %&gt;%
+<span class="st">  </span><span class="kw">plot</span>(<span class="dt">col =</span> <span class="st">&#39;green&#39;</span>)</code></pre></div>
+<p><img src="SuDACDa-notes_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rcspline.plot</span>(
+  <span class="dt">x       =</span> pbc_df$platelet %&gt;%<span class="st"> </span>as.numeric,
+  <span class="dt">y       =</span> pbc_df$time,
+  <span class="dt">event   =</span> pbc_df$status ==<span class="st"> </span><span class="dv">2</span>,
+  <span class="dt">xlab    =</span> <span class="st">&#39;Platelet&#39;</span>
+)</code></pre></div>
+<pre><code>##            x                                        
 ## -0.002304221 -0.034164621  0.159445107 -0.192976796 
-## [1] -836.1424 -826.2939
-\end{verbatim}
-
-\includegraphics{SuDACDa-notes_files/figure-latex/unnamed-chunk-15-2.pdf}
-
-\begin{verbatim}
-## 
+## [1] -836.1424 -826.2939</code></pre>
+<p><img src="SuDACDa-notes_files/figure-html/unnamed-chunk-15-2.png" width="672" /></p>
+<pre><code>## 
 ## cbind(xe, lower, upper)
 ## 
 ##               xe                        
@@ -3675,52 +2443,23 @@ death}{Impact of platelet on death}}\label{platelet2}
 ## [597,] 469.18983 -2.110055  0.4995666663
 ## [598,] 469.81779 -2.108864  0.5020478199
 ## [599,] 470.44575 -2.107683  0.5045385396
-## [600,] 471.07371 -2.106511  0.5070388110
-\end{verbatim}
+## [600,] 471.07371 -2.106511  0.5070388110</code></pre>
+<p>The log-linear plot has a U-shape so, standard transformation are not good. We can try to perform a categorization. Two strategy: 1. look at the log-linear plot and try to find a good cut-points, but we have to explain how we have defined them (and “use the p-value” is not a good strategy) 2. Use standard non related cutoff, such as median or quartiles</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cox_cut_platelet &lt;-<span class="st"> </span><span class="kw">coxph</span>(
+  <span class="kw">Surv</span>(time, status ==<span class="st"> </span><span class="dv">2</span>) ~<span class="st"> </span><span class="kw">cut</span>(platelet, <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">150</span>, <span class="dv">400</span>, <span class="dv">1000</span>)),
+  <span class="dt">data =</span> pbc_df
+)
 
-The log-linear plot has a U-shape so, standard transformation are not
-good. We can try to perform a categorization. Two strategy: 1. look at
-the log-linear plot and try to find a good cut-points, but we have to
-explain how we have defined them (and ``use the p-value'' is not a good
-strategy) 2. Use standard non related cutoff, such as median or
-quartiles
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{cox_cut_platelet <-}\StringTok{ }\KeywordTok{coxph}\NormalTok{(}
-  \KeywordTok{Surv}\NormalTok{(time, status ==}\StringTok{ }\DecValTok{2}\NormalTok{) ~}\StringTok{ }\KeywordTok{cut}\NormalTok{(platelet, }\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{150}\NormalTok{, }\DecValTok{400}\NormalTok{, }\DecValTok{1000}\NormalTok{)),}
-  \DataTypeTok{data =} \NormalTok{pbc_df}
-\NormalTok{)}
-
-\KeywordTok{cox.zph}\NormalTok{(cox_cut_platelet)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-##                                                    rho   chisq     p
+<span class="kw">cox.zph</span>(cox_cut_platelet)</code></pre></div>
+<pre><code>##                                                    rho   chisq     p
 ## cut(platelet, c(0, 150, 400, 1000))(150,400]   0.06413 0.62938 0.428
 ## cut(platelet, c(0, 150, 400, 1000))(400,1e+03] 0.00345 0.00181 0.966
-## GLOBAL                                              NA 0.74607 0.689
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{cox.zph}\NormalTok{(cox_cut_platelet) %>%}
-\StringTok{  }\KeywordTok{plot}\NormalTok{(}\DataTypeTok{col =} \StringTok{'blue'}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{SuDACDa-notes_files/figure-latex/unnamed-chunk-16-1.pdf}
-\includegraphics{SuDACDa-notes_files/figure-latex/unnamed-chunk-16-2.pdf}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{summary}\NormalTok{(cox_cut_platelet)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## Call:
+## GLOBAL                                              NA 0.74607 0.689</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cox.zph</span>(cox_cut_platelet) %&gt;%
+<span class="st">  </span><span class="kw">plot</span>(<span class="dt">col =</span> <span class="st">&#39;blue&#39;</span>)</code></pre></div>
+<p><img src="SuDACDa-notes_files/figure-html/unnamed-chunk-16-1.png" width="672" /><img src="SuDACDa-notes_files/figure-html/unnamed-chunk-16-2.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(cox_cut_platelet)</code></pre></div>
+<pre><code>## Call:
 ## coxph(formula = Surv(time, status == 2) ~ cut(platelet, c(0, 
 ##     150, 400, 1000)), data = pbc_df)
 ## 
@@ -3730,11 +2469,11 @@ quartiles
 ##                                                   coef exp(coef) se(coef)
 ## cut(platelet, c(0, 150, 400, 1000))(150,400]   -0.7164    0.4885   0.1948
 ## cut(platelet, c(0, 150, 400, 1000))(400,1e+03] -0.8445    0.4298   0.3352
-##                                                     z Pr(>|z|)    
+##                                                     z Pr(&gt;|z|)    
 ## cut(platelet, c(0, 150, 400, 1000))(150,400]   -3.678 0.000235 ***
 ## cut(platelet, c(0, 150, 400, 1000))(400,1e+03] -2.519 0.011755 *  
 ## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
 ##                                                exp(coef) exp(-coef)
 ## cut(platelet, c(0, 150, 400, 1000))(150,400]      0.4885      2.047
@@ -3747,42 +2486,30 @@ quartiles
 ## Rsquare= 0.031   (max possible= 0.984 )
 ## Likelihood ratio test= 12.68  on 2 df,   p=0.001766
 ## Wald test            = 14.53  on 2 df,   p=0.0006987
-## Score (logrank) test = 15.19  on 2 df,   p=0.0005032
-\end{verbatim}
+## Score (logrank) test = 15.19  on 2 df,   p=0.0005032</code></pre>
+<p>But here the reference level, i.e. the contrast, is the lower level but the interested is what happen if we lie above or over the standard values, so we have to relevel the category to make the medium level as the reference one, i.e. the first.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pbc_df &lt;-<span class="st"> </span>pbc_df %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(
+    <span class="dt">platelet_ref =</span> <span class="kw">cut</span>(pbc_df$platelet, <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">150</span>, <span class="dv">400</span>, <span class="dv">1000</span>)) %&gt;%
+<span class="st">                      </span><span class="kw">relevel</span>(<span class="dt">ref =</span> <span class="st">&quot;(150,400]&quot;</span>)
+)
 
-But here the reference level, i.e.~the contrast, is the lower level but
-the interested is what happen if we lie above or over the standard
-values, so we have to relevel the category to make the medium level as
-the reference one, i.e.~the first.
+cox_relev_platelet &lt;-<span class="st"> </span><span class="kw">coxph</span>(<span class="kw">Surv</span>(time, status ==<span class="st"> </span><span class="dv">2</span>) ~<span class="st"> </span>platelet_ref,
+  <span class="dt">data =</span> pbc_df
+)
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{pbc_df <-}\StringTok{ }\NormalTok{pbc_df %>%}\StringTok{ }
-\StringTok{  }\KeywordTok{mutate}\NormalTok{(}
-    \DataTypeTok{platelet_ref =} \KeywordTok{cut}\NormalTok{(pbc_df$platelet, }\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{150}\NormalTok{, }\DecValTok{400}\NormalTok{, }\DecValTok{1000}\NormalTok{)) %>%}
-\StringTok{                      }\KeywordTok{relevel}\NormalTok{(}\DataTypeTok{ref =} \StringTok{"(150,400]"}\NormalTok{)}
-\NormalTok{)}
-
-\NormalTok{cox_relev_platelet <-}\StringTok{ }\KeywordTok{coxph}\NormalTok{(}\KeywordTok{Surv}\NormalTok{(time, status ==}\StringTok{ }\DecValTok{2}\NormalTok{) ~}\StringTok{ }\NormalTok{platelet_ref,}
-  \DataTypeTok{data =} \NormalTok{pbc_df}
-\NormalTok{)}
-
-\KeywordTok{summary}\NormalTok{(cox_relev_platelet)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## Call:
+<span class="kw">summary</span>(cox_relev_platelet)</code></pre></div>
+<pre><code>## Call:
 ## coxph(formula = Surv(time, status == 2) ~ platelet_ref, data = pbc_df)
 ## 
 ##   n= 407, number of events= 155 
 ##    (11 observations deleted due to missingness)
 ## 
-##                            coef exp(coef) se(coef)      z Pr(>|z|)    
+##                            coef exp(coef) se(coef)      z Pr(&gt;|z|)    
 ## platelet_ref(0,150]      0.7164    2.0471   0.1948  3.678 0.000235 ***
 ## platelet_ref(400,1e+03] -0.1281    0.8798   0.3046 -0.420 0.674235    
 ## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
 ##                         exp(coef) exp(-coef) lower .95 upper .95
 ## platelet_ref(0,150]        2.0471     0.4885    1.3975     2.999
@@ -3792,71 +2519,41 @@ the reference one, i.e.~the first.
 ## Rsquare= 0.031   (max possible= 0.984 )
 ## Likelihood ratio test= 12.68  on 2 df,   p=0.001766
 ## Wald test            = 14.53  on 2 df,   p=0.0006987
-## Score (logrank) test = 15.19  on 2 df,   p=0.0005032
-\end{verbatim}
-
-\section{Investigation on adjusted variables and
-interactions}\label{adjusted2}
-
-Clinician: what is the effect of treatment (\texttt{trt}) on death?
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{cph}\NormalTok{(}\KeywordTok{Surv}\NormalTok{(time, status ==}\StringTok{ }\DecValTok{2}\NormalTok{) ~}\StringTok{ }\NormalTok{trt,}
-  \DataTypeTok{data =} \NormalTok{pbc_df}
-\NormalTok{) %>%}\StringTok{ }
-\StringTok{  }\NormalTok{summary}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-##              Effects              Response : Surv(time, status == 2) 
+## Score (logrank) test = 15.19  on 2 df,   p=0.0005032</code></pre>
+</div>
+</div>
+<div id="adjusted2" class="section level2">
+<h2><span class="header-section-number">2.3</span> Investigation on adjusted variables and interactions</h2>
+<p>Clinician: what is the effect of treatment (<code>trt</code>) on death?</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cph</span>(<span class="kw">Surv</span>(time, status ==<span class="st"> </span><span class="dv">2</span>) ~<span class="st"> </span>trt,
+  <span class="dt">data =</span> pbc_df
+) %&gt;%<span class="st"> </span>
+<span class="st">  </span>summary</code></pre></div>
+<pre><code>##              Effects              Response : Surv(time, status == 2) 
 ## 
 ##  Factor        Low High Diff. Effect    S.E.    Lower 0.95 Upper 0.95
 ##  trt           1   2    1     -0.057189 0.17916 -0.40835   0.29397   
-##   Hazard Ratio 1   2    1      0.944420      NA  0.66475   1.34170
-\end{verbatim}
-
-No significant effect for treatment.
-
-Clinician: an adjusted with edema?
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{cph}\NormalTok{(}\KeywordTok{Surv}\NormalTok{(time, status ==}\StringTok{ }\DecValTok{2}\NormalTok{) ~}\StringTok{ }\NormalTok{trt +}\StringTok{ }\NormalTok{edema,}
-  \DataTypeTok{data =} \NormalTok{pbc_df}
-\NormalTok{) %>%}\StringTok{ }
-\StringTok{  }\NormalTok{summary}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-##              Effects              Response : Surv(time, status == 2) 
+##   Hazard Ratio 1   2    1      0.944420      NA  0.66475   1.34170</code></pre>
+<p>No significant effect for treatment.</p>
+<p>Clinician: an adjusted with edema?</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cph</span>(<span class="kw">Surv</span>(time, status ==<span class="st"> </span><span class="dv">2</span>) ~<span class="st"> </span>trt +<span class="st"> </span>edema,
+  <span class="dt">data =</span> pbc_df
+) %&gt;%<span class="st"> </span>
+<span class="st">  </span>summary</code></pre></div>
+<pre><code>##              Effects              Response : Surv(time, status == 2) 
 ## 
 ##  Factor        Low High Diff. Effect    S.E.    Lower 0.95 Upper 0.95
 ##  trt           1   2    1     -0.065946 0.17953 -0.41781    0.28592  
 ##   Hazard Ratio 1   2    1      0.936180      NA  0.65849    1.33100  
 ##  edema         0   1    1      2.280700 0.25761  1.77580    2.78560  
-##   Hazard Ratio 0   1    1      9.783600      NA  5.90510   16.21000
-\end{verbatim}
-
-No effect for treatment nor edema
-
-Clinicians: and what about their interaction?\footnote{The answer here
-  should be ``if there are no marginal significant effect is has no
-  sense to look at the interaction terms!''.}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{cph}\NormalTok{(}\KeywordTok{Surv}\NormalTok{(time, status ==}\StringTok{ }\DecValTok{2}\NormalTok{) ~}\StringTok{ }\NormalTok{trt *}\StringTok{ }\NormalTok{edema,}
-  \DataTypeTok{data =} \NormalTok{pbc_df}
-\NormalTok{) %>%}\StringTok{ }
-\StringTok{  }\NormalTok{summary}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-##              Effects              Response : Surv(time, status == 2) 
+##   Hazard Ratio 0   1    1      9.783600      NA  5.90510   16.21000</code></pre>
+<p>No effect for treatment nor edema</p>
+<p>Clinicians: and what about their interaction?<a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cph</span>(<span class="kw">Surv</span>(time, status ==<span class="st"> </span><span class="dv">2</span>) ~<span class="st"> </span>trt *<span class="st"> </span>edema,
+  <span class="dt">data =</span> pbc_df
+) %&gt;%<span class="st"> </span>
+<span class="st">  </span>summary</code></pre></div>
+<pre><code>##              Effects              Response : Surv(time, status == 2) 
 ## 
 ##  Factor        Low High Diff. Effect   S.E.    Lower 0.95 Upper 0.95
 ##  trt           1   2    1     -0.24014 0.22959 -0.69012    0.20984  
@@ -3864,29 +2561,19 @@ Clinicians: and what about their interaction?\footnote{The answer here
 ##  edema         0   1    1      2.62340 0.37161  1.89500    3.35170  
 ##   Hazard Ratio 0   1    1     13.78200      NA  6.65280   28.55200  
 ## 
-## Adjusted to: trt=1 edema=0.5
-\end{verbatim}
+## Adjusted to: trt=1 edema=0.5</code></pre>
+<p>No effect.</p>
+<p>Clinicians: and what about adjusted with stage?</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">adj_pbc &lt;-<span class="st"> </span>pbc_df %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">stage_fct =</span> <span class="kw">factor</span>(stage))
 
-No effect.
+dd &lt;-<span class="st"> </span><span class="kw">datadist</span>(adj_pbc)
 
-Clinicians: and what about adjusted with stage?
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{adj_pbc <-}\StringTok{ }\NormalTok{pbc_df %>%}\StringTok{ }
-\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{stage_fct =} \KeywordTok{factor}\NormalTok{(stage))}
-
-\NormalTok{dd <-}\StringTok{ }\KeywordTok{datadist}\NormalTok{(adj_pbc)}
-
-\KeywordTok{cph}\NormalTok{(}\KeywordTok{Surv}\NormalTok{(time, status ==}\StringTok{ }\DecValTok{2}\NormalTok{) ~}\StringTok{ }\NormalTok{trt +}\StringTok{ }\NormalTok{stage_fct,}
-  \DataTypeTok{data =} \NormalTok{adj_pbc}
-\NormalTok{) %>%}\StringTok{ }
-\StringTok{  }\NormalTok{summary}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-##              Effects              Response : Surv(time, status == 2) 
+<span class="kw">cph</span>(<span class="kw">Surv</span>(time, status ==<span class="st"> </span><span class="dv">2</span>) ~<span class="st"> </span>trt +<span class="st"> </span>stage_fct,
+  <span class="dt">data =</span> adj_pbc
+) %&gt;%<span class="st"> </span>
+<span class="st">  </span>summary</code></pre></div>
+<pre><code>##              Effects              Response : Surv(time, status == 2) 
 ## 
 ##  Factor          Low High Diff. Effect   S.E.    Lower 0.95 Upper 0.95
 ##  trt             1   2     1    -0.14713 0.17989 -0.49971    0.20545  
@@ -3896,26 +2583,15 @@ Clinicians: and what about adjusted with stage?
 ##  stage_fct - 2:3 3   2    NA    -0.54826 0.29344 -1.12340    0.02687  
 ##   Hazard Ratio   3   2    NA     0.57795      NA  0.32517    1.02720  
 ##  stage_fct - 4:3 3   4    NA     0.91613 0.19771  0.52862    1.30360  
-##   Hazard Ratio   3   4    NA     2.49960      NA  1.69660    3.68270
-\end{verbatim}
+##   Hazard Ratio   3   4    NA     2.49960      NA  1.69660    3.68270</code></pre>
+<p>Treatment still with no significant effect. <code>stage</code> has some effects, i.e. from the 3 to 1 or to 4,</p>
+<p>Clinicians: oh, so let’s look at the interactions!</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rms_trt_stage &lt;-<span class="st"> </span><span class="kw">cph</span>(<span class="kw">Surv</span>(time, status ==<span class="st"> </span><span class="dv">2</span>) ~<span class="st"> </span>trt *<span class="st"> </span>stage,
+  <span class="dt">data =</span> adj_pbc
+)
 
-Treatment still with no significant effect. \texttt{stage} has some
-effects, i.e.~from the 3 to 1 or to 4,
-
-Clinicians: oh, so let's look at the interactions!
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{rms_trt_stage <-}\StringTok{ }\KeywordTok{cph}\NormalTok{(}\KeywordTok{Surv}\NormalTok{(time, status ==}\StringTok{ }\DecValTok{2}\NormalTok{) ~}\StringTok{ }\NormalTok{trt *}\StringTok{ }\NormalTok{stage,}
-  \DataTypeTok{data =} \NormalTok{adj_pbc}
-\NormalTok{)}
-
-\KeywordTok{summary}\NormalTok{(rms_trt_stage)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-##              Effects              Response : Surv(time, status == 2) 
+<span class="kw">summary</span>(rms_trt_stage)</code></pre></div>
+<pre><code>##              Effects              Response : Surv(time, status == 2) 
 ## 
 ##  Factor        Low High Diff. Effect   S.E.    Lower 0.95 Upper 0.95
 ##  trt           1   2    1     -0.15717 0.20284 -0.55473   0.24039   
@@ -3923,47 +2599,25 @@ Clinicians: oh, so let's look at the interactions!
 ##  stage         2   4    2      1.61630 0.33135  0.96682   2.26570   
 ##   Hazard Ratio 2   4    2      5.03420      NA  2.62960   9.63790   
 ## 
-## Adjusted to: trt=1 stage=3
-\end{verbatim}
+## Adjusted to: trt=1 stage=3</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">Predict</span>(rms_trt_stage) %&gt;%
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="dt">anova =</span> <span class="kw">anova</span>(rms_trt_stage), <span class="dt">pval =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<p><img src="SuDACDa-notes_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">Predict</span>(rms_trt_stage) %&gt;%
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="dt">anova =</span> <span class="kw">anova</span>(rms_trt_stage), <span class="dt">pval =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<p><img src="SuDACDa-notes_files/figure-html/unnamed-chunk-22-2.png" width="672" /></p>
+<p>Treatment continue to have no effect</p>
+</div>
+<div id="longitudinal" class="section level2">
+<h2><span class="header-section-number">2.4</span> Longitudinal suvival data analayses</h2>
+<p>Load a data-set, update the <code>datadist()</code> for the <strong>rms</strong> package, and take a look at the data</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pbcseq_df &lt;-<span class="st"> </span><span class="kw">as.tibble</span>(pbcseq)
+dd &lt;-<span class="st"> </span><span class="kw">datadist</span>(pbcseq_df)
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{Predict}\NormalTok{(rms_trt_stage) %>%}
-\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{anova =} \KeywordTok{anova}\NormalTok{(rms_trt_stage), }\DataTypeTok{pval =} \OtherTok{TRUE}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{SuDACDa-notes_files/figure-latex/unnamed-chunk-22-1.pdf}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{Predict}\NormalTok{(rms_trt_stage) %>%}
-\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{anova =} \KeywordTok{anova}\NormalTok{(rms_trt_stage), }\DataTypeTok{pval =} \OtherTok{TRUE}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{SuDACDa-notes_files/figure-latex/unnamed-chunk-22-2.pdf}
-
-Treatment continue to have no effect
-
-\section{Longitudinal suvival data analayses}\label{longitudinal}
-
-Load a data-set, update the \texttt{datadist()} for the \textbf{rms}
-package, and take a look at the data
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{pbcseq_df <-}\StringTok{ }\KeywordTok{as.tibble}\NormalTok{(pbcseq)}
-\NormalTok{dd <-}\StringTok{ }\KeywordTok{datadist}\NormalTok{(pbcseq_df)}
-
-\NormalTok{pbcseq_df}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## # A tibble: 1,945 x 19
+pbcseq_df</code></pre></div>
+<pre><code>## # A tibble: 1,945 x 19
 ##       id futime status   trt      age    sex   day ascites hepato spiders
-##    <int>  <int>  <int> <int>    <dbl> <fctr> <int>   <int>  <int>   <int>
+##    &lt;int&gt;  &lt;int&gt;  &lt;int&gt; &lt;int&gt;    &lt;dbl&gt; &lt;fctr&gt; &lt;int&gt;   &lt;int&gt;  &lt;int&gt;   &lt;int&gt;
 ##  1     1    400      2     1 58.76523      f     0       1      1       1
 ##  2     1    400      2     1 58.76523      f   192       1      1       1
 ##  3     2   5169      0     1 56.44627      f     0       0      1       1
@@ -3974,127 +2628,75 @@ package, and take a look at the data
 ##  8     2   5169      0     1 56.44627      f  2151       1      1       1
 ##  9     2   5169      0     1 56.44627      f  2515       1      1       1
 ## 10     2   5169      0     1 56.44627      f  2882       1      1       1
-## # ... with 1,935 more rows, and 9 more variables: edema <dbl>, bili <dbl>,
-## #   chol <int>, albumin <dbl>, alk.phos <int>, ast <dbl>, platelet <int>,
-## #   protime <dbl>, stage <int>
-\end{verbatim}
+## # ... with 1,935 more rows, and 9 more variables: edema &lt;dbl&gt;, bili &lt;dbl&gt;,
+## #   chol &lt;int&gt;, albumin &lt;dbl&gt;, alk.phos &lt;int&gt;, ast &lt;dbl&gt;, platelet &lt;int&gt;,
+## #   protime &lt;dbl&gt;, stage &lt;int&gt;</code></pre>
+<ul>
+<li>The only tricky task is to correctly manage and prepare the data. Our proposal take advantage of the <code>dplyr</code> functionality</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pbcseq_full &lt;-<span class="st"> </span>pbcseq_df %&gt;%
+<span class="st">  </span><span class="kw">group_by</span>(id) %&gt;%<span class="st">                    </span><span class="co"># perform all the next according to the id</span>
+<span class="st">  </span><span class="kw">mutate</span>(
+    <span class="dt">start  =</span> day,                                 <span class="co"># just to have consistent names</span>
+    <span class="dt">end    =</span> <span class="kw">lead</span>(day),           <span class="co"># the end is &quot;the next start&quot; (last will be NA)</span>
+    <span class="dt">status =</span> <span class="kw">if_else</span>(<span class="kw">is.na</span>(end), status, 0L), 
+    <span class="dt">end    =</span> <span class="kw">if_else</span>(<span class="kw">is.na</span>(end), futime, end) <span class="co"># fill the NA-ends (i.e. the lasts)</span>
+                                              <span class="co"># with the real end</span>
+)</code></pre></div>
+<div id="bilurubine2" class="section level3">
+<h3><span class="header-section-number">2.4.1</span> Impact of bilurubine of death</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">bil_mod &lt;-<span class="st"> </span><span class="kw">cph</span>(
+  <span class="kw">Surv</span>(<span class="dt">time =</span> start, <span class="dt">time2 =</span> end, <span class="dt">event =</span> status ==<span class="st"> </span>2L) ~<span class="st"> </span><span class="kw">log</span>(bili),
+  <span class="dt">data =</span> pbcseq_full,
+  <span class="dt">x    =</span> <span class="ot">TRUE</span>,
+  <span class="dt">y    =</span> <span class="ot">TRUE</span>
+)
 
-\begin{itemize}
-\tightlist
-\item
-  The only tricky task is to correctly manage and prepare the data. Our
-  proposal take advantage of the \texttt{dplyr} functionality
-\end{itemize}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{pbcseq_full <-}\StringTok{ }\NormalTok{pbcseq_df %>%}
-\StringTok{  }\KeywordTok{group_by}\NormalTok{(id) %>%}\StringTok{                    }\CommentTok{# perform all the next according to the id}
-\StringTok{  }\KeywordTok{mutate}\NormalTok{(}
-    \DataTypeTok{start  =} \NormalTok{day,                                 }\CommentTok{# just to have consistent names}
-    \DataTypeTok{end    =} \KeywordTok{lead}\NormalTok{(day),           }\CommentTok{# the end is "the next start" (last will be NA)}
-    \DataTypeTok{status =} \KeywordTok{if_else}\NormalTok{(}\KeywordTok{is.na}\NormalTok{(end), status, 0L), }
-    \DataTypeTok{end    =} \KeywordTok{if_else}\NormalTok{(}\KeywordTok{is.na}\NormalTok{(end), futime, end) }\CommentTok{# fill the NA-ends (i.e. the lasts)}
-                                              \CommentTok{# with the real end}
-\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\subsection{Impact of bilurubine of death}\label{bilurubine2}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{bil_mod <-}\StringTok{ }\KeywordTok{cph}\NormalTok{(}
-  \KeywordTok{Surv}\NormalTok{(}\DataTypeTok{time =} \NormalTok{start, }\DataTypeTok{time2 =} \NormalTok{end, }\DataTypeTok{event =} \NormalTok{status ==}\StringTok{ }\NormalTok{2L) ~}\StringTok{ }\KeywordTok{log}\NormalTok{(bili),}
-  \DataTypeTok{data =} \NormalTok{pbcseq_full,}
-  \DataTypeTok{x    =} \OtherTok{TRUE}\NormalTok{,}
-  \DataTypeTok{y    =} \OtherTok{TRUE}
-\NormalTok{)}
-
-\KeywordTok{summary}\NormalTok{(bil_mod)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-##              Effects              Response : Surv(time = start, time2 = end, event = status == 2) 
+<span class="kw">summary</span>(bil_mod)</code></pre></div>
+<pre><code>##              Effects              Response : Surv(time = start, time2 = end, event = status == 2) 
 ## 
 ##  Factor        Low High Diff. Effect S.E.    Lower 0.95 Upper 0.95
 ##  bili          0.8 3.9  3.1   2.0410 0.13391 1.7786      2.3035   
-##   Hazard Ratio 0.8 3.9  3.1   7.6984      NA 5.9213     10.0090
-\end{verbatim}
+##   Hazard Ratio 0.8 3.9  3.1   7.6984      NA 5.9213     10.0090</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(
+  <span class="dt">x   =</span> pbcseq_full$end,
+  <span class="dt">y   =</span> <span class="kw">residuals</span>(bil_mod, <span class="dt">type =</span> <span class="st">&#39;dfbeta&#39;</span>),
+  <span class="dt">col =</span> <span class="st">&#39;red&#39;</span>
+)</code></pre></div>
+<p><img src="SuDACDa-notes_files/figure-html/unnamed-chunk-25-1.png" width="672" /></p>
+</div>
+<div id="ast_full2" class="section level3">
+<h3><span class="header-section-number">2.4.2</span> Impact of ast</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ast_mod &lt;-<span class="st"> </span><span class="kw">cph</span>(
+  <span class="kw">Surv</span>(<span class="dt">time =</span> start, <span class="dt">time2 =</span> end, <span class="dt">event =</span> status ==<span class="st"> </span>2L) ~<span class="st"> </span>ast,
+  <span class="dt">data =</span> pbcseq_full,
+  <span class="dt">x    =</span> <span class="ot">TRUE</span>,
+  <span class="dt">y    =</span> <span class="ot">TRUE</span>
+)
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{plot}\NormalTok{(}
-  \DataTypeTok{x   =} \NormalTok{pbcseq_full$end,}
-  \DataTypeTok{y   =} \KeywordTok{residuals}\NormalTok{(bil_mod, }\DataTypeTok{type =} \StringTok{'dfbeta'}\NormalTok{),}
-  \DataTypeTok{col =} \StringTok{'red'}
-\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{SuDACDa-notes_files/figure-latex/unnamed-chunk-25-1.pdf}
-
-\subsection{Impact of ast}\label{ast_full2}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{ast_mod <-}\StringTok{ }\KeywordTok{cph}\NormalTok{(}
-  \KeywordTok{Surv}\NormalTok{(}\DataTypeTok{time =} \NormalTok{start, }\DataTypeTok{time2 =} \NormalTok{end, }\DataTypeTok{event =} \NormalTok{status ==}\StringTok{ }\NormalTok{2L) ~}\StringTok{ }\NormalTok{ast,}
-  \DataTypeTok{data =} \NormalTok{pbcseq_full,}
-  \DataTypeTok{x    =} \OtherTok{TRUE}\NormalTok{,}
-  \DataTypeTok{y    =} \OtherTok{TRUE}
-\NormalTok{)}
-
-\KeywordTok{summary}\NormalTok{(ast_mod)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-##              Effects              Response : Surv(time = start, time2 = end, event = status == 2) 
+<span class="kw">summary</span>(ast_mod)</code></pre></div>
+<pre><code>##              Effects              Response : Surv(time = start, time2 = end, event = status == 2) 
 ## 
 ##  Factor        Low High Diff. Effect S.E.     Lower 0.95 Upper 0.95
 ##  ast           72  155  83    0.2875 0.044222 0.20083    0.37417   
-##   Hazard Ratio 72  155  83    1.3331       NA 1.22240    1.45380
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{plot}\NormalTok{(}
-  \DataTypeTok{x   =} \NormalTok{pbcseq_full$end,}
-  \DataTypeTok{y   =} \KeywordTok{residuals}\NormalTok{(ast_mod, }\DataTypeTok{type =} \StringTok{'dfbeta'}\NormalTok{),}
-  \DataTypeTok{col =} \StringTok{'red'}
-\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{SuDACDa-notes_files/figure-latex/unnamed-chunk-26-1.pdf}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{plot}\NormalTok{(}
-  \DataTypeTok{x   =} \NormalTok{pbcseq_full$end,}
-  \DataTypeTok{y   =} \KeywordTok{residuals}\NormalTok{(ast_mod, }\DataTypeTok{type =} \StringTok{'martingale'}\NormalTok{),}
-  \DataTypeTok{col =} \StringTok{'brown'}
-\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{SuDACDa-notes_files/figure-latex/unnamed-chunk-26-2.pdf}
-
-What happen with the strange observations? We try to find which is that
-outlier.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# look at the residual caracteristics}
-\KeywordTok{residuals}\NormalTok{(ast_mod, }\DataTypeTok{type =} \StringTok{'martingale'}\NormalTok{) %>%}
-\StringTok{  }\NormalTok{describe}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## . 
+##   Hazard Ratio 72  155  83    1.3331       NA 1.22240    1.45380</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(
+  <span class="dt">x   =</span> pbcseq_full$end,
+  <span class="dt">y   =</span> <span class="kw">residuals</span>(ast_mod, <span class="dt">type =</span> <span class="st">&#39;dfbeta&#39;</span>),
+  <span class="dt">col =</span> <span class="st">&#39;red&#39;</span>
+)</code></pre></div>
+<p><img src="SuDACDa-notes_files/figure-html/unnamed-chunk-26-1.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(
+  <span class="dt">x   =</span> pbcseq_full$end,
+  <span class="dt">y   =</span> <span class="kw">residuals</span>(ast_mod, <span class="dt">type =</span> <span class="st">&#39;martingale&#39;</span>),
+  <span class="dt">col =</span> <span class="st">&#39;brown&#39;</span>
+)</code></pre></div>
+<p><img src="SuDACDa-notes_files/figure-html/unnamed-chunk-26-2.png" width="672" /></p>
+<p>What happen with the strange observations? We try to find which is that outlier.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># look at the residual caracteristics</span>
+<span class="kw">residuals</span>(ast_mod, <span class="dt">type =</span> <span class="st">&#39;martingale&#39;</span>) %&gt;%
+<span class="st">  </span>describe</code></pre></div>
+<pre><code>## . 
 ##          n    missing   distinct       Info       Mean        Gmd 
 ##       1945          0       1855          1 -2.395e-17     0.1868 
 ##        .05        .10        .25        .50        .75        .90 
@@ -4103,75 +2705,48 @@ outlier.
 ##    0.95170 
 ## 
 ## lowest : -2.3632251 -0.9104219 -0.7874086 -0.7390614 -0.7120605
-## highest:  0.9960346  0.9963091  0.9968442  0.9970148  0.9970895
-\end{verbatim}
+## highest:  0.9960346  0.9963091  0.9968442  0.9970148  0.9970895</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># take the id of the lowest</span>
+strange_id &lt;-<span class="st"> </span><span class="kw">residuals</span>(ast_mod, <span class="dt">type =</span> <span class="st">&#39;martingale&#39;</span>) %&gt;%
+<span class="st">  </span>which.min
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# take the id of the lowest}
-\NormalTok{strange_id <-}\StringTok{ }\KeywordTok{residuals}\NormalTok{(ast_mod, }\DataTypeTok{type =} \StringTok{'martingale'}\NormalTok{) %>%}
-\StringTok{  }\NormalTok{which.min}
-
-\CommentTok{# take a look to the ast}
-\NormalTok{pbcseq_full$ast %>%}\StringTok{ }\NormalTok{describe}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## . 
+<span class="co"># take a look to the ast</span>
+pbcseq_full$ast %&gt;%<span class="st"> </span>describe</code></pre></div>
+<pre><code>## . 
 ##        n  missing distinct     Info     Mean      Gmd      .05      .10 
 ##     1945        0      418        1    122.7    74.42     41.9     51.2 
 ##      .25      .50      .75      .90      .95 
 ##     72.0    107.0    155.0    209.3    250.7 
 ## 
-## lowest :    6.2   21.0   21.7   22.0   23.3, highest:  473.0  655.7  685.1  918.0 1205.0
-\end{verbatim}
+## lowest :    6.2   21.0   21.7   22.0   23.3, highest:  473.0  655.7  685.1  918.0 1205.0</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># check the id</span>
+pbcseq_full$ast[[strange_id]]</code></pre></div>
+<pre><code>## [1] 1205</code></pre>
+<p>Here is another example in which the opinion of a clinician is mandatory, i.e. we cannot decide if ignore outliers, which ones, etc</p>
+</div>
+</div>
+<div id="prognostic2" class="section level2">
+<h2><span class="header-section-number">2.5</span> Prognostic model</h2>
+<div id="prognostic-model-with-ascites-edema-sex-bili-ast-platelet-stage" class="section level3">
+<h3><span class="header-section-number">2.5.1</span> prognostic model with <code>àscites</code>, <code>edema</code>, <code>sex</code>, <code>bili</code>, <code>ast</code>, <code>platelet</code>, <code id="model2">stage</code></h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># prepare an ad hoc data frame</span>
+pbc_updated &lt;-<span class="st"> </span>pbc_df %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(
+    <span class="dt">bili_log     =</span> <span class="kw">log</span>(bili),
+    <span class="dt">ast_log      =</span> <span class="kw">log</span>(ast),
+    <span class="dt">platelet_ref =</span> platelet_ref, <span class="co"># we have already defined it</span>
+    <span class="dt">stage_fct    =</span> <span class="kw">as.factor</span>(stage)
+  )
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# check the id}
-\NormalTok{pbcseq_full$ast[[strange_id]]}
-\end{Highlighting}
-\end{Shaded}
+dd &lt;-<span class="st"> </span><span class="kw">datadist</span>(pbc_updated)
 
-\begin{verbatim}
-## [1] 1205
-\end{verbatim}
-
-Here is another example in which the opinion of a clinician is
-mandatory, i.e.~we cannot decide if ignore outliers, which ones, etc
-
-\section{Prognostic model}\label{prognostic2}
-
-\subsection{\texorpdfstring{prognostic model with \texttt{àscites},
-\texttt{edema}, \texttt{sex}, \texttt{bili}, \texttt{ast},
-\texttt{platelet},
-\texttt{stage}}{prognostic model with àscites, edema, sex, bili, ast, platelet, stage}}\label{prognostic-model-with-ascites-edema-sex-bili-ast-platelet-stage}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# prepare an ad hoc data frame}
-\NormalTok{pbc_updated <-}\StringTok{ }\NormalTok{pbc_df %>%}\StringTok{ }
-\StringTok{  }\KeywordTok{mutate}\NormalTok{(}
-    \DataTypeTok{bili_log     =} \KeywordTok{log}\NormalTok{(bili),}
-    \DataTypeTok{ast_log      =} \KeywordTok{log}\NormalTok{(ast),}
-    \DataTypeTok{platelet_ref =} \NormalTok{platelet_ref, }\CommentTok{# we have already defined it}
-    \DataTypeTok{stage_fct    =} \KeywordTok{as.factor}\NormalTok{(stage)}
-  \NormalTok{)}
-
-\NormalTok{dd <-}\StringTok{ }\KeywordTok{datadist}\NormalTok{(pbc_updated)}
-
-\CommentTok{# take a look at them }
-\NormalTok{pbc_updated %>%}\StringTok{ }
-\StringTok{  }\NormalTok{dplyr::}\KeywordTok{select}\NormalTok{(}
-    \NormalTok{ascites, edema, sex, bili_log, ast_log, platelet_ref, stage_fct}
-  \NormalTok{) %>%}\StringTok{ }
-\StringTok{  }\NormalTok{describe}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## . 
+<span class="co"># take a look at them </span>
+pbc_updated %&gt;%<span class="st"> </span>
+<span class="st">  </span>dplyr::<span class="kw">select</span>(
+    ascites, edema, sex, bili_log, ast_log, platelet_ref, stage_fct
+  ) %&gt;%<span class="st"> </span>
+<span class="st">  </span>describe</code></pre></div>
+<pre><code>## . 
 ## 
 ##  7  Variables      418  Observations
 ## ---------------------------------------------------------------------------
@@ -4229,43 +2804,26 @@ mandatory, i.e.~we cannot decide if ignore outliers, which ones, etc
 ## Value          1     2     3     4
 ## Frequency     21    92   155   144
 ## Proportion 0.051 0.223 0.376 0.350
-## ---------------------------------------------------------------------------
-\end{verbatim}
+## ---------------------------------------------------------------------------</code></pre>
+<p>There are 11 basic df (one each continuous variable and one-minus-n-level for the categorical one), so to use all of them we need at least <span class="math inline">\(110\)</span> obs. Data has <span class="math inline">\(418\)</span>, this allow us to use a more complex model, with some interaction, splines, etc (more or less other <span class="math inline">\(15 -- 30\)</span> df).</p>
+<p>We decide (following suggestions from <span class="citation">Harrell Jr (<a href="#ref-harrell2015regression">2015</a>)</span>) to consider splines for any continuous variable (with 3 knots) and consider sex interaction with them and the other numerical variables, leading to near <span class="math inline">\(20\)</span> df.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">data_used &lt;-<span class="st"> </span>pbc_updated %&gt;%<span class="st"> </span>
+<span class="st">  </span>dplyr::<span class="kw">select</span>(status, time,
+    sex, ascites, edema, bili_log, ast_log, platelet_ref, stage_fct
+)
 
-There are 11 basic df (one each continuous variable and
-one-minus-n-level for the categorical one), so to use all of them we
-need at least \(110\) obs. Data has \(418\), this allow us to use a more
-complex model, with some interaction, splines, etc (more or less other
-\(15 -- 30\) df).
-
-We decide (following suggestions from \citet{harrell2015regression}) to
-consider splines for any continuous variable (with 3 knots) and consider
-sex interaction with them and the other numerical variables, leading to
-near \(20\) df.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{data_used <-}\StringTok{ }\NormalTok{pbc_updated %>%}\StringTok{ }
-\StringTok{  }\NormalTok{dplyr::}\KeywordTok{select}\NormalTok{(status, time,}
-    \NormalTok{sex, ascites, edema, bili_log, ast_log, platelet_ref, stage_fct}
-\NormalTok{)}
-
-\NormalTok{dd <-}\StringTok{ }\KeywordTok{datadist}\NormalTok{(data_used)}
+dd &lt;-<span class="st"> </span><span class="kw">datadist</span>(data_used)
 
 
-\CommentTok{# all the data-set}
-\KeywordTok{cph}\NormalTok{(}
-  \KeywordTok{Surv}\NormalTok{(time, status ==}\StringTok{ }\DecValTok{2}\NormalTok{) ~}
-\StringTok{    }\NormalTok{sex *}\StringTok{ }\NormalTok{(ascites +}\StringTok{ }\NormalTok{edema +}\StringTok{ }\KeywordTok{rcs}\NormalTok{(bili_log, }\DecValTok{3}\NormalTok{) +}\StringTok{ }\KeywordTok{rcs}\NormalTok{(ast_log, }\DecValTok{3}\NormalTok{)) +}
-\StringTok{    }\NormalTok{platelet_ref +}\StringTok{ }\NormalTok{stage_fct,}
-  \DataTypeTok{data =} \NormalTok{data_used}
-\NormalTok{) %>%}\StringTok{ }
-\StringTok{  }\NormalTok{summary}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-##              Effects              Response : Surv(time, status == 2) 
+<span class="co"># all the data-set</span>
+<span class="kw">cph</span>(
+  <span class="kw">Surv</span>(time, status ==<span class="st"> </span><span class="dv">2</span>) ~
+<span class="st">    </span>sex *<span class="st"> </span>(ascites +<span class="st"> </span>edema +<span class="st"> </span><span class="kw">rcs</span>(bili_log, <span class="dv">3</span>) +<span class="st"> </span><span class="kw">rcs</span>(ast_log, <span class="dv">3</span>)) +
+<span class="st">    </span>platelet_ref +<span class="st"> </span>stage_fct,
+  <span class="dt">data =</span> data_used
+) %&gt;%<span class="st"> </span>
+<span class="st">  </span>summary</code></pre></div>
+<pre><code>##              Effects              Response : Surv(time, status == 2) 
 ## 
 ##  Factor                               Low      High   Diff.   Effect    
 ##  ascites                               0.00000 1.0000 1.00000  1.1613000
@@ -4310,25 +2868,17 @@ near \(20\) df.
 ##  0.23174  0.198190   1.10660  
 ##       NA  1.219200   3.02400  
 ## 
-## Adjusted to: sex=f ascites=0 edema=0.5 bili_log=0.3364722 ast_log=4.74232
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# without missing data, and with beckward stepwise variable selection}
-\KeywordTok{cph}\NormalTok{(}
-  \KeywordTok{Surv}\NormalTok{(time, status ==}\StringTok{ }\DecValTok{2}\NormalTok{) ~}
-\StringTok{    }\NormalTok{sex +}\StringTok{ }\NormalTok{ascites +}\StringTok{ }\NormalTok{edema +}\StringTok{ }\NormalTok{bili_log +}\StringTok{ }\NormalTok{ast_log +}\StringTok{ }\NormalTok{platelet_ref +}\StringTok{ }\NormalTok{stage_fct,}
-  \DataTypeTok{data =} \NormalTok{pbc_updated %>%}\StringTok{ }
-\StringTok{    }\KeywordTok{filter}\NormalTok{(}\KeywordTok{complete.cases}\NormalTok{(.))}
-\NormalTok{) %>%}\StringTok{ }
-\StringTok{  }\KeywordTok{step}\NormalTok{(}\DataTypeTok{trace =} \DecValTok{0}\NormalTok{) %>%}\StringTok{ }
-\StringTok{  }\NormalTok{summary}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-##              Effects              Response : Surv(time, status == 2) 
+## Adjusted to: sex=f ascites=0 edema=0.5 bili_log=0.3364722 ast_log=4.74232</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># without missing data, and with beckward stepwise variable selection</span>
+<span class="kw">cph</span>(
+  <span class="kw">Surv</span>(time, status ==<span class="st"> </span><span class="dv">2</span>) ~
+<span class="st">    </span>sex +<span class="st"> </span>ascites +<span class="st"> </span>edema +<span class="st"> </span>bili_log +<span class="st"> </span>ast_log +<span class="st"> </span>platelet_ref +<span class="st"> </span>stage_fct,
+  <span class="dt">data =</span> pbc_updated %&gt;%<span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(<span class="kw">complete.cases</span>(.))
+) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">step</span>(<span class="dt">trace =</span> <span class="dv">0</span>) %&gt;%<span class="st"> </span>
+<span class="st">  </span>summary</code></pre></div>
+<pre><code>##              Effects              Response : Surv(time, status == 2) 
 ## 
 ##  Factor          Low      High   Diff.  Effect   S.E.    Lower 0.95
 ##  ascites          0.00000 1.0000 1.0000  0.62140 0.33765 -0.040376 
@@ -4359,169 +2909,82 @@ near \(20\) df.
 ##  0.32812   
 ##  1.38840   
 ##  0.98449   
-##  2.67640
-\end{verbatim}
+##  2.67640</code></pre>
 
-\chapter{\texorpdfstring{\emph{Wednesday}: Heterogeneity of treatment
-effects}{Wednesday: Heterogeneity of treatment effects}}\label{heterogeneity}
+</div>
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references">
+<div id="ref-harrell2015regression">
+<p>Harrell Jr, Frank E. 2015. <em>Regression Modeling Strategies: With Applications to Linear Models, Logistic and Ordinal Regression, and Survival Analysis</em>. Springer.</p>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="2">
+<li id="fn2"><p>In reality this is not really true because who stay better is on the top of the list!<a href="cox.html#fnref2">↩</a></p></li>
+<li id="fn3"><p>Good example in which only the clinicians know if it is an effect clinically relevant (deciding it <strong>before</strong> the analyses) or not<a href="cox.html#fnref3">↩</a></p></li>
+<li id="fn4"><p>The answer here should be “if there are no marginal significant effect is has no sense to look at the interaction terms!”.<a href="cox.html#fnref4">↩</a></p></li>
+</ol>
+</div>
+            </section>
 
-\section{Key (operative) concepts}\label{key3}
+          </div>
+        </div>
+      </div>
+<a href="survival.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="heterogeneity.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"weibo": false,
+"instapper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"download": ["SuDACDa-notes.epub", "SuDACDa-notes.pdf"],
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
 
-\chapter*{Software}\label{software}
-\addcontentsline{toc}{chapter}{Software}
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(script.src))
+      script.src  = script.src.replace(/^https?:/, '');
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
 
-\section*{Packages}\label{packages}
-\addcontentsline{toc}{section}{Packages}
-
-All the exercise are solved using R (ver. 3.4.2) has been used provided
-with packages: \texttt{survival} (\citet{R-survival}) for the survival
-data analyses (reference package), \texttt{survminer}
-(\citet{R-survminer}) for advance survival plot using \texttt{ggplot2}
-(\citet{R-ggplot2}) package, \texttt{rms} (\citet{R-rms}) for additional
-features on regression modeling strategies (survival ones included).
-
-With regards to the data management, the collection of package
-\texttt{tidyverse} (\citet{R-tidyverse}) is loaded, which includes:
-\texttt{dplyr} (\citet{R-dplyr}) for data manipulation, \texttt{purrr}
-(\citet{R-purrr}) for functional programming, \texttt{readr} (R-readr)
-for data import, \texttt{tidyr} (R-tidyr) for funtions to tidy the data,
-\texttt{tibble} (R-tibble) to take advantage of the \emph{tible} data
-frame class and \texttt{ggplot2} as a interface for the Gramar of
-Grahics.
-
-The present book was written in RMarkdown (R-rmarkdown), compiled using
-\texttt{knitr} (\citet{R-knitr}) and rendered as an HTML book by
-\texttt{bookdown} (\citet{R-bookdown}).
-
-\section*{System Information}\label{system-information}
-\addcontentsline{toc}{section}{System Information}
-
-All the code is compiled on a system with the following overall
-characteristics and loaded packages.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{devtools::}\KeywordTok{session_info}\NormalTok{()}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-##  setting  value                       
-##  version  R version 3.4.2 (2017-09-28)
-##  system   x86_64, mingw32             
-##  ui       RTerm                       
-##  language (EN)                        
-##  collate  English_United States.1252  
-##  tz       Europe/Berlin               
-##  date     2017-10-04                  
-## 
-##  package      * version date       source        
-##  acepack        1.4.1   2016-10-29 CRAN (R 3.4.1)
-##  assertthat     0.2.0   2017-04-11 CRAN (R 3.4.1)
-##  backports      1.1.0   2017-05-22 CRAN (R 3.4.0)
-##  base         * 3.4.2   2017-09-28 local         
-##  base64enc      0.1-3   2015-07-28 CRAN (R 3.4.0)
-##  bindr          0.1     2016-11-13 CRAN (R 3.4.1)
-##  bindrcpp     * 0.2     2017-06-17 CRAN (R 3.4.1)
-##  bookdown       0.5     2017-08-20 CRAN (R 3.4.1)
-##  broom          0.4.2   2017-02-13 CRAN (R 3.4.0)
-##  cellranger     1.1.0   2016-07-27 CRAN (R 3.4.1)
-##  checkmate      1.8.3   2017-07-03 CRAN (R 3.4.1)
-##  cluster        2.0.6   2017-03-16 CRAN (R 3.4.1)
-##  cmprsk         2.2-7   2014-06-17 CRAN (R 3.4.1)
-##  codetools      0.2-15  2016-10-05 CRAN (R 3.4.0)
-##  colorspace     1.3-2   2016-12-14 CRAN (R 3.4.1)
-##  compiler       3.4.2   2017-09-28 local         
-##  data.table     1.10.4  2017-02-01 CRAN (R 3.4.0)
-##  datasets     * 3.4.2   2017-09-28 local         
-##  devtools       1.13.3  2017-08-02 CRAN (R 3.4.1)
-##  digest         0.6.12  2017-01-27 CRAN (R 3.4.1)
-##  dplyr        * 0.7.3   2017-09-09 CRAN (R 3.4.1)
-##  evaluate       0.10.1  2017-06-24 CRAN (R 3.4.1)
-##  forcats        0.2.0   2017-01-23 CRAN (R 3.4.1)
-##  foreign        0.8-69  2017-06-21 CRAN (R 3.4.0)
-##  Formula      * 1.2-2   2017-07-10 CRAN (R 3.4.1)
-##  ggplot2      * 2.2.1   2016-12-30 CRAN (R 3.4.1)
-##  ggpubr       * 0.1.5   2017-08-22 CRAN (R 3.4.1)
-##  glue           1.1.1   2017-06-21 CRAN (R 3.4.1)
-##  graphics     * 3.4.2   2017-09-28 local         
-##  grDevices    * 3.4.2   2017-09-28 local         
-##  grid           3.4.2   2017-09-28 local         
-##  gridExtra      2.3     2017-09-09 CRAN (R 3.4.1)
-##  gtable         0.2.0   2016-02-26 CRAN (R 3.4.1)
-##  haven          1.1.0   2017-07-09 CRAN (R 3.4.1)
-##  Hmisc        * 4.0-3   2017-05-02 CRAN (R 3.4.1)
-##  hms            0.3     2016-11-22 CRAN (R 3.4.1)
-##  htmlTable      1.9     2017-01-26 CRAN (R 3.4.1)
-##  htmltools      0.3.6   2017-04-28 CRAN (R 3.4.1)
-##  htmlwidgets    0.9     2017-07-10 CRAN (R 3.4.1)
-##  httr           1.3.1   2017-08-20 CRAN (R 3.4.1)
-##  jsonlite       1.5     2017-06-01 CRAN (R 3.4.1)
-##  km.ci          0.5-2   2009-08-30 CRAN (R 3.4.1)
-##  KMsurv         0.1-5   2012-12-03 CRAN (R 3.4.0)
-##  knitr          1.17    2017-08-10 CRAN (R 3.4.1)
-##  labeling       0.3     2014-08-23 CRAN (R 3.4.0)
-##  lattice      * 0.20-35 2017-03-25 CRAN (R 3.4.1)
-##  latticeExtra   0.6-28  2016-02-09 CRAN (R 3.4.1)
-##  lazyeval       0.2.0   2016-06-12 CRAN (R 3.4.1)
-##  lubridate      1.6.0   2016-09-13 CRAN (R 3.4.1)
-##  magrittr     * 1.5     2014-11-22 CRAN (R 3.4.1)
-##  MASS           7.3-47  2017-04-21 CRAN (R 3.4.1)
-##  Matrix         1.2-11  2017-08-16 CRAN (R 3.4.1)
-##  MatrixModels   0.4-1   2015-08-22 CRAN (R 3.4.1)
-##  memoise        1.1.0   2017-04-21 CRAN (R 3.4.1)
-##  methods      * 3.4.2   2017-09-28 local         
-##  mnormt         1.5-5   2016-10-15 CRAN (R 3.4.0)
-##  modelr         0.1.1   2017-07-24 CRAN (R 3.4.1)
-##  multcomp       1.4-7   2017-09-07 CRAN (R 3.4.1)
-##  munsell        0.4.3   2016-02-13 CRAN (R 3.4.1)
-##  mvtnorm        1.0-6   2017-03-02 CRAN (R 3.4.0)
-##  nlme           3.1-131 2017-02-06 CRAN (R 3.4.1)
-##  nnet           7.3-12  2016-02-02 CRAN (R 3.4.1)
-##  parallel       3.4.2   2017-09-28 local         
-##  pkgconfig      2.0.1   2017-03-21 CRAN (R 3.4.1)
-##  plyr           1.8.4   2016-06-08 CRAN (R 3.4.1)
-##  polspline      1.1.12  2015-07-14 CRAN (R 3.4.0)
-##  psych          1.7.8   2017-09-09 CRAN (R 3.4.1)
-##  purrr        * 0.2.3   2017-08-02 CRAN (R 3.4.1)
-##  quantreg       5.33    2017-04-18 CRAN (R 3.4.1)
-##  R6             2.2.2   2017-06-17 CRAN (R 3.4.1)
-##  RColorBrewer   1.1-2   2014-12-07 CRAN (R 3.4.0)
-##  Rcpp           0.12.12 2017-07-15 CRAN (R 3.4.1)
-##  readr        * 1.1.1   2017-05-16 CRAN (R 3.4.1)
-##  readxl         1.0.0   2017-04-18 CRAN (R 3.4.1)
-##  reshape2       1.4.2   2016-10-22 CRAN (R 3.4.1)
-##  rlang          0.1.2   2017-08-09 CRAN (R 3.4.1)
-##  rmarkdown      1.6     2017-06-15 CRAN (R 3.4.1)
-##  rms          * 5.1-1   2017-05-03 CRAN (R 3.4.1)
-##  rpart          4.1-11  2017-04-21 CRAN (R 3.4.1)
-##  rprojroot      1.2     2017-01-16 CRAN (R 3.4.1)
-##  rstudioapi     0.7     2017-09-07 CRAN (R 3.4.1)
-##  rvest          0.3.2   2016-06-17 CRAN (R 3.4.1)
-##  sandwich       2.4-0   2017-07-26 CRAN (R 3.4.1)
-##  scales         0.5.0   2017-08-24 CRAN (R 3.4.1)
-##  SparseM      * 1.77    2017-04-23 CRAN (R 3.4.0)
-##  splines        3.4.2   2017-09-28 local         
-##  stats        * 3.4.2   2017-09-28 local         
-##  stringi        1.1.5   2017-04-07 CRAN (R 3.4.0)
-##  stringr        1.2.0   2017-02-18 CRAN (R 3.4.1)
-##  survival     * 2.41-3  2017-04-04 CRAN (R 3.4.1)
-##  survminer    * 0.4.0   2017-06-07 CRAN (R 3.4.1)
-##  survMisc       0.5.4   2016-11-23 CRAN (R 3.4.1)
-##  TH.data        1.0-8   2017-01-23 CRAN (R 3.4.1)
-##  tibble       * 1.3.4   2017-08-22 CRAN (R 3.4.1)
-##  tidyr        * 0.7.1   2017-09-01 CRAN (R 3.4.1)
-##  tidyverse    * 1.1.1   2017-01-27 CRAN (R 3.4.1)
-##  tools          3.4.2   2017-09-28 local         
-##  utils        * 3.4.2   2017-09-28 local         
-##  withr          2.0.0   2017-07-28 CRAN (R 3.4.1)
-##  xml2           1.1.1   2017-01-24 CRAN (R 3.4.1)
-##  xtable         1.8-2   2016-02-05 CRAN (R 3.4.1)
-##  yaml           2.1.14  2016-11-12 CRAN (R 3.4.1)
-##  zoo            1.8-0   2017-04-12 CRAN (R 3.4.1)
-\end{verbatim}
-
-\bibliography{packages,book}
-
-
-\end{document}
+</html>

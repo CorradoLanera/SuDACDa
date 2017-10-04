@@ -1,4 +1,4 @@
-# *Monday*: Introduction to Survival Analyses and simulation of data {#monday}
+# *Monday*: Introduction to Survival Analyses and simulation of data {#survival}
 
 ## Key (operative) concepts {#key1}
 
