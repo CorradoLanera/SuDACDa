@@ -1,20 +1,20 @@
 # *Thusday*: Cox models {#thusday}
 
 
-## Key (operative) concepts
+## Key (operative) concepts {#key2}
 
 1. Non-informative censoring assumption!
 
 > We cannot test for it, but we can be convinced of it
 
-2. Test any covariates for proportional hazzard. If fail:
+2. Test any covariates for proportional hazard. If fail:
   - If $H_0$ is valid, it is not a problem
   - Is it due to outliers?
   - Does this variable really need?
-  - ... do you really think that proportiona of hazard should hold? What about
+  - ... do you really think that proportional of hazard should hold? What about
     shift to a different model?
 3. Test continuous variable for log-linearity. If fail:
-  - try a trasformation of the variable (i.e., log, spline, ...)
+  - try a transformation of the variable (i.e., log, spline, ...)
   - if it is not possible (e.g. *U-shape*) perform a categorization
 
 > When performing categorization do not base it on the p-value: you have to 
@@ -23,16 +23,16 @@
 
 4. The biggest problem with databases with more observations for each patients
    is not the model but to produce a table with the right information in the
-   righ position. In particular we need the  folloqing columns
+   right position. In particular we need the  following columns
    - id
    - start
    - end
    - event
    - covariates...
 
-5. Get results easy to explain to / undertand by a clinician!
+5. Get results easy to explain to / understand by a clinician!
 
-## Basic tests and funtions
+## Basic tests and funtions {#test2}
 
 For this part we will use the data `pbc` (`?pbc`) from the package __survival__.
 
@@ -51,9 +51,9 @@ pbc_df                                                       # give a look at it
 describe(pbc_df)                                 # and whatch at some statistics
 ```
 
-### Impact of sex on death
+### Impact of sex on death {sex2}
 
-First of all we have to ask to ourself, and to the clinicians, some questions:
+First of all we have to ask to our self, and to the clinicians, some questions:
 
 1. There are non-informative censoring? Yes, because there is a final
    data-independent date (i.e. July, 1986). This is completely non-informative
@@ -63,10 +63,10 @@ First of all we have to ask to ourself, and to the clinicians, some questions:
 2. What we have to do with the transplant? I.e., `event` has three levels:
    censored, transplant, dead; how we have to consider transplanted patients?
    In this case, clinicians answered that the transplant status is completely
-   random! So, we can beleve that it is a non-informative censoring.^[In reality
+   random! So, we can believe that it is a non-informative censoring.^[In reality
    this is not really true because who stay better is on the top of the list!]
    
-Moreover we have to consider, befor to start, that `sex` is a categorical
+Moreover we have to consider, before to start, that `sex` is a categorical
 variable, so we have to check (only) the proportionality of the hazards.
 
 ```{r}
@@ -117,7 +117,7 @@ summary(rms_sex)       # a cleaner and more informative output, note Low and Hig
 
 
 
-### Impact of age on death
+### Impact of age on death{#age2}
 
   - we have to check for the proportional HR
   - It is continuous variable, we have to check the the log-linearity too
@@ -134,16 +134,19 @@ cox.zph(cox_age) %>%
   plot(col = 'blue')
 ```
 
-The proportional hazard ipotesis is not invalidated
+The proportional hazard hypothesis is not invalidated
 
 ```{r}
+# [Note: unfortunately the option `noprint` of the funciton `rcspline.plot`
+#  does not work and the space-waste list of all the coefficients and relative
+#  SE will be printed all the time. Sorry, we are working for a solution.]
 rcspline.plot(
-  x     = pbc_df$age,
-  y     = pbc_df$time,
-  event = pbc_df$status == 2,
-  nk    = 3,                     # default are 5 knots, too mutch for this model
-#  model = 'cox',            # If event is present, model is assumed to be "cox"
-  xlab  = 'Age'
+  x       = pbc_df$age,
+  y       = pbc_df$time,
+  event   = pbc_df$status == 2,
+  nk      = 3,                   # default are 5 knots, too mutch for this model
+#  model   = 'cox',          # If event is present, model is assumed to be "cox"
+  xlab    = 'Age'
 )
 ```
 
@@ -158,7 +161,7 @@ summary(cox_age)
 ```
 
 The effect is significant but too low to understand, so we can change the
-"misure of time" to expand it.
+"measure of time" to expand it.
 
 
 ```{r}
@@ -193,7 +196,7 @@ only the clinicians know if it is an effect clinically relevant (deciding it
 __before__ the analyses) or not].
 
 
-### Impact of aspartate aminotransferase (`ast`) on death
+### Impact of aspartate aminotransferase (`ast`) on death {#ast2}
   - same of age
   
 ```{r}
@@ -209,7 +212,7 @@ cox.zph(rms_ast) %>%
 ```
 
 The proportional hazard assumption is not violated, but by the graph it seams
-not that linear. Try to transform it using the $log()$ trasformation.
+not that linear. Try to transform it using the $log()$ transformation.
 
 ```{r}
 log_ast <- cph(Surv(time, status == 2) ~ log(ast),
@@ -224,17 +227,17 @@ cox.zph(log_ast) %>%
   plot(col = 'green')
 ```
 
-The situtation is not much better...but we can say that there exists a line
+The situation is not much better...but we can say that there exists a line
 living in the middle of the band...so we are not very happy but we accept it. 
 
 Let's test for log-linearity
 
 ```{r}
 rcspline.plot(
-  x     = log(pbc_df$ast),
-  y     = pbc_df$time,
-  event = pbc_df$status == 2,
-  xlab  = 'ast'
+  x       = log(pbc_df$ast),
+  y       = pbc_df$time,
+  event   = pbc_df$status == 2,
+  xlab    = 'ast'
 )
 ```
 
@@ -250,7 +253,7 @@ It is significantly protective, with doubling the effect between the borders of
 the IQR.
 
 
-### Impact of __platelet__ on death
+### Impact of __platelet__ on death {#platelet2}
   - same of age
 
 ```{r}
@@ -263,22 +266,23 @@ rms_platelet <- cph(Surv(time, status == 2) ~ platelet,
 cox.zph(rms_platelet)
 
 cox.zph(rms_platelet) %>%
-  plot
+  plot(col = 'green')
+
 
 rcspline.plot(
-  x     = pbc_df$platelet %>% as.numeric,
-  y     = pbc_df$time,
-  event = pbc_df$status == 2,
-  xlab  = 'Platelet'
+  x       = pbc_df$platelet %>% as.numeric,
+  y       = pbc_df$time,
+  event   = pbc_df$status == 2,
+  xlab    = 'Platelet'
 )
 ```
 
 The log-linear plot has a U-shape so, standard transformation are not good.
-We can try to perform a categorization. Two startegy:
-  1. look at the log-linear plot and try to find a good cutpoints, but we have
+We can try to perform a categorization. Two strategy:
+  1. look at the log-linear plot and try to find a good cut-points, but we have
     to explain how we have defined them (and "use the p-value" is not a good
     strategy)
-  2. Use standard non related cutof, such as median or quartile
+  2. Use standard non related cutoff, such as median or quartiles
 
 
 ```{r}
@@ -290,7 +294,7 @@ cox_cut_platelet <- coxph(
 cox.zph(cox_cut_platelet)
 
 cox.zph(cox_cut_platelet) %>%
-  plot
+  plot(col = 'blue')
 
 summary(cox_cut_platelet)
 ```
@@ -316,7 +320,7 @@ summary(cox_relev_platelet)
 
 
 
-## Investigation on adjusted variables and interactions
+## Investigation on adjusted variables and interactions {#adjusted2}
 
 Clinician: what is the effect of treatment (`trt`) on death?
 ```{r}
@@ -339,7 +343,7 @@ cph(Surv(time, status == 2) ~ trt + edema,
 
 No effect for treatment nor edema
 
-Clinicians: and what about teir interaction?^[The answere here should be "if
+Clinicians: and what about their interaction?^[The answer here should be "if
 there are no marginal significant effect is has no sense to look at the
 interaction terms!".]
 
@@ -387,7 +391,7 @@ Predict(rms_trt_stage) %>%
 
 Treatment continue to have no effect
 
-## Longitudinal suvival data analayses
+## Longitudinal suvival data analayses {#longitudinal}
 
 Load a data-set, update the `datadist()` for the __rms__ package, and take a 
 look at the data
@@ -399,8 +403,8 @@ dd <- datadist(pbcseq_df)
 pbcseq_df
 ```
 
-- The only triky task is to correctly manage and prepare the data. Our proposal
-  take advantage of the `dplyr` functionalities
+- The only tricky task is to correctly manage and prepare the data. Our proposal
+  take advantage of the `dplyr` functionality
 
 ```{r}
 pbcseq_full <- pbcseq_df %>%
@@ -415,7 +419,7 @@ pbcseq_full <- pbcseq_df %>%
 ```
 
 
-### Impact of bilurubine of death
+### Impact of bilurubine of death {#bilurubine2}
 
 ```{r}
 bil_mod <- cph(
@@ -428,12 +432,13 @@ bil_mod <- cph(
 summary(bil_mod)
 
 plot(
-  x = pbcseq_full$end,
-  y = residuals(bil_mod, type = 'dfbeta')
+  x   = pbcseq_full$end,
+  y   = residuals(bil_mod, type = 'dfbeta'),
+  col = 'red'
 )
 ```
 
-### Impact of ast
+### Impact of ast {#ast_full2}
 
 ```{r}
 ast_mod <- cph(
@@ -446,13 +451,15 @@ ast_mod <- cph(
 summary(ast_mod)
 
 plot(
-  x = pbcseq_full$end,
-  y = residuals(ast_mod, type = 'dfbeta')
+  x   = pbcseq_full$end,
+  y   = residuals(ast_mod, type = 'dfbeta'),
+  col = 'red'
 )
 
 plot(
-  x = pbcseq_full$end,
-  y = residuals(ast_mod, type = 'martingale')
+  x   = pbcseq_full$end,
+  y   = residuals(ast_mod, type = 'martingale'),
+  col = 'brown'
 )
 ```
 
@@ -474,15 +481,15 @@ pbcseq_full$ast %>% describe
 pbcseq_full$ast[[strange_id]]
 ```
 
-Here is another example in which the opionon of a clinician is mandatory, i.e.
-we cannot decide if ignore outliers, which ones, etcetera
+Here is another example in which the opinion of a clinician is mandatory, i.e.
+we cannot decide if ignore outliers, which ones, etc
 
 
 
 
-## Prognostic model
+## Prognostic model {#prognostic2}
 
-### priognostic model with `àscites`, `edema`, `sex`, `bili`, `ast`, `platelet`, `stage`
+### prognostic model with `àscites`, `edema`, `sex`, `bili`, `ast`, `platelet`, `stage` {#model2}
 
 ```{r}
 # prepare an ad hoc data frame
@@ -507,10 +514,10 @@ pbc_updated %>%
 There are 11 basic df (one each continuous variable and one-minus-n-level for
 the categorical one), so to use all of them we need at least $110$ obs. Data has
 $418$, this allow us to use a more complex model, with some interaction, splines,
-eccetera (more or less other $15 -- 30$ df).
+etc (more or less other $15 -- 30$ df).
 
 We decide (following suggestions from @harrell2015regression) to consider
-splines for any continuous variable (with 3 knots) and consider sex interactin 
+splines for any continuous variable (with 3 knots) and consider sex interaction 
 with them and the other numerical variables, leading to near $20$ df.
 
 ```{r}

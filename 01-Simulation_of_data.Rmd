@@ -1,6 +1,34 @@
 # *Monday*: Introduction to Survival Analyses and simulation of data {#monday}
 
-## Simulated Data
+## Key (operative) concepts {#key1}
+
+1. Time has asymmetric density and can be censored:
+  - not possible to summarize it by the means
+  - cannot be normal distributed
+  - use exponential family
+
+2. Plot the log-plot to check the distribution assumptions
+
+3. Censoring can be:
+  - Right: event not (yet) occurred at f-up
+    - Fixed (identical f-up for anyone)
+    - Sequential ($min(T_i, C_i)$)
+    - Random
+  - Left: the event has occurred before the observed period (all population but
+    not all information, e.g. menarche date)
+  - Interval: the event can be occurred between two times (but don't know when)
+  - Left truncated: starting point is after the beginning (different from Left,
+    all the information but not complete population)
+
+4. Models:
+  - statistical: non-informative censoring (Kaplan-Meier, Cox model, ...)
+  - probabilistic: independent censoring (life tables)
+  - parametric (`survival::survreg()`, need to define the distribution) VS
+    non-parametric (`survival::survfit()` or `rms::npsurv()`, no need to define
+    distribution)
+
+
+## Simulated Data {#sumulation1}
 
 1. Simulate a sample of $n = 100$ or $1000$ exponential survival times, with
   mean $\theta = 5$.
@@ -152,7 +180,7 @@ title(main = 'Censored (a = 0.5) --- rms')
 
 
 
-## `mgus` data from __survival__ package
+## `mgus` data from __survival__ package {#mgus}
 
 1. Load and explore data
 
@@ -280,7 +308,7 @@ Predict(cox_model) %>%          # Compute predicted values and confidence limits
 
 
 
-## Non parametric Kaplan-Meier estimation of the survival function
+## Non parametric Kaplan-Meier estimation of the survival function {#km1}
 
 1. Let consider a sample of $n = 500$
 
