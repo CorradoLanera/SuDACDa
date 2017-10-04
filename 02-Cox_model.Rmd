@@ -1,126 +1,231 @@
 # *Thusday*: Cox models {#thusday}
 
+
+## Key (operative) concepts
+
+1. Non-informative censoring assumption!
+
+> We cannot test for it, but we can be convinced of it
+
+2. Test any covariates for proportional hazzard. If fail:
+  - If $H_0$ is valid, it is not a problem
+  - Is it due to outliers?
+  - Does this variable really need?
+  - ... do you really think that proportiona of hazard should hold? What about
+    shift to a different model?
+3. Test continuous variable for log-linearity. If fail:
+  - try a trasformation of the variable (i.e., log, spline, ...)
+  - if it is not possible (e.g. *U-shape*) perform a categorization
+
+> When performing categorization do not base it on the p-value: you have to 
+  explain why this choiche is clinically relevant and not statistically 
+  significant!
+
+4. The biggest problem with databases with more observations for each patients
+   is not the model but to produce a table with the right information in the
+   righ position. In particular we need the  folloqing columns
+   - id
+   - start
+   - end
+   - event
+   - covariates...
+
+5. Get results easy to explain to / undertand by a clinician!
+
+## Basic tests and funtions
+
+For this part we will use the data `pbc` (`?pbc`) from the package __survival__.
+
+> Note: `data(pbc)` load the `pbc` data-set and the `pbcseq` one, so on one side
+>        we do not need to call `data(pbcseq)` to load the letter, on the other
+>        side `data(pbcseq)` will throw an error because to load it we have to 
+>        call `data(pbc)`. (We will use both data-sets.)
+
 ```{r data_load}
-data(pbc)
-?pbc
-pbc_df <- as.tibble(pbc)
-dd <- datadist(pbc_df)
+data(pbc)                                                    # load the data-set
+# ?pbc
+pbc_df <- as.tibble(pbc)                       # create the tibble version of it
+dd <- datadist(pbc_df)     # store in the dd variable its `datadist()` for _rms_
+
+pbc_df                                                       # give a look at it
+describe(pbc_df)                                 # and whatch at some statistics
 ```
 
+### Impact of sex on death
 
-## TP1
+First of all we have to ask to ourself, and to the clinicians, some questions:
 
-1. Impact of __sex__ on death
-  - First question: there are non informative censoring. Because there is
-    a final date (i.e. July, 1986) this is completerly non informative about
-    the patients. So we can suspect a non informative censoring. So we can
-    use Cox, KM, ...
-  - What we have to do with the transplant? Considercensored, cases, what?
-    Answere: it is completely random! So, we can beleve that this is a non 
-    informative censoring.^[In reality this is not really true because who
-    stay better is on the top of the list!]
-  - sex is categorical so we have to check (only) the proportional HR
+1. There are non-informative censoring? Yes, because there is a final
+   data-independent date (i.e. July, 1986). This is completely non-informative
+   with regards to the patients. So we can suspect a non-informative censoring
+   and start investigations using Cox model.
+
+2. What we have to do with the transplant? I.e., `event` has three levels:
+   censored, transplant, dead; how we have to consider transplanted patients?
+   In this case, clinicians answered that the transplant status is completely
+   random! So, we can beleve that it is a non-informative censoring.^[In reality
+   this is not really true because who stay better is on the top of the list!]
+   
+Moreover we have to consider, befor to start, that `sex` is a categorical
+variable, so we have to check (only) the proportionality of the hazards.
 
 ```{r}
-pbc_df
-
-# Using _survival_
+# Using _survival_ (Cox model for proportional hazard against sex)
 cox_sex <- coxph(Surv(time, status == 2) ~ sex,
   data = pbc_df
 )
 
-cox.zph(cox_sex)                                      # test for proportional HR
+cox.zph(cox_sex)                           # test for proportionality of hazards
 
-summary(cox_sex)
-
-
-# Using rms
-rms_mod <- cph(Surv(time, status == 2) ~ sex,
-  data = pbc_df
+cox.zph(cox_sex) %>% 
+  plot(
+    main = 'Graph of the scaled Schoenfeld residuals for sex, along with a smooth curve',
+    col = 'blue'
 )
-
-cox.zph(cox_mod)                                      # test for proportional HR
-
-summary(cox_mod)
-
-
 ```
 
-So, if you are a female it seams that you have a lower risk to die, but it is
-not significant (CI include $1$).
-
-2. Impact of __age__ on death
-
-  - we have to check for the proportional HR
-  - It is continuous, so we have to check the linearity of the log-linear
+The proportional hazard assumption is not invalidate so we can continue with the
+analyses.
 
 ```{r}
+summary(cox_sex)
+```
+
+The effect of sex, viewed as hazard ration, say that if you are a female it
+seems that you have a lower risk to die, but it is not significant (i.e.,
+$p$-value $> 0.05$ and CI include $1$).
+
+> Anyone have the same risk, 1, to die... What the hazard ration say is that if
+> at the begin of a day you are alive, if you a re a woman you have 32% less
+> probability to die before the end of the day respect a men.
+
+```{r}
+# Using rms
+rms_sex <- cph(Surv(time, status == 2) ~ sex,
+  data = pbc_df,
+  x    = TRUE,                    # to compute cox.zph, we need to store x and y
+  y    = TRUE
+)
+
+cox.zph(rms_sex)
+
+cox.zph(rms_sex) %>% 
+  plot(col = 'green')                       # exactly the same results as before!
+
+summary(rms_sex)       # a cleaner and more informative output, note Low and High
+```
+
+
+
+### Impact of age on death
+
+  - we have to check for the proportional HR
+  - It is continuous variable, we have to check the the log-linearity too
+
+```{r}
+# Using survival
 cox_age <- coxph(Surv(time, status == 2) ~ age,
   data = pbc_df
 )
 
-cox.zph(cox_age)                                      # test for proportional HR
+cox.zph(cox_age)
 
 cox.zph(cox_age) %>%
-  plot                                              # the plot should seams flat
+  plot(col = 'blue')
+```
 
+The proportional hazard ipotesis is not invalidated
+
+```{r}
 rcspline.plot(
   x     = pbc_df$age,
   y     = pbc_df$time,
   event = pbc_df$status == 2,
-  model = 'cox',
+  nk    = 3,                     # default are 5 knots, too mutch for this model
+#  model = 'cox',            # If event is present, model is assumed to be "cox"
   xlab  = 'Age'
 )
 ```
 
-> Note: sometimes you __know__ the answer for log-linearity (for any reason), in
+The log-linearity is not invalidated
+
+> Note: sometimes you *know* the answer for log-linearity (for any reason), in
 >       those cases do not test for it!! (It is not very powerful so for small
->       ss it never reject it)
+>       sample sizes it never reject it)
 
 ```{r}
 summary(cox_age)
 ```
 
-The effect seams quite low, even if significant, so to explain better to a 
-clinicians this fact we can find the effect for ten year and not one
+The effect is significant but too low to understand, so we can change the
+"misure of time" to expand it.
+
 
 ```{r}
-coxph(Surv(time, status == 2) ~ I(age / 10),
+coxph(Surv(time, status == 2) ~ I(age / 10),          # consider 10 years as one
   data = pbc_df
 ) %>%
   summary
 ```
 
+Here, the effect is increased, but we have to pay attention the an increment of
+"one", here, corresponds to an increment of ten years!
 
-3. Impact of __ast__ on death
+```{r}
+# Using rms
+rms_age <- cph(Surv(time, status == 2) ~ age,
+  data = pbc_df,
+  x    = TRUE,                    # to compute cox.zph, we need to store x and y
+  y    = TRUE
+)
+
+Predict(rms_age) %>%
+  plot
+
+summary(rms_age)  # _rms_ show effects from the Lower to the Higher limit of IQR
+                  # and report the different between them as well as the HR, so
+                  # we do not need to perform triky transformation which asks
+                  # for an alterate interpretation of the result
+```
+
+In particular, the effect quite doubled in fifteen years.^[Good example in which
+only the clinicians know if it is an effect clinically relevant (deciding it
+__before__ the analyses) or not].
+
+
+### Impact of aspartate aminotransferase (`ast`) on death
   - same of age
   
 ```{r}
-cox_ast <- coxph(Surv(time, status == 2) ~ ast,
-  data = pbc_df
+rms_ast <- cph(Surv(time, status == 2) ~ ast,
+  data = pbc_df,
+  x    = TRUE,
+  y    = TRUE
 )
 
-cox.zph(cox_ast)                                      # test for proportional HR
-
-cox.zph(cox_ast) %>%
-  plot                                              # the plot should seams flat
+cox.zph(rms_ast)
+cox.zph(rms_ast) %>%
+  plot(col = 'green')
 ```
 
-The proportional HR assumption is violated, so we cannot use a Cox model as it
-is, we have to transform it.
+The proportional hazard assumption is not violated, but by the graph it seams
+not that linear. Try to transform it using the $log()$ trasformation.
 
 ```{r}
-cox_log_ast <- coxph(Surv(time, status == 2) ~ log(ast),
-  data = pbc_df
+log_ast <- cph(Surv(time, status == 2) ~ log(ast),
+  data = pbc_df,
+  x    = TRUE,
+  y    = TRUE
 )
 
-cox.zph(cox_log_ast)
+cox.zph(log_ast)
 
-cox.zph(cox_log_ast) %>%
-  plot                                              # the plot should seams flat
+cox.zph(log_ast) %>%
+  plot(col = 'green')
 ```
-There exixt a line live in the middle of the band...so we are not very happy
-but we accept it. 
+
+The situtation is not much better...but we can say that there exists a line
+living in the middle of the band...so we are not very happy but we accept it. 
 
 Let's test for log-linearity
 
@@ -129,62 +234,71 @@ rcspline.plot(
   x     = log(pbc_df$ast),
   y     = pbc_df$time,
   event = pbc_df$status == 2,
-  model = 'cox',
-  xlab  = 'AST'
+  xlab  = 'ast'
 )
 ```
 
-And finally look at the effect of the log of `ast`
+The log-linear assumption is not violated.
+
+Finally, look at the effect of the log of `ast`
+
 ```{r}
-summary(cox_ast)
+summary(log_ast)
 ```
 
-3. Impact of __platelet__ on death
+It is significantly protective, with doubling the effect between the borders of
+the IQR.
+
+
+### Impact of __platelet__ on death
   - same of age
 
 ```{r}
-cox_platelet <- coxph(Surv(time, status == 2) ~ platelet,
-  data = pbc_df
+rms_platelet <- cph(Surv(time, status == 2) ~ platelet,
+  data = pbc_df,
+  x    = TRUE,
+  y    = TRUE
 )
 
-cox.zph(cox_platelet)
+cox.zph(rms_platelet)
 
-cox.zph(cox_platelet) %>%
-  plot                                              # the plot should seams flat
+cox.zph(rms_platelet) %>%
+  plot
 
 rcspline.plot(
   x     = pbc_df$platelet %>% as.numeric,
   y     = pbc_df$time,
   event = pbc_df$status == 2,
-  model = 'cox',
   xlab  = 'Platelet'
 )
 ```
 
 The log-linear plot has a U-shape so, standard transformation are not good.
 We can try to perform a categorization. Two startegy:
-  - look at the log-linear plot and try to find a good cutpoints, but we have
+  1. look at the log-linear plot and try to find a good cutpoints, but we have
     to explain how we have defined them (and "use the p-value" is not a good
     strategy)
-  - Use standard non related cutof, such as median or quartile
+  2. Use standard non related cutof, such as median or quartile
 
 
 ```{r}
-cox_cut_platelet <- coxph(Surv(time, status == 2) ~ cut(platelet, c(0, 150, 400, 1000)),
+cox_cut_platelet <- coxph(
+  Surv(time, status == 2) ~ cut(platelet, c(0, 150, 400, 1000)),
   data = pbc_df
 )
 
 cox.zph(cox_cut_platelet)
 
 cox.zph(cox_cut_platelet) %>%
-  plot                                              # the plot should seams flat
+  plot
 
 summary(cox_cut_platelet)
 ```
 
-But here the reference is the lower level but the interested is what happen if
-we lie above or over the standard values, so we have to relevel the category
-to make the medium level as the reference one, i.e. the first
+But here the reference level, i.e. the contrast, is the lower level but the
+interested is what happen if we lie above or over the standard values, so we
+have to relevel the category to make the medium level as the reference one, i.e.
+the first.
 
 ```{r}
 pbc_df <- pbc_df %>% 
@@ -202,44 +316,81 @@ summary(cox_relev_platelet)
 
 
 
-## TP2
+## Investigation on adjusted variables and interactions
 
+Clinician: what is the effect of treatment (`trt`) on death?
 ```{r}
-coxph(Surv(time, status == 2) ~ trt,
+cph(Surv(time, status == 2) ~ trt,
   data = pbc_df
 ) %>% 
   summary
-
-coxph(Surv(time, status == 2) ~ trt + edema,
-  data = pbc_df
-) %>% 
-  summary
-
-coxph(Surv(time, status == 2) ~ trt * edema,
-  data = pbc_df
-) %>% 
-  summary
-
-coxph(Surv(time, status == 2) ~ trt + stage,
-  data = pbc_df %>% mutate(stage = factor(stage, ordered = TRUE))
-) %>% 
-  summary
-
-coxph(Surv(time, status == 2) ~ trt * stage,
-  data = pbc_df %>% mutate(stage = as.factor(stage))
-) %>% 
-  summary
-
-
-Predict(cph(Surv(time, status == 2) ~ trt * stage,
-  data = pbc_df %>% mutate(stage = as.factor(stage))
-)) %>%
-  ggplot
 ```
 
+No significant effect for treatment.
 
+Clinician: an adjusted with edema?
 
-## TP3
+```{r}
+cph(Surv(time, status == 2) ~ trt + edema,
+  data = pbc_df
+) %>% 
+  summary
+```
+
+No effect for treatment nor edema
+
+Clinicians: and what about teir interaction?^[The answere here should be "if
+there are no marginal significant effect is has no sense to look at the
+interaction terms!".]
+
+```{r}
+cph(Surv(time, status == 2) ~ trt * edema,
+  data = pbc_df
+) %>% 
+  summary
+```
+
+No effect.
+
+Clinicians: and what about adjusted with stage?
+
+```{r}
+adj_pbc <- pbc_df %>% 
+  mutate(stage_fct = factor(stage))
+
+dd <- datadist(adj_pbc)
+
+cph(Surv(time, status == 2) ~ trt + stage_fct,
+  data = adj_pbc
+) %>% 
+  summary
+```
+
+Treatment still with no significant effect. `stage` has some effects, i.e. from
+the 3 to 1 or to 4, 
+
+Clinicians: oh, so let's look at the interactions!
+
+```{r}
+rms_trt_stage <- cph(Surv(time, status == 2) ~ trt * stage,
+  data = adj_pbc
+)
+
+summary(rms_trt_stage)
+
+Predict(rms_trt_stage) %>%
+  ggplot(anova = anova(rms_trt_stage), pval = TRUE)
+
+Predict(rms_trt_stage) %>%
+  ggplot(anova = anova(rms_trt_stage), pval = TRUE)
+```
+
+Treatment continue to have no effect
+
+## Longitudinal suvival data analayses
+
+Load a data-set, update the `datadist()` for the __rms__ package, and take a 
+look at the data
 
 ```{r}
 pbcseq_df <- as.tibble(pbcseq)
@@ -248,8 +399,8 @@ dd <- datadist(pbcseq_df)
 pbcseq_df
 ```
 
-
-- impact of bilurubine of death
+- The only triky task is to correctly manage and prepare the data. Our proposal
+  take advantage of the `dplyr` functionalities
 
 ```{r}
 pbcseq_full <- pbcseq_df %>%
@@ -262,9 +413,16 @@ pbcseq_full <- pbcseq_df %>%
                                               # with the real end
 )
 ```
+
+
+### Impact of bilurubine of death
+
 ```{r}
-bil_mod <- coxph(Surv(time = start, time2 = end, event = status == 2L) ~ log(bili),
-  data = pbcseq_full
+bil_mod <- cph(
+  Surv(time = start, time2 = end, event = status == 2L) ~ log(bili),
+  data = pbcseq_full,
+  x    = TRUE,
+  y    = TRUE
 )
 
 summary(bil_mod)
@@ -275,12 +433,14 @@ plot(
 )
 ```
 
+### Impact of ast
 
-
-- impact of ast
 ```{r}
-ast_mod <- coxph(Surv(time = start, time2 = end, event = status == 2L) ~ ast,
-  data = pbcseq_full
+ast_mod <- cph(
+  Surv(time = start, time2 = end, event = status == 2L) ~ ast,
+  data = pbcseq_full,
+  x    = TRUE,
+  y    = TRUE
 )
 
 summary(ast_mod)
@@ -296,28 +456,36 @@ plot(
 )
 ```
 
-What happen with the strange observations? I  try to find which is the outlier
+What happen with the strange observations? We try to find which is that outlier.
 
 ```{r}
+# look at the residual caracteristics
 residuals(ast_mod, type = 'martingale') %>%
   describe
 
+# take the id of the lowest
 strange_id <- residuals(ast_mod, type = 'martingale') %>%
   which.min
 
+# take a look to the ast
 pbcseq_full$ast %>% describe
 
+# check the id
 pbcseq_full$ast[[strange_id]]
 ```
 
+Here is another example in which the opionon of a clinician is mandatory, i.e.
+we cannot decide if ignore outliers, which ones, etcetera
 
 
-## TP4
 
-1. priognostic model with
-  - `àscites`, `edema`, `sex`, `bili`, `ast`, `platelet`, `stage`
+
+## Prognostic model
+
+### priognostic model with `àscites`, `edema`, `sex`, `bili`, `ast`, `platelet`, `stage`
 
 ```{r}
+# prepare an ad hoc data frame
 pbc_updated <- pbc_df %>% 
   mutate(
     bili_log     = log(bili),
@@ -328,31 +496,50 @@ pbc_updated <- pbc_df %>%
 
 dd <- datadist(pbc_updated)
 
+# take a look at them 
 pbc_updated %>% 
   dplyr::select(
     ascites, edema, sex, bili_log, ast_log, platelet_ref, stage_fct
   ) %>% 
   describe
-# there are 11 df so to use all of them we need at least 110 obs
+```
+
+There are 11 basic df (one each continuous variable and one-minus-n-level for
+the categorical one), so to use all of them we need at least $110$ obs. Data has
+$418$, this allow us to use a more complex model, with some interaction, splines,
+eccetera (more or less other $15 -- 30$ df).
+
+We decide (following suggestions from @harrell2015regression) to consider
+splines for any continuous variable (with 3 knots) and consider sex interactin 
+with them and the other numerical variables, leading to near $20$ df.
+
+```{r}
+data_used <- pbc_updated %>% 
+  dplyr::select(status, time,
+    sex, ascites, edema, bili_log, ast_log, platelet_ref, stage_fct
+)
+
+dd <- datadist(data_used)
 
 
-coxph(
+# all the data-set
+cph(
   Surv(time, status == 2) ~
-    sex * (ascites + edema + rcs(bili_log, 3) + rcs(ast_log, 3)) + platelet_ref + stage_fct,
-  data = pbc_updated
+    sex * (ascites + edema + rcs(bili_log, 3) + rcs(ast_log, 3)) +
+    platelet_ref + stage_fct,
+  data = data_used
 ) %>% 
   summary
 
 
-coxph(
+# without missing data, and with beckward stepwise variable selection
+cph(
   Surv(time, status == 2) ~
     sex + ascites + edema + bili_log + ast_log + platelet_ref + stage_fct,
   data = pbc_updated %>% 
-    dplyr::select(status, time,
-      sex, ascites, edema, bili_log, ast_log, platelet_ref, stage_fct
-    ) %>% 
     filter(complete.cases(.))
 ) %>% 
-  step(trace = 0)
+  step(trace = 0) %>% 
+  summary
 ```
 
