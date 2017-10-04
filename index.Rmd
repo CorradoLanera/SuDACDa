@@ -17,8 +17,9 @@ description: "Examples and exercise from the Politecnico Ph.D. course by prof. S
 
 This book is designed to collect notes and exercises from the Ph.D. course
 on [__Survival Data Analysis for Cancer Data__](http://www.politocomunica.polito.it/events/appuntamenti/(idnews)/9665)
-by prof. Sylvie Chevret and prof. Matthieu Resche-Rigon from
-[ECSTRA Team](http://www.cress-umr1153.fr/),
+by prof. Sylvie Chevret
+and prof. Matthieu Resche-Rigon from
+[ECSTRRA Team](http://www.cress-umr1153.fr/),
 [Inserm](https://www.inserm.fr/),
 [University of Paris Diderot](https://www.univ-paris-diderot.fr/), promoted
 by the
@@ -51,6 +52,7 @@ by humans obtaining nicer output.
 # Packages for the analyses
 library(survival)                                            # Survival Analysis
 library(survminer)                     # Drawing Survival Curves using 'ggplot2'
+library(cmprsk)                                                 # Competing risk
 library(rms)              # Regression Modeling Strategy (include Hmisc package)
   options(datadist = 'dd')                  # Distribution Summaries used by rms
 

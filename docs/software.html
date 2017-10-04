@@ -31,7 +31,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="heterogeneity.html">
+<link rel="prev" href="competing-risk.html">
 <link rel="next" href="references.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -129,8 +129,11 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="2.5.1" data-path="cox.html"><a href="cox.html#prognostic-model-with-ascites-edema-sex-bili-ast-platelet-stage"><i class="fa fa-check"></i><b>2.5.1</b> prognostic model with <code>àscites</code>, <code>edema</code>, <code>sex</code>, <code>bili</code>, <code>ast</code>, <code>platelet</code>, <code id="model2">stage</code></a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="heterogeneity.html"><a href="heterogeneity.html"><i class="fa fa-check"></i><b>3</b> <em>Wednesday</em>: Heterogeneity of treatment effects</a><ul>
-<li class="chapter" data-level="3.1" data-path="heterogeneity.html"><a href="heterogeneity.html#key3"><i class="fa fa-check"></i><b>3.1</b> Key (operative) concepts</a></li>
+<li class="chapter" data-level="3" data-path="competing-risk.html"><a href="competing-risk.html"><i class="fa fa-check"></i><b>3</b> <em>Wednesday</em>: Competing risk</a><ul>
+<li class="chapter" data-level="3.1" data-path="competing-risk.html"><a href="competing-risk.html#key3"><i class="fa fa-check"></i><b>3.1</b> Key (operative) concepts</a></li>
+<li class="chapter" data-level="3.2" data-path="competing-risk.html"><a href="competing-risk.html#data-manipulation"><i class="fa fa-check"></i><b>3.2</b> Data manipulation</a></li>
+<li class="chapter" data-level="3.3" data-path="competing-risk.html"><a href="competing-risk.html#simulation-of-competing-risk"><i class="fa fa-check"></i><b>3.3</b> Simulation of Competing risk</a></li>
+<li class="chapter" data-level="3.4" data-path="competing-risk.html"><a href="competing-risk.html#estimation-of-the-effect-of-sex-on-mgus-incidence"><i class="fa fa-check"></i><b>3.4</b> Estimation of the effect of sex on MGUS incidence</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="software.html"><a href="software.html"><i class="fa fa-check"></i>Software</a><ul>
 <li class="chapter" data-level="" data-path="software.html"><a href="software.html#packages"><i class="fa fa-check"></i>Packages</a></li>
@@ -161,7 +164,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h1>Software</h1>
 <div id="packages" class="section level2 unnumbered">
 <h2>Packages</h2>
-<p>All the exercise are solved using R (ver. 3.4.2) has been used provided with packages: <code>survival</code> (<span class="citation">Therneau (<a href="#ref-R-survival">2017</a>)</span>) for the survival data analyses (reference package), <code>survminer</code> (<span class="citation">Kassambara and Kosinski (<a href="#ref-R-survminer">2017</a>)</span>) for advance survival plot using <code>ggplot2</code> (<span class="citation">Wickham and Chang (<a href="#ref-R-ggplot2">2016</a>)</span>) package, <code>rms</code> (<span class="citation">Harrell, Jr. (<a href="#ref-R-rms">2017</a>)</span>) for additional features on regression modeling strategies (survival ones included).</p>
+<p>All the exercise are solved using R (ver. 3.4.2) has been used provided with packages: <code>survival</code> (<span class="citation">Therneau (<a href="#ref-R-survival">2017</a>)</span>) for the survival data analyses (reference package), <code>survminer</code> (<span class="citation">Kassambara and Kosinski (<a href="#ref-R-survminer">2017</a>)</span>) for advance survival plot using <code>ggplot2</code> (<span class="citation">Wickham and Chang (<a href="#ref-R-ggplot2">2016</a>)</span>) package, <code>cmprsk</code> (<span class="citation">Gray (<a href="#ref-R-cmprsk">2014</a>)</span>) for competing risk, <code>rms</code> (<span class="citation">Harrell, Jr. (<a href="#ref-R-rms">2017</a>)</span>) for additional features on regression modeling strategies (survival ones included).</p>
 <p>With regards to the data management, the collection of package <code>tidyverse</code> (<span class="citation">Wickham (<a href="#ref-R-tidyverse">2017</a>)</span>) is loaded, which includes: <code>dplyr</code> (<span class="citation">Wickham et al. (<a href="#ref-R-dplyr">2017</a>)</span>) for data manipulation, <code>purrr</code> (<span class="citation">Henry and Wickham (<a href="#ref-R-purrr">2017</a>)</span>) for functional programming, <code>readr</code> (R-readr) for data import, <code>tidyr</code> (R-tidyr) for funtions to tidy the data, <code>tibble</code> (R-tibble) to take advantage of the <em>tible</em> data frame class and <code>ggplot2</code> as a interface for the Gramar of Grahics.</p>
 <p>The present book was written in RMarkdown (R-rmarkdown), compiled using <code>knitr</code> (<span class="citation">Xie (<a href="#ref-R-knitr">2017</a><a href="#ref-R-knitr">b</a>)</span>) and rendered as an HTML book by <code>bookdown</code> (<span class="citation">Xie (<a href="#ref-R-bookdown">2017</a><a href="#ref-R-bookdown">a</a>)</span>).</p>
 </div>
@@ -191,7 +194,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 ##  cellranger     1.1.0   2016-07-27 CRAN (R 3.4.1)
 ##  checkmate      1.8.3   2017-07-03 CRAN (R 3.4.1)
 ##  cluster        2.0.6   2017-03-16 CRAN (R 3.4.1)
-##  cmprsk         2.2-7   2014-06-17 CRAN (R 3.4.1)
+##  cmprsk       * 2.2-7   2014-06-17 CRAN (R 3.4.1)
 ##  codetools      0.2-15  2016-10-05 CRAN (R 3.4.0)
 ##  colorspace     1.3-2   2016-12-14 CRAN (R 3.4.1)
 ##  compiler       3.4.2   2017-09-28 local         
@@ -296,6 +299,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="ref-R-ggplot2">
 <p>Wickham, Hadley, and Winston Chang. 2016. <em>Ggplot2: Create Elegant Data Visualisations Using the Grammar of Graphics</em>. <a href="https://CRAN.R-project.org/package=ggplot2" class="uri">https://CRAN.R-project.org/package=ggplot2</a>.</p>
 </div>
+<div id="ref-R-cmprsk">
+<p>Gray, Bob. 2014. <em>Cmprsk: Subdistribution Analysis of Competing Risks</em>. <a href="https://CRAN.R-project.org/package=cmprsk" class="uri">https://CRAN.R-project.org/package=cmprsk</a>.</p>
+</div>
 <div id="ref-R-rms">
 <p>Harrell, Jr., Frank E. 2017. <em>Rms: Regression Modeling Strategies</em>. <a href="https://CRAN.R-project.org/package=rms" class="uri">https://CRAN.R-project.org/package=rms</a>.</p>
 </div>
@@ -320,7 +326,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           </div>
         </div>
       </div>
-<a href="heterogeneity.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="competing-risk.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 <a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>

@@ -1,3 +1,243 @@
-# *Wednesday*: Heterogeneity of treatment effects {#heterogeneity}
+# *Wednesday*: Competing risk {#competing-risk}
 
 ## Key (operative) concepts {#key3}
+
+
+
+
+
+## Data manipulation
+
+```{r}
+set.seed(171004)
+data(mgus, package = 'survival')
+# ?mgus
+
+mgus_df <- as_tibble(mgus)
+dd <- datadist(mgus_df)
+
+mgus_df
+```
+
+
+1. Find number of patient with malignancy (AKA transition), death
+   (w/out malignancy) and Free of Events.
+
+```{r}
+mgus_df <- mgus_df %>% 
+  mutate(
+    malignancy = !is.na(pcdx)
+  )
+
+mgus_df %>% 
+  group_by(malignancy, death) %>% 
+  summarise(n = n())
+```
+
+Patients with malignancy as a First Observed Event (FOE) are 64; patients which experiment death as FOE are 163, while the ones FoE are 14.
+163.
+
+2. Find the indicator for censored, malignancy and death (`indicator`)
+3. Find the time-to-event to use in the models (`time_t`)
+
+```{r}
+mgus_df <- mgus_df %>% 
+  mutate(
+    indicator = if_else(malignancy, 1, 2 * death),
+    time_t    = pmin(futime, pctime, na.rm = TRUE)
+)
+
+mgus_df
+```
+
+4. Estimate the naive K-M and the cumulative incidence functions
+
+```{r}
+# Using survival
+cuminc(mgus_df$time_t, mgus_df$indicator) %>%                  # ?cmprsk::cuminc
+  plot(                                                  # ?cmprsk:::plot.cuminc
+    main    = 'Cumulative Incidence Estimates curves',
+    col     = c('blue', 'red'),
+    xlab    = 'Days',
+    curvlab = c('Transition', 'Death'),
+    wh      = c(1, 1)                                          # legend position
+)
+
+survfit(Surv(time_t, malignancy) ~ 1,        # using `rms::npsurv()` is the same
+  data = mgus_df
+  ) %>% 
+  lines(                          # Use `lines()` to draw over the previous plot
+    fun       = 'event',                            # plot the cumulative events
+    conf.int   = FALSE,
+    col       = 'black',
+    lty       = 3
+)
+legend(x = 1, y = 0.86,
+  legend = 'Naive K-M (Overestimation of Transitions)',
+  col    = 'black',
+  lty    = 3,
+  bty    = 'n' # remove box arround the legend (because we have to add an entry)
+)
+```
+
+
+
+## Simulation of Competing risk
+
+1. Specify two cause-specific exponential hazard $\lambda_1(t)$ and
+$\lambda_2(t)$ of means $0.8$ and $1.2$. (Set sample size as you like.)
+
+```{r}
+n        <- 1e4
+lambda_1 <- 0.8
+lambda_2 <- 1.2
+```
+
+
+2. Simulate survival times $T$ based on the all causes hazard
+   $\lambda_.(t) = \lambda_1(t) + \lambda_2(t)$.
+
+```{r}
+lambda    <- lambda_1 + lambda_2 
+surv_time <- rexp(n,
+  rate = 1 / lambda
+)
+```
+
+
+3. Generate Bernoulli $B(p)$ random variables, with
+   $p = \lambda_1(t) / \lambda_.(t)$, i.e. is the probability of occurrence of
+   the event of type 1.
+
+```{r}
+p_cens     <- lambda_1 / lambda
+transition <- rbinom(n,
+  size = 1,
+  prob = p_cens
+) %>%
+  as.logical     # Set as logical to use the variable for conditional statements
+```
+
+
+4. Simulate uniform censoring times over $[0, 1]$.
+
+```{r}
+censor_time <- runif(n,
+  min = 0,
+  max = 1
+)
+```
+
+
+5. Estimate the Cumulative Incidence of each competing event, with and without
+   censoring; discuss the results.
+
+```{r}
+# create the dataset
+sim_data <- data_frame(
+  id         = seq_len(n),
+  transition = transition,
+  surv_t     = surv_time,
+  cens_t     = censor_time,
+  time_t     = pmin(surv_t, cens_t),
+  status     = case_when(
+    time_t == cens_t ~ 0L,              # All the censored patients has status 0
+    transition       ~ 1L,    # Among the other, the ones which has a transition
+                              # have state 1
+    TRUE             ~ 2L     # All the other were dead (before the end of f-up)
+  )
+)
+
+# Explore a (random) sample of three cases for each staus
+sim_data %>% 
+  group_by(status) %>% 
+  sample_n(3)
+```
+
+```{r}
+# Using survival
+cuminc(sim_data$time_t, sim_data$status) %>%                  # ?cmprsk::cuminc
+  plot(                                                  # ?cmprsk:::plot.cuminc
+    main    = 'Cumulative Incidence Estimates curves',
+    col     = c('blue', 'red'),
+    xlab    = 'Time (normalized [0, 1])',
+    curvlab = c('Transition', 'Event'),
+    wh      = c(0.01, 1)                                          # legend position
+)
+
+survfit(Surv(time_t, transition) ~ 1,        # using `rms::npsurv()` is the same
+  data = sim_data
+  ) %>% 
+  lines(                          # Use `lines()` to draw over the previous plot
+    fun       = 'event',                            # plot the cumulative events
+    conf.int   = FALSE,
+    col       = 'black',
+    lty       = 3
+)
+legend(x = 0.01, y = 0.86,
+  legend = 'Naive K-M (overestimation of transitions)',
+  col    = 'black',
+  lty    = 3,
+  bty    = 'n' # remove box arround the legend (because we have to add an entry)
+)
+
+```
+
+
+
+## Estimation of the effect of sex on MGUS incidence
+
+1. Compare the results of Cox cause specific hazard model...
+
+> For clinical questions, i.e. cause specific risk to experiment the event
+  without taking into account the other couse(s)
+
+```{r}
+dd <- datadist(mgus_df)
+
+cox_sex <- cph(Surv(time_t, malignancy) ~ sex,
+  data = mgus_df,
+  x    = TRUE,
+  y    = TRUE
+)
+
+summary(cox_sex)                  # this is good for a clean view of the effects
+cox_sex                    # Here there are more informations (and the p-values)
+
+Predict(cox_sex) %>%      # It is necessary to have the predictions for the plot
+  plot
+
+
+cox_sex_death <- cph(Surv(time_t, indicator == 2) ~ sex,
+  data = mgus_df,
+  x    = TRUE,
+  y    = TRUE
+)
+
+summary(cox_sex_death)
+cox_sex_death
+
+Predict(cox_sex_death) %>% 
+  plot
+```
+
+
+2. ...to those of the Fine and Gray model
+
+> For administrative questions, i.e. overall risk of experiment each event
+  taking into account the competing risk
+
+```{r}
+mgus_num <- mgus_df %>% 
+  mutate(sex = as.numeric(sex))
+
+crr(
+  ftime   = mgus_num$time_t,
+  fstatus = mgus_num$indicator,
+  cov1    = mgus_num$sex
+) %>%
+  summary
+
+                                             # here we do not have a way to plot 
+```
+

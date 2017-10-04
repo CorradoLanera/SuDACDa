@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Survival Data Analysis for Cancer Data</title>
+  <meta name="description" content="Examples and exercise from the Politecnico Ph.D. course by prof. Sylvie Chevret and prof. Matthieu Resche-Rigon.">
+  <meta name="generator" content="bookdown 0.5 and GitBook 2.6.7">
+
+  <meta property="og:title" content="Survival Data Analysis for Cancer Data" />
+  <meta property="og:type" content="book" />
+  <meta property="og:url" content="https://corradolanera.github.io/SuDACDa/" />
+  
+  <meta property="og:description" content="Examples and exercise from the Politecnico Ph.D. course by prof. Sylvie Chevret and prof. Matthieu Resche-Rigon." />
+  <meta name="github-repo" content="CorradoLanera/SuDACDa" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Survival Data Analysis for Cancer Data" />
+  
+  <meta name="twitter:description" content="Examples and exercise from the Politecnico Ph.D. course by prof. Sylvie Chevret and prof. Matthieu Resche-Rigon." />
+  
+
+<meta name="author" content="Corrado Lanera, Danila Azzolina, Daniele Bottigliengo">
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="cox.html">
+<link rel="next" href="software.html">
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Survival Data Analysis for Cancer Data</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Introduction</a><ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#contributions"><i class="fa fa-check"></i>Contributions</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#settings"><i class="fa fa-check"></i>Settings</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="survival.html"><a href="survival.html"><i class="fa fa-check"></i><b>1</b> <em>Monday</em>: Introduction to Survival Analyses and simulation of data</a><ul>
+<li class="chapter" data-level="1.1" data-path="survival.html"><a href="survival.html#key1"><i class="fa fa-check"></i><b>1.1</b> Key (operative) concepts</a></li>
+<li class="chapter" data-level="1.2" data-path="survival.html"><a href="survival.html#sumulation1"><i class="fa fa-check"></i><b>1.2</b> Simulated Data</a></li>
+<li class="chapter" data-level="1.3" data-path="survival.html"><a href="survival.html#mgus"><i class="fa fa-check"></i><b>1.3</b> <code>mgus</code> data from <strong>survival</strong> package</a></li>
+<li class="chapter" data-level="1.4" data-path="survival.html"><a href="survival.html#km1"><i class="fa fa-check"></i><b>1.4</b> Non parametric Kaplan-Meier estimation of the survival function</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="cox.html"><a href="cox.html"><i class="fa fa-check"></i><b>2</b> <em>Tuesday</em>: Cox models</a><ul>
+<li class="chapter" data-level="2.1" data-path="cox.html"><a href="cox.html#key2"><i class="fa fa-check"></i><b>2.1</b> Key (operative) concepts</a></li>
+<li class="chapter" data-level="2.2" data-path="cox.html"><a href="cox.html#test2"><i class="fa fa-check"></i><b>2.2</b> Basic tests and funtions</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="cox.html"><a href="cox.html#impact-of-sex-on-death-sex2"><i class="fa fa-check"></i><b>2.2.1</b> Impact of sex on death {sex2}</a></li>
+<li class="chapter" data-level="2.2.2" data-path="cox.html"><a href="cox.html#age2"><i class="fa fa-check"></i><b>2.2.2</b> Impact of age on death</a></li>
+<li class="chapter" data-level="2.2.3" data-path="cox.html"><a href="cox.html#ast2"><i class="fa fa-check"></i><b>2.2.3</b> Impact of aspartate aminotransferase (<code>ast</code>) on death</a></li>
+<li class="chapter" data-level="2.2.4" data-path="cox.html"><a href="cox.html#platelet2"><i class="fa fa-check"></i><b>2.2.4</b> Impact of <strong>platelet</strong> on death</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="cox.html"><a href="cox.html#adjusted2"><i class="fa fa-check"></i><b>2.3</b> Investigation on adjusted variables and interactions</a></li>
+<li class="chapter" data-level="2.4" data-path="cox.html"><a href="cox.html#longitudinal"><i class="fa fa-check"></i><b>2.4</b> Longitudinal suvival data analayses</a><ul>
+<li class="chapter" data-level="2.4.1" data-path="cox.html"><a href="cox.html#bilurubine2"><i class="fa fa-check"></i><b>2.4.1</b> Impact of bilurubine of death</a></li>
+<li class="chapter" data-level="2.4.2" data-path="cox.html"><a href="cox.html#ast_full2"><i class="fa fa-check"></i><b>2.4.2</b> Impact of ast</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="cox.html"><a href="cox.html#prognostic2"><i class="fa fa-check"></i><b>2.5</b> Prognostic model</a><ul>
+<li class="chapter" data-level="2.5.1" data-path="cox.html"><a href="cox.html#prognostic-model-with-ascites-edema-sex-bili-ast-platelet-stage"><i class="fa fa-check"></i><b>2.5.1</b> prognostic model with <code>àscites</code>, <code>edema</code>, <code>sex</code>, <code>bili</code>, <code>ast</code>, <code>platelet</code>, <code id="model2">stage</code></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="competing-risk.html"><a href="competing-risk.html"><i class="fa fa-check"></i><b>3</b> <em>Wednesday</em>: Competing risk</a><ul>
+<li class="chapter" data-level="3.1" data-path="competing-risk.html"><a href="competing-risk.html#key3"><i class="fa fa-check"></i><b>3.1</b> Key (operative) concepts</a></li>
+<li class="chapter" data-level="3.2" data-path="competing-risk.html"><a href="competing-risk.html#data-manipulation"><i class="fa fa-check"></i><b>3.2</b> Data manipulation</a></li>
+<li class="chapter" data-level="3.3" data-path="competing-risk.html"><a href="competing-risk.html#simulation-of-competing-risk"><i class="fa fa-check"></i><b>3.3</b> Simulation of Competing risk</a></li>
+<li class="chapter" data-level="3.4" data-path="competing-risk.html"><a href="competing-risk.html#estimation-of-the-effect-of-sex-on-mgus-incidence"><i class="fa fa-check"></i><b>3.4</b> Estimation of the effect of sex on MGUS incidence</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="software.html"><a href="software.html"><i class="fa fa-check"></i>Software</a><ul>
+<li class="chapter" data-level="" data-path="software.html"><a href="software.html#packages"><i class="fa fa-check"></i>Packages</a></li>
+<li class="chapter" data-level="" data-path="software.html"><a href="software.html#system-information"><i class="fa fa-check"></i>System Information</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/CorradoLanera/SuDACDa" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Survival Data Analysis for Cancer Data</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="competing-risk" class="section level1">
+<h1><span class="header-section-number">Chapter 3</span> <em>Wednesday</em>: Competing risk</h1>
+<div id="key3" class="section level2">
+<h2><span class="header-section-number">3.1</span> Key (operative) concepts</h2>
+</div>
+<div id="data-manipulation" class="section level2">
+<h2><span class="header-section-number">3.2</span> Data manipulation</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">171004</span>)
+<span class="kw">data</span>(mgus, <span class="dt">package =</span> <span class="st">&#39;survival&#39;</span>)
+<span class="co"># ?mgus</span>
+
+mgus_df &lt;-<span class="st"> </span><span class="kw">as_tibble</span>(mgus)
+dd &lt;-<span class="st"> </span><span class="kw">datadist</span>(mgus_df)
+
+mgus_df</code></pre></div>
+<pre><code>## # A tibble: 241 x 12
+##       id   age    sex  dxyr   pcdx pctime futime death   alb creat   hgb
+##  * &lt;dbl&gt; &lt;dbl&gt; &lt;fctr&gt; &lt;dbl&gt; &lt;fctr&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1     1    78 female    68   &lt;NA&gt;     NA    748     1   2.8   1.2  11.5
+##  2     2    73 female    66     LP   1310   6751     1    NA    NA    NA
+##  3     3    87   male    68   &lt;NA&gt;     NA    277     1   2.2   1.1  11.2
+##  4     4    86   male    69   &lt;NA&gt;     NA   1815     1   2.8   1.3  15.3
+##  5     5    74 female    68   &lt;NA&gt;     NA   2587     1   3.0   0.8   9.8
+##  6     6    81   male    68   &lt;NA&gt;     NA    563     1   2.9   0.9  11.5
+##  7     7    72 female    68   &lt;NA&gt;     NA   1135     1   3.0   0.8  13.5
+##  8     8    79 female    69   &lt;NA&gt;     NA   2016     1   3.1   0.8  15.5
+##  9     9    85 female    70   &lt;NA&gt;     NA   2422     1   3.2   1.0  12.4
+## 10    10    58   male    65   &lt;NA&gt;     NA   6155     1   3.5   1.0  14.8
+## # ... with 231 more rows, and 1 more variables: mspike &lt;dbl&gt;</code></pre>
+<ol style="list-style-type: decimal">
+<li>Find number of patient with malignancy (AKA transition), death (w/out malignancy) and Free of Events.</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mgus_df &lt;-<span class="st"> </span>mgus_df %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(
+    <span class="dt">malignancy =</span> !<span class="kw">is.na</span>(pcdx)
+  )
+
+mgus_df %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">group_by</span>(malignancy, death) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">n =</span> <span class="kw">n</span>())</code></pre></div>
+<pre><code>## # A tibble: 4 x 3
+## # Groups:   malignancy [?]
+##   malignancy death     n
+##        &lt;lgl&gt; &lt;dbl&gt; &lt;int&gt;
+## 1      FALSE     0    14
+## 2      FALSE     1   163
+## 3       TRUE     0     2
+## 4       TRUE     1    62</code></pre>
+<p>Patients with malignancy as a First Observed Event (FOE) are 64; patients which experiment death as FOE are 163, while the ones FoE are 14. 163.</p>
+<ol start="2" style="list-style-type: decimal">
+<li>Find the indicator for censored, malignancy and death (<code>indicator</code>)</li>
+<li>Find the time-to-event to use in the models (<code>time_t</code>)</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mgus_df &lt;-<span class="st"> </span>mgus_df %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(
+    <span class="dt">indicator =</span> <span class="kw">if_else</span>(malignancy, <span class="dv">1</span>, <span class="dv">2</span> *<span class="st"> </span>death),
+    <span class="dt">time_t    =</span> <span class="kw">pmin</span>(futime, pctime, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)
+)
+
+mgus_df</code></pre></div>
+<pre><code>## # A tibble: 241 x 15
+##       id   age    sex  dxyr   pcdx pctime futime death   alb creat   hgb
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;fctr&gt; &lt;dbl&gt; &lt;fctr&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1     1    78 female    68   &lt;NA&gt;     NA    748     1   2.8   1.2  11.5
+##  2     2    73 female    66     LP   1310   6751     1    NA    NA    NA
+##  3     3    87   male    68   &lt;NA&gt;     NA    277     1   2.2   1.1  11.2
+##  4     4    86   male    69   &lt;NA&gt;     NA   1815     1   2.8   1.3  15.3
+##  5     5    74 female    68   &lt;NA&gt;     NA   2587     1   3.0   0.8   9.8
+##  6     6    81   male    68   &lt;NA&gt;     NA    563     1   2.9   0.9  11.5
+##  7     7    72 female    68   &lt;NA&gt;     NA   1135     1   3.0   0.8  13.5
+##  8     8    79 female    69   &lt;NA&gt;     NA   2016     1   3.1   0.8  15.5
+##  9     9    85 female    70   &lt;NA&gt;     NA   2422     1   3.2   1.0  12.4
+## 10    10    58   male    65   &lt;NA&gt;     NA   6155     1   3.5   1.0  14.8
+## # ... with 231 more rows, and 4 more variables: mspike &lt;dbl&gt;,
+## #   malignancy &lt;lgl&gt;, indicator &lt;dbl&gt;, time_t &lt;dbl&gt;</code></pre>
+<ol start="4" style="list-style-type: decimal">
+<li>Estimate the naive K-M and the cumulative incidence functions</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Using survival</span>
+<span class="kw">cuminc</span>(mgus_df$time_t, mgus_df$indicator) %&gt;%<span class="st">                  </span><span class="co"># ?cmprsk::cuminc</span>
+<span class="st">  </span><span class="kw">plot</span>(                                                  <span class="co"># ?cmprsk:::plot.cuminc</span>
+    <span class="dt">main    =</span> <span class="st">&#39;Cumulative Incidence Estimates curves&#39;</span>,
+    <span class="dt">col     =</span> <span class="kw">c</span>(<span class="st">&#39;blue&#39;</span>, <span class="st">&#39;red&#39;</span>),
+    <span class="dt">xlab    =</span> <span class="st">&#39;Days&#39;</span>,
+    <span class="dt">curvlab =</span> <span class="kw">c</span>(<span class="st">&#39;Transition&#39;</span>, <span class="st">&#39;Death&#39;</span>),
+    <span class="dt">wh      =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>)                                          <span class="co"># legend position</span>
+)
+
+<span class="kw">survfit</span>(<span class="kw">Surv</span>(time_t, malignancy) ~<span class="st"> </span><span class="dv">1</span>,        <span class="co"># using `rms::npsurv()` is the same</span>
+  <span class="dt">data =</span> mgus_df
+  ) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">lines</span>(                          <span class="co"># Use `lines()` to draw over the previous plot</span>
+    <span class="dt">fun       =</span> <span class="st">&#39;event&#39;</span>,                            <span class="co"># plot the cumulative events</span>
+    <span class="dt">conf.int   =</span> <span class="ot">FALSE</span>,
+    <span class="dt">col       =</span> <span class="st">&#39;black&#39;</span>,
+    <span class="dt">lty       =</span> <span class="dv">3</span>
+)
+<span class="kw">legend</span>(<span class="dt">x =</span> <span class="dv">1</span>, <span class="dt">y =</span> <span class="fl">0.86</span>,
+  <span class="dt">legend =</span> <span class="st">&#39;Naive K-M (Overestimation of Transitions)&#39;</span>,
+  <span class="dt">col    =</span> <span class="st">&#39;black&#39;</span>,
+  <span class="dt">lty    =</span> <span class="dv">3</span>,
+  <span class="dt">bty    =</span> <span class="st">&#39;n&#39;</span> <span class="co"># remove box arround the legend (because we have to add an entry)</span>
+)</code></pre></div>
+<p><img src="SuDACDa-notes_files/figure-html/unnamed-chunk-33-1.png" width="672" /></p>
+</div>
+<div id="simulation-of-competing-risk" class="section level2">
+<h2><span class="header-section-number">3.3</span> Simulation of Competing risk</h2>
+<ol style="list-style-type: decimal">
+<li>Specify two cause-specific exponential hazard <span class="math inline">\(\lambda_1(t)\)</span> and <span class="math inline">\(\lambda_2(t)\)</span> of means <span class="math inline">\(0.8\)</span> and <span class="math inline">\(1.2\)</span>. (Set sample size as you like.)</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">n        &lt;-<span class="st"> </span><span class="fl">1e4</span>
+lambda_1 &lt;-<span class="st"> </span><span class="fl">0.8</span>
+lambda_2 &lt;-<span class="st"> </span><span class="fl">1.2</span></code></pre></div>
+<ol start="2" style="list-style-type: decimal">
+<li>Simulate survival times <span class="math inline">\(T\)</span> based on the all causes hazard <span class="math inline">\(\lambda_.(t) = \lambda_1(t) + \lambda_2(t)\)</span>.</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">lambda    &lt;-<span class="st"> </span>lambda_1 +<span class="st"> </span>lambda_2 
+surv_time &lt;-<span class="st"> </span><span class="kw">rexp</span>(n,
+  <span class="dt">rate =</span> <span class="dv">1</span> /<span class="st"> </span>lambda
+)</code></pre></div>
+<ol start="3" style="list-style-type: decimal">
+<li>Generate Bernoulli <span class="math inline">\(B(p)\)</span> random variables, with <span class="math inline">\(p = \lambda_1(t) / \lambda_.(t)\)</span>, i.e. is the probability of occurrence of the event of type 1.</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p_cens     &lt;-<span class="st"> </span>lambda_1 /<span class="st"> </span>lambda
+transition &lt;-<span class="st"> </span><span class="kw">rbinom</span>(n,
+  <span class="dt">size =</span> <span class="dv">1</span>,
+  <span class="dt">prob =</span> p_cens
+) %&gt;%
+<span class="st">  </span>as.logical     <span class="co"># Set as logical to use the variable for conditional statements</span></code></pre></div>
+<ol start="4" style="list-style-type: decimal">
+<li>Simulate uniform censoring times over <span class="math inline">\([0, 1]\)</span>.</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">censor_time &lt;-<span class="st"> </span><span class="kw">runif</span>(n,
+  <span class="dt">min =</span> <span class="dv">0</span>,
+  <span class="dt">max =</span> <span class="dv">1</span>
+)</code></pre></div>
+<ol start="5" style="list-style-type: decimal">
+<li>Estimate the Cumulative Incidence of each competing event, with and without censoring; discuss the results.</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># create the dataset</span>
+sim_data &lt;-<span class="st"> </span><span class="kw">data_frame</span>(
+  <span class="dt">id         =</span> <span class="kw">seq_len</span>(n),
+  <span class="dt">transition =</span> transition,
+  <span class="dt">surv_t     =</span> surv_time,
+  <span class="dt">cens_t     =</span> censor_time,
+  <span class="dt">time_t     =</span> <span class="kw">pmin</span>(surv_t, cens_t),
+  <span class="dt">status     =</span> <span class="kw">case_when</span>(
+    time_t ==<span class="st"> </span>cens_t ~<span class="st"> </span>0L,              <span class="co"># All the censored patients has status 0</span>
+    transition       ~<span class="st"> </span>1L,    <span class="co"># Among the other, the ones which has a transition</span>
+                              <span class="co"># have state 1</span>
+    <span class="ot">TRUE</span>             ~<span class="st"> </span>2L     <span class="co"># All the other were dead (before the end of f-up)</span>
+  )
+)
+
+<span class="co"># Explore a (random) sample of three cases for each staus</span>
+sim_data %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">group_by</span>(status) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">sample_n</span>(<span class="dv">3</span>)</code></pre></div>
+<pre><code>## # A tibble: 9 x 6
+## # Groups:   status [3]
+##      id transition      surv_t    cens_t      time_t status
+##   &lt;int&gt;      &lt;lgl&gt;       &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt;  &lt;int&gt;
+## 1  6759      FALSE 6.844765752 0.5175084 0.517508388      0
+## 2   906       TRUE 1.378642827 0.5063402 0.506340163      0
+## 3  3568       TRUE 0.623047318 0.5752797 0.575279657      0
+## 4  2196       TRUE 0.506380841 0.9344626 0.506380841      1
+## 5  8119       TRUE 0.157231928 0.9007847 0.157231928      1
+## 6  5854       TRUE 0.742379822 0.8771130 0.742379822      1
+## 7  1685      FALSE 0.539729742 0.9635529 0.539729742      2
+## 8  4550      FALSE 0.001042022 0.3692372 0.001042022      2
+## 9  6893      FALSE 0.410360153 0.9322769 0.410360153      2</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Using survival</span>
+<span class="kw">cuminc</span>(sim_data$time_t, sim_data$status) %&gt;%<span class="st">                  </span><span class="co"># ?cmprsk::cuminc</span>
+<span class="st">  </span><span class="kw">plot</span>(                                                  <span class="co"># ?cmprsk:::plot.cuminc</span>
+    <span class="dt">main    =</span> <span class="st">&#39;Cumulative Incidence Estimates curves&#39;</span>,
+    <span class="dt">col     =</span> <span class="kw">c</span>(<span class="st">&#39;blue&#39;</span>, <span class="st">&#39;red&#39;</span>),
+    <span class="dt">xlab    =</span> <span class="st">&#39;Time (normalized [0, 1])&#39;</span>,
+    <span class="dt">curvlab =</span> <span class="kw">c</span>(<span class="st">&#39;Transition&#39;</span>, <span class="st">&#39;Event&#39;</span>),
+    <span class="dt">wh      =</span> <span class="kw">c</span>(<span class="fl">0.01</span>, <span class="dv">1</span>)                                          <span class="co"># legend position</span>
+)
+
+<span class="kw">survfit</span>(<span class="kw">Surv</span>(time_t, transition) ~<span class="st"> </span><span class="dv">1</span>,        <span class="co"># using `rms::npsurv()` is the same</span>
+  <span class="dt">data =</span> sim_data
+  ) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">lines</span>(                          <span class="co"># Use `lines()` to draw over the previous plot</span>
+    <span class="dt">fun       =</span> <span class="st">&#39;event&#39;</span>,                            <span class="co"># plot the cumulative events</span>
+    <span class="dt">conf.int   =</span> <span class="ot">FALSE</span>,
+    <span class="dt">col       =</span> <span class="st">&#39;black&#39;</span>,
+    <span class="dt">lty       =</span> <span class="dv">3</span>
+)
+<span class="kw">legend</span>(<span class="dt">x =</span> <span class="fl">0.01</span>, <span class="dt">y =</span> <span class="fl">0.86</span>,
+  <span class="dt">legend =</span> <span class="st">&#39;Naive K-M (overestimation of transitions)&#39;</span>,
+  <span class="dt">col    =</span> <span class="st">&#39;black&#39;</span>,
+  <span class="dt">lty    =</span> <span class="dv">3</span>,
+  <span class="dt">bty    =</span> <span class="st">&#39;n&#39;</span> <span class="co"># remove box arround the legend (because we have to add an entry)</span>
+)</code></pre></div>
+<p><img src="SuDACDa-notes_files/figure-html/unnamed-chunk-39-1.png" width="672" /></p>
+</div>
+<div id="estimation-of-the-effect-of-sex-on-mgus-incidence" class="section level2">
+<h2><span class="header-section-number">3.4</span> Estimation of the effect of sex on MGUS incidence</h2>
+<ol style="list-style-type: decimal">
+<li>Compare the results of Cox cause specific hazard model…</li>
+</ol>
+<blockquote>
+<p>For clinical questions, i.e. cause specific risk to experiment the event without taking into account the other couse(s)</p>
+</blockquote>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dd &lt;-<span class="st"> </span><span class="kw">datadist</span>(mgus_df)
+
+cox_sex &lt;-<span class="st"> </span><span class="kw">cph</span>(<span class="kw">Surv</span>(time_t, malignancy) ~<span class="st"> </span>sex,
+  <span class="dt">data =</span> mgus_df,
+  <span class="dt">x    =</span> <span class="ot">TRUE</span>,
+  <span class="dt">y    =</span> <span class="ot">TRUE</span>
+)
+
+<span class="kw">summary</span>(cox_sex)                  <span class="co"># this is good for a clean view of the effects</span></code></pre></div>
+<pre><code>##              Effects              Response : Surv(time_t, malignancy) 
+## 
+##  Factor            Low High Diff. Effect   S.E.    Lower 0.95 Upper 0.95
+##  sex - female:male 2   1    NA    0.049342 0.25103 -0.44268   0.54136   
+##   Hazard Ratio     2   1    NA    1.050600      NA  0.64232   1.71830</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cox_sex                    <span class="co"># Here there are more informations (and the p-values)</span></code></pre></div>
+<pre><code>## Cox Proportional Hazards Model
+##  
+##  cph(formula = Surv(time_t, malignancy) ~ sex, data = mgus_df, 
+##      x = TRUE, y = TRUE)
+##  
+##                      Model Tests       Discrimination    
+##                                           Indexes        
+##  Obs       241    LR chi2      0.04    R2       0.000    
+##  Events     64    d.f.            1    Dxy     -0.039    
+##  Center -0.028    Pr(&gt; chi2) 0.8441    g        0.024    
+##                   Score chi2   0.04    gr       1.025    
+##                   Pr(&gt; chi2) 0.8441                      
+##  
+##           Coef    S.E.   Wald Z Pr(&gt;|Z|)
+##  sex=male -0.0493 0.2510 -0.20  0.8442  
+## </code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">Predict</span>(cox_sex) %&gt;%<span class="st">      </span><span class="co"># It is necessary to have the predictions for the plot</span>
+<span class="st">  </span>plot</code></pre></div>
+<p><img src="SuDACDa-notes_files/figure-html/unnamed-chunk-40-1.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cox_sex_death &lt;-<span class="st"> </span><span class="kw">cph</span>(<span class="kw">Surv</span>(time_t, indicator ==<span class="st"> </span><span class="dv">2</span>) ~<span class="st"> </span>sex,
+  <span class="dt">data =</span> mgus_df,
+  <span class="dt">x    =</span> <span class="ot">TRUE</span>,
+  <span class="dt">y    =</span> <span class="ot">TRUE</span>
+)
+
+<span class="kw">summary</span>(cox_sex_death)</code></pre></div>
+<pre><code>##              Effects              Response : Surv(time_t, indicator == 2) 
+## 
+##  Factor            Low High Diff. Effect   S.E.    Lower 0.95 Upper 0.95
+##  sex - female:male 2   1    NA    -0.44221 0.16183 -0.75939   -0.12502  
+##   Hazard Ratio     2   1    NA     0.64262      NA  0.46795    0.88248</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cox_sex_death</code></pre></div>
+<pre><code>## Cox Proportional Hazards Model
+##  
+##  cph(formula = Surv(time_t, indicator == 2) ~ sex, data = mgus_df, 
+##      x = TRUE, y = TRUE)
+##  
+##                      Model Tests       Discrimination    
+##                                           Indexes        
+##  Obs       241    LR chi2      7.65    R2       0.031    
+##  Events    163    d.f.            1    Dxy      0.124    
+##  Center 0.2514    Pr(&gt; chi2) 0.0057    g        0.218    
+##                   Score chi2   7.59    gr       1.243    
+##                   Pr(&gt; chi2) 0.0059                      
+##  
+##           Coef   S.E.   Wald Z Pr(&gt;|Z|)
+##  sex=male 0.4422 0.1618 2.73   0.0063  
+## </code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">Predict</span>(cox_sex_death) %&gt;%<span class="st"> </span>
+<span class="st">  </span>plot</code></pre></div>
+<p><img src="SuDACDa-notes_files/figure-html/unnamed-chunk-40-2.png" width="672" /></p>
+<ol start="2" style="list-style-type: decimal">
+<li>…to those of the Fine and Gray model</li>
+</ol>
+<blockquote>
+<p>For administrative questions, i.e. overall risk of experiment each event taking into account the competing risk</p>
+</blockquote>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mgus_num &lt;-<span class="st"> </span>mgus_df %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sex =</span> <span class="kw">as.numeric</span>(sex))
+
+<span class="kw">crr</span>(
+  <span class="dt">ftime   =</span> mgus_num$time_t,
+  <span class="dt">fstatus =</span> mgus_num$indicator,
+  <span class="dt">cov1    =</span> mgus_num$sex
+) %&gt;%
+<span class="st">  </span>summary</code></pre></div>
+<pre><code>## Competing Risks Regression
+## 
+## Call:
+## crr(ftime = mgus_num$time_t, fstatus = mgus_num$indicator, cov1 = mgus_num$sex)
+## 
+##                 coef exp(coef) se(coef)     z p-value
+## mgus_num$sex1 -0.339     0.713    0.249 -1.36    0.17
+## 
+##               exp(coef) exp(-coef)  2.5% 97.5%
+## mgus_num$sex1     0.713        1.4 0.437  1.16
+## 
+## Num. cases = 241
+## Pseudo Log-likelihood = -341 
+## Pseudo likelihood ratio test = 1.83  on 1 df,</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">                                             <span class="co"># here we do not have a way to plot </span></code></pre></div>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="cox.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="software.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"weibo": false,
+"instapper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"download": ["SuDACDa-notes.epub", "SuDACDa-notes.pdf"],
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(script.src))
+      script.src  = script.src.replace(/^https?:/, '');
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

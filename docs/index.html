@@ -129,8 +129,11 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="2.5.1" data-path="cox.html"><a href="cox.html#prognostic-model-with-ascites-edema-sex-bili-ast-platelet-stage"><i class="fa fa-check"></i><b>2.5.1</b> prognostic model with <code>àscites</code>, <code>edema</code>, <code>sex</code>, <code>bili</code>, <code>ast</code>, <code>platelet</code>, <code id="model2">stage</code></a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="heterogeneity.html"><a href="heterogeneity.html"><i class="fa fa-check"></i><b>3</b> <em>Wednesday</em>: Heterogeneity of treatment effects</a><ul>
-<li class="chapter" data-level="3.1" data-path="heterogeneity.html"><a href="heterogeneity.html#key3"><i class="fa fa-check"></i><b>3.1</b> Key (operative) concepts</a></li>
+<li class="chapter" data-level="3" data-path="competing-risk.html"><a href="competing-risk.html"><i class="fa fa-check"></i><b>3</b> <em>Wednesday</em>: Competing risk</a><ul>
+<li class="chapter" data-level="3.1" data-path="competing-risk.html"><a href="competing-risk.html#key3"><i class="fa fa-check"></i><b>3.1</b> Key (operative) concepts</a></li>
+<li class="chapter" data-level="3.2" data-path="competing-risk.html"><a href="competing-risk.html#data-manipulation"><i class="fa fa-check"></i><b>3.2</b> Data manipulation</a></li>
+<li class="chapter" data-level="3.3" data-path="competing-risk.html"><a href="competing-risk.html#simulation-of-competing-risk"><i class="fa fa-check"></i><b>3.3</b> Simulation of Competing risk</a></li>
+<li class="chapter" data-level="3.4" data-path="competing-risk.html"><a href="competing-risk.html#estimation-of-the-effect-of-sex-on-mgus-incidence"><i class="fa fa-check"></i><b>3.4</b> Estimation of the effect of sex on MGUS incidence</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="software.html"><a href="software.html"><i class="fa fa-check"></i>Software</a><ul>
 <li class="chapter" data-level="" data-path="software.html"><a href="software.html#packages"><i class="fa fa-check"></i>Packages</a></li>
@@ -164,7 +167,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </div>
 <div id="introduction" class="section level1 unnumbered">
 <h1>Introduction</h1>
-<p>This book is designed to collect notes and exercises from the Ph.D. course on <a href="http://www.politocomunica.polito.it/events/appuntamenti/(idnews)/9665"><strong>Survival Data Analysis for Cancer Data</strong></a> by prof. Sylvie Chevret and prof. Matthieu Resche-Rigon from <a href="http://www.cress-umr1153.fr/">ECSTRA Team</a>, <a href="https://www.inserm.fr/">Inserm</a>, <a href="https://www.univ-paris-diderot.fr/">University of Paris Diderot</a>, promoted by the <a href="http://www.disma.polito.it/">Dep. of Mathematical Sciences “G. L. Lagrange”</a> of the <a href="http://www.polito.it/">Politecnico</a> of Torino (Italy).</p>
+<p>This book is designed to collect notes and exercises from the Ph.D. course on <a href="http://www.politocomunica.polito.it/events/appuntamenti/(idnews)/9665"><strong>Survival Data Analysis for Cancer Data</strong></a> by prof. Sylvie Chevret and prof. Matthieu Resche-Rigon from <a href="http://www.cress-umr1153.fr/">ECSTRRA Team</a>, <a href="https://www.inserm.fr/">Inserm</a>, <a href="https://www.univ-paris-diderot.fr/">University of Paris Diderot</a>, promoted by the <a href="http://www.disma.polito.it/">Dep. of Mathematical Sciences “G. L. Lagrange”</a> of the <a href="http://www.polito.it/">Politecnico</a> of Torino (Italy).</p>
 <div id="contributions" class="section level2 unnumbered">
 <h2>Contributions</h2>
 <p>Any contribution is welcome! From the download button on the top of each (HTML) page you can download both the <code>epub</code> and the <code>PDF</code> versions of the present book.</p>
@@ -180,6 +183,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Packages for the analyses</span>
 <span class="kw">library</span>(survival)                                            <span class="co"># Survival Analysis</span>
 <span class="kw">library</span>(survminer)                     <span class="co"># Drawing Survival Curves using &#39;ggplot2&#39;</span>
+<span class="kw">library</span>(cmprsk)                                                 <span class="co"># Competing risk</span>
 <span class="kw">library</span>(rms)              <span class="co"># Regression Modeling Strategy (include Hmisc package)</span>
   <span class="kw">options</span>(<span class="dt">datadist =</span> <span class="st">&#39;dd&#39;</span>)                  <span class="co"># Distribution Summaries used by rms</span>
 

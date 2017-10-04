@@ -32,7 +32,7 @@
   
   
 <link rel="prev" href="survival.html">
-<link rel="next" href="heterogeneity.html">
+<link rel="next" href="competing-risk.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -129,8 +129,11 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="2.5.1" data-path="cox.html"><a href="cox.html#prognostic-model-with-ascites-edema-sex-bili-ast-platelet-stage"><i class="fa fa-check"></i><b>2.5.1</b> prognostic model with <code>àscites</code>, <code>edema</code>, <code>sex</code>, <code>bili</code>, <code>ast</code>, <code>platelet</code>, <code id="model2">stage</code></a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="heterogeneity.html"><a href="heterogeneity.html"><i class="fa fa-check"></i><b>3</b> <em>Wednesday</em>: Heterogeneity of treatment effects</a><ul>
-<li class="chapter" data-level="3.1" data-path="heterogeneity.html"><a href="heterogeneity.html#key3"><i class="fa fa-check"></i><b>3.1</b> Key (operative) concepts</a></li>
+<li class="chapter" data-level="3" data-path="competing-risk.html"><a href="competing-risk.html"><i class="fa fa-check"></i><b>3</b> <em>Wednesday</em>: Competing risk</a><ul>
+<li class="chapter" data-level="3.1" data-path="competing-risk.html"><a href="competing-risk.html#key3"><i class="fa fa-check"></i><b>3.1</b> Key (operative) concepts</a></li>
+<li class="chapter" data-level="3.2" data-path="competing-risk.html"><a href="competing-risk.html#data-manipulation"><i class="fa fa-check"></i><b>3.2</b> Data manipulation</a></li>
+<li class="chapter" data-level="3.3" data-path="competing-risk.html"><a href="competing-risk.html#simulation-of-competing-risk"><i class="fa fa-check"></i><b>3.3</b> Simulation of Competing risk</a></li>
+<li class="chapter" data-level="3.4" data-path="competing-risk.html"><a href="competing-risk.html#estimation-of-the-effect-of-sex-on-mgus-incidence"><i class="fa fa-check"></i><b>3.4</b> Estimation of the effect of sex on MGUS incidence</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="software.html"><a href="software.html"><i class="fa fa-check"></i>Software</a><ul>
 <li class="chapter" data-level="" data-path="software.html"><a href="software.html#packages"><i class="fa fa-check"></i>Packages</a></li>
@@ -206,9 +209,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <blockquote>
 <p>Note: <code>data(pbc)</code> load the <code>pbc</code> data-set and the <code>pbcseq</code> one, so on one side we do not need to call <code>data(pbcseq)</code> to load the letter, on the other side <code>data(pbcseq)</code> will throw an error because to load it we have to call <code>data(pbc)</code>. (We will use both data-sets.)</p>
 </blockquote>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(pbc)                                                    <span class="co"># load the data-set</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">171003</span>)
+<span class="kw">data</span>(pbc)                                                    <span class="co"># load the data-set</span>
 <span class="co"># ?pbc</span>
-pbc_df &lt;-<span class="st"> </span><span class="kw">as.tibble</span>(pbc)                       <span class="co"># create the tibble version of it</span>
+pbc_df &lt;-<span class="st"> </span><span class="kw">as_tibble</span>(pbc)                       <span class="co"># create the tibble version of it</span>
 dd &lt;-<span class="st"> </span><span class="kw">datadist</span>(pbc_df)     <span class="co"># store in the dd variable its `datadist()` for _rms_</span>
 
 pbc_df                                                       <span class="co"># give a look at it</span></code></pre></div>
@@ -479,7 +483,8 @@ cox_age &lt;-<span class="st"> </span><span class="kw">coxph</span>(<span class=
   <span class="dt">event   =</span> pbc_df$status ==<span class="st"> </span><span class="dv">2</span>,
   <span class="dt">nk      =</span> <span class="dv">3</span>,                   <span class="co"># default are 5 knots, too mutch for this model</span>
 <span class="co">#  model   = &#39;cox&#39;,          # If event is present, model is assumed to be &quot;cox&quot;</span>
-  <span class="dt">xlab    =</span> <span class="st">&#39;Age&#39;</span>
+  <span class="dt">xlab    =</span> <span class="st">&#39;Age&#39;</span>,
+  <span class="dt">statloc =</span> <span class="st">&#39;ll&#39;</span>
 )</code></pre></div>
 <pre><code>##           x             
 ##  0.05307827 -0.01469916 
@@ -1193,7 +1198,8 @@ rms_age &lt;-<span class="st"> </span><span class="kw">cph</span>(<span class="k
   <span class="dt">x       =</span> <span class="kw">log</span>(pbc_df$ast),
   <span class="dt">y       =</span> pbc_df$time,
   <span class="dt">event   =</span> pbc_df$status ==<span class="st"> </span><span class="dv">2</span>,
-  <span class="dt">xlab    =</span> <span class="st">&#39;ast&#39;</span>
+  <span class="dt">xlab    =</span> <span class="st">&#39;ast&#39;</span>,
+  <span class="dt">statloc =</span> <span class="st">&#39;ll&#39;</span>
 )</code></pre></div>
 <pre><code>##           x                                     
 ## -0.04133714  4.00548693 -7.69016846 -8.96495717 
@@ -1834,7 +1840,8 @@ rms_age &lt;-<span class="st"> </span><span class="kw">cph</span>(<span class="k
   <span class="dt">x       =</span> pbc_df$platelet %&gt;%<span class="st"> </span>as.numeric,
   <span class="dt">y       =</span> pbc_df$time,
   <span class="dt">event   =</span> pbc_df$status ==<span class="st"> </span><span class="dv">2</span>,
-  <span class="dt">xlab    =</span> <span class="st">&#39;Platelet&#39;</span>
+  <span class="dt">xlab    =</span> <span class="st">&#39;Platelet&#39;</span>,
+  <span class="dt">statloc =</span> <span class="st">&#39;ll&#39;</span>
 )</code></pre></div>
 <pre><code>##            x                                        
 ## -0.002304221 -0.034164621  0.159445107 -0.192976796 
@@ -2611,7 +2618,7 @@ dd &lt;-<span class="st"> </span><span class="kw">datadist</span>(adj_pbc)
 <div id="longitudinal" class="section level2">
 <h2><span class="header-section-number">2.4</span> Longitudinal suvival data analayses</h2>
 <p>Load a data-set, update the <code>datadist()</code> for the <strong>rms</strong> package, and take a look at the data</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pbcseq_df &lt;-<span class="st"> </span><span class="kw">as.tibble</span>(pbcseq)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pbcseq_df &lt;-<span class="st"> </span><span class="kw">as_tibble</span>(pbcseq)
 dd &lt;-<span class="st"> </span><span class="kw">datadist</span>(pbcseq_df)
 
 pbcseq_df</code></pre></div>
@@ -2934,7 +2941,7 @@ dd &lt;-<span class="st"> </span><span class="kw">datadist</span>(data_used)
         </div>
       </div>
 <a href="survival.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="heterogeneity.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="competing-risk.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

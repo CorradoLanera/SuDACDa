@@ -166,7 +166,7 @@ This book is designed to collect notes and exercises from the
 Ph.D.~course on
 \href{http://www.politocomunica.polito.it/events/appuntamenti/(idnews)/9665}{\textbf{Survival
 Data Analysis for Cancer Data}} by prof. Sylvie Chevret and prof.
-Matthieu Resche-Rigon from \href{http://www.cress-umr1153.fr/}{ECSTRA
+Matthieu Resche-Rigon from \href{http://www.cress-umr1153.fr/}{ECSTRRA
 Team}, \href{https://www.inserm.fr/}{Inserm},
 \href{https://www.univ-paris-diderot.fr/}{University of Paris Diderot},
 promoted by the \href{http://www.disma.polito.it/}{Dep. of Mathematical
@@ -204,6 +204,7 @@ more understandable by humans obtaining nicer output.
 \CommentTok{# Packages for the analyses}
 \KeywordTok{library}\NormalTok{(survival)                                            }\CommentTok{# Survival Analysis}
 \KeywordTok{library}\NormalTok{(survminer)                     }\CommentTok{# Drawing Survival Curves using 'ggplot2'}
+\KeywordTok{library}\NormalTok{(cmprsk)                                                 }\CommentTok{# Competing risk}
 \KeywordTok{library}\NormalTok{(rms)              }\CommentTok{# Regression Modeling Strategy (include Hmisc package)}
   \KeywordTok{options}\NormalTok{(}\DataTypeTok{datadist =} \StringTok{'dd'}\NormalTok{)                  }\CommentTok{# Distribution Summaries used by rms}
 
@@ -1187,9 +1188,10 @@ call \texttt{data(pbc)}. (We will use both data-sets.)
 
 \begin{Shaded}
 \begin{Highlighting}[]
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{171003}\NormalTok{)}
 \KeywordTok{data}\NormalTok{(pbc)                                                    }\CommentTok{# load the data-set}
 \CommentTok{# ?pbc}
-\NormalTok{pbc_df <-}\StringTok{ }\KeywordTok{as.tibble}\NormalTok{(pbc)                       }\CommentTok{# create the tibble version of it}
+\NormalTok{pbc_df <-}\StringTok{ }\KeywordTok{as_tibble}\NormalTok{(pbc)                       }\CommentTok{# create the tibble version of it}
 \NormalTok{dd <-}\StringTok{ }\KeywordTok{datadist}\NormalTok{(pbc_df)     }\CommentTok{# store in the dd variable its `datadist()` for _rms_}
 
 \NormalTok{pbc_df                                                       }\CommentTok{# give a look at it}
@@ -1565,7 +1567,8 @@ The proportional hazard hypothesis is not invalidated
   \DataTypeTok{event   =} \NormalTok{pbc_df$status ==}\StringTok{ }\DecValTok{2}\NormalTok{,}
   \DataTypeTok{nk      =} \DecValTok{3}\NormalTok{,                   }\CommentTok{# default are 5 knots, too mutch for this model}
 \CommentTok{#  model   = 'cox',          # If event is present, model is assumed to be "cox"}
-  \DataTypeTok{xlab    =} \StringTok{'Age'}
+  \DataTypeTok{xlab    =} \StringTok{'Age'}\NormalTok{,}
+  \DataTypeTok{statloc =} \StringTok{'ll'}
 \NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -2376,7 +2379,8 @@ Let's test for log-linearity
   \DataTypeTok{x       =} \KeywordTok{log}\NormalTok{(pbc_df$ast),}
   \DataTypeTok{y       =} \NormalTok{pbc_df$time,}
   \DataTypeTok{event   =} \NormalTok{pbc_df$status ==}\StringTok{ }\DecValTok{2}\NormalTok{,}
-  \DataTypeTok{xlab    =} \StringTok{'ast'}
+  \DataTypeTok{xlab    =} \StringTok{'ast'}\NormalTok{,}
+  \DataTypeTok{statloc =} \StringTok{'ll'}
 \NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -3058,7 +3062,8 @@ death}{Impact of platelet on death}}\label{platelet2}
   \DataTypeTok{x       =} \NormalTok{pbc_df$platelet %>%}\StringTok{ }\NormalTok{as.numeric,}
   \DataTypeTok{y       =} \NormalTok{pbc_df$time,}
   \DataTypeTok{event   =} \NormalTok{pbc_df$status ==}\StringTok{ }\DecValTok{2}\NormalTok{,}
-  \DataTypeTok{xlab    =} \StringTok{'Platelet'}
+  \DataTypeTok{xlab    =} \StringTok{'Platelet'}\NormalTok{,}
+  \DataTypeTok{statloc =} \StringTok{'ll'}
 \NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -3953,7 +3958,7 @@ package, and take a look at the data
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{pbcseq_df <-}\StringTok{ }\KeywordTok{as.tibble}\NormalTok{(pbcseq)}
+\NormalTok{pbcseq_df <-}\StringTok{ }\KeywordTok{as_tibble}\NormalTok{(pbcseq)}
 \NormalTok{dd <-}\StringTok{ }\KeywordTok{datadist}\NormalTok{(pbcseq_df)}
 
 \NormalTok{pbcseq_df}
@@ -4362,10 +4367,491 @@ near \(20\) df.
 ##  2.67640
 \end{verbatim}
 
-\chapter{\texorpdfstring{\emph{Wednesday}: Heterogeneity of treatment
-effects}{Wednesday: Heterogeneity of treatment effects}}\label{heterogeneity}
+\chapter{\texorpdfstring{\emph{Wednesday}: Competing
+risk}{Wednesday: Competing risk}}\label{competing-risk}
 
 \section{Key (operative) concepts}\label{key3}
+
+\section{Data manipulation}\label{data-manipulation}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{171004}\NormalTok{)}
+\KeywordTok{data}\NormalTok{(mgus, }\DataTypeTok{package =} \StringTok{'survival'}\NormalTok{)}
+\CommentTok{# ?mgus}
+
+\NormalTok{mgus_df <-}\StringTok{ }\KeywordTok{as_tibble}\NormalTok{(mgus)}
+\NormalTok{dd <-}\StringTok{ }\KeywordTok{datadist}\NormalTok{(mgus_df)}
+
+\NormalTok{mgus_df}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 241 x 12
+##       id   age    sex  dxyr   pcdx pctime futime death   alb creat   hgb
+##  * <dbl> <dbl> <fctr> <dbl> <fctr>  <dbl>  <dbl> <dbl> <dbl> <dbl> <dbl>
+##  1     1    78 female    68   <NA>     NA    748     1   2.8   1.2  11.5
+##  2     2    73 female    66     LP   1310   6751     1    NA    NA    NA
+##  3     3    87   male    68   <NA>     NA    277     1   2.2   1.1  11.2
+##  4     4    86   male    69   <NA>     NA   1815     1   2.8   1.3  15.3
+##  5     5    74 female    68   <NA>     NA   2587     1   3.0   0.8   9.8
+##  6     6    81   male    68   <NA>     NA    563     1   2.9   0.9  11.5
+##  7     7    72 female    68   <NA>     NA   1135     1   3.0   0.8  13.5
+##  8     8    79 female    69   <NA>     NA   2016     1   3.1   0.8  15.5
+##  9     9    85 female    70   <NA>     NA   2422     1   3.2   1.0  12.4
+## 10    10    58   male    65   <NA>     NA   6155     1   3.5   1.0  14.8
+## # ... with 231 more rows, and 1 more variables: mspike <dbl>
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Find number of patient with malignancy (AKA transition), death (w/out
+  malignancy) and Free of Events.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mgus_df <-}\StringTok{ }\NormalTok{mgus_df %>%}\StringTok{ }
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}
+    \DataTypeTok{malignancy =} \NormalTok{!}\KeywordTok{is.na}\NormalTok{(pcdx)}
+  \NormalTok{)}
+
+\NormalTok{mgus_df %>%}\StringTok{ }
+\StringTok{  }\KeywordTok{group_by}\NormalTok{(malignancy, death) %>%}\StringTok{ }
+\StringTok{  }\KeywordTok{summarise}\NormalTok{(}\DataTypeTok{n =} \KeywordTok{n}\NormalTok{())}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 4 x 3
+## # Groups:   malignancy [?]
+##   malignancy death     n
+##        <lgl> <dbl> <int>
+## 1      FALSE     0    14
+## 2      FALSE     1   163
+## 3       TRUE     0     2
+## 4       TRUE     1    62
+\end{verbatim}
+
+Patients with malignancy as a First Observed Event (FOE) are 64;
+patients which experiment death as FOE are 163, while the ones FoE are
+14. 163.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Find the indicator for censored, malignancy and death
+  (\texttt{indicator})
+\item
+  Find the time-to-event to use in the models (\texttt{time\_t})
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mgus_df <-}\StringTok{ }\NormalTok{mgus_df %>%}\StringTok{ }
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}
+    \DataTypeTok{indicator =} \KeywordTok{if_else}\NormalTok{(malignancy, }\DecValTok{1}\NormalTok{, }\DecValTok{2} \NormalTok{*}\StringTok{ }\NormalTok{death),}
+    \DataTypeTok{time_t    =} \KeywordTok{pmin}\NormalTok{(futime, pctime, }\DataTypeTok{na.rm =} \OtherTok{TRUE}\NormalTok{)}
+\NormalTok{)}
+
+\NormalTok{mgus_df}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 241 x 15
+##       id   age    sex  dxyr   pcdx pctime futime death   alb creat   hgb
+##    <dbl> <dbl> <fctr> <dbl> <fctr>  <dbl>  <dbl> <dbl> <dbl> <dbl> <dbl>
+##  1     1    78 female    68   <NA>     NA    748     1   2.8   1.2  11.5
+##  2     2    73 female    66     LP   1310   6751     1    NA    NA    NA
+##  3     3    87   male    68   <NA>     NA    277     1   2.2   1.1  11.2
+##  4     4    86   male    69   <NA>     NA   1815     1   2.8   1.3  15.3
+##  5     5    74 female    68   <NA>     NA   2587     1   3.0   0.8   9.8
+##  6     6    81   male    68   <NA>     NA    563     1   2.9   0.9  11.5
+##  7     7    72 female    68   <NA>     NA   1135     1   3.0   0.8  13.5
+##  8     8    79 female    69   <NA>     NA   2016     1   3.1   0.8  15.5
+##  9     9    85 female    70   <NA>     NA   2422     1   3.2   1.0  12.4
+## 10    10    58   male    65   <NA>     NA   6155     1   3.5   1.0  14.8
+## # ... with 231 more rows, and 4 more variables: mspike <dbl>,
+## #   malignancy <lgl>, indicator <dbl>, time_t <dbl>
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{3}
+\tightlist
+\item
+  Estimate the naive K-M and the cumulative incidence functions
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Using survival}
+\KeywordTok{cuminc}\NormalTok{(mgus_df$time_t, mgus_df$indicator) %>%}\StringTok{                  }\CommentTok{# ?cmprsk::cuminc}
+\StringTok{  }\KeywordTok{plot}\NormalTok{(                                                  }\CommentTok{# ?cmprsk:::plot.cuminc}
+    \DataTypeTok{main    =} \StringTok{'Cumulative Incidence Estimates curves'}\NormalTok{,}
+    \DataTypeTok{col     =} \KeywordTok{c}\NormalTok{(}\StringTok{'blue'}\NormalTok{, }\StringTok{'red'}\NormalTok{),}
+    \DataTypeTok{xlab    =} \StringTok{'Days'}\NormalTok{,}
+    \DataTypeTok{curvlab =} \KeywordTok{c}\NormalTok{(}\StringTok{'Transition'}\NormalTok{, }\StringTok{'Death'}\NormalTok{),}
+    \DataTypeTok{wh      =} \KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{)                                          }\CommentTok{# legend position}
+\NormalTok{)}
+
+\KeywordTok{survfit}\NormalTok{(}\KeywordTok{Surv}\NormalTok{(time_t, malignancy) ~}\StringTok{ }\DecValTok{1}\NormalTok{,        }\CommentTok{# using `rms::npsurv()` is the same}
+  \DataTypeTok{data =} \NormalTok{mgus_df}
+  \NormalTok{) %>%}\StringTok{ }
+\StringTok{  }\KeywordTok{lines}\NormalTok{(                          }\CommentTok{# Use `lines()` to draw over the previous plot}
+    \DataTypeTok{fun       =} \StringTok{'event'}\NormalTok{,                            }\CommentTok{# plot the cumulative events}
+    \DataTypeTok{conf.int   =} \OtherTok{FALSE}\NormalTok{,}
+    \DataTypeTok{col       =} \StringTok{'black'}\NormalTok{,}
+    \DataTypeTok{lty       =} \DecValTok{3}
+\NormalTok{)}
+\KeywordTok{legend}\NormalTok{(}\DataTypeTok{x =} \DecValTok{1}\NormalTok{, }\DataTypeTok{y =} \FloatTok{0.86}\NormalTok{,}
+  \DataTypeTok{legend =} \StringTok{'Naive K-M (Overestimation of Transitions)'}\NormalTok{,}
+  \DataTypeTok{col    =} \StringTok{'black'}\NormalTok{,}
+  \DataTypeTok{lty    =} \DecValTok{3}\NormalTok{,}
+  \DataTypeTok{bty    =} \StringTok{'n'} \CommentTok{# remove box arround the legend (because we have to add an entry)}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{SuDACDa-notes_files/figure-latex/unnamed-chunk-33-1.pdf}
+
+\section{Simulation of Competing
+risk}\label{simulation-of-competing-risk}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Specify two cause-specific exponential hazard \(\lambda_1(t)\) and
+  \(\lambda_2(t)\) of means \(0.8\) and \(1.2\). (Set sample size as you
+  like.)
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{n        <-}\StringTok{ }\FloatTok{1e4}
+\NormalTok{lambda_1 <-}\StringTok{ }\FloatTok{0.8}
+\NormalTok{lambda_2 <-}\StringTok{ }\FloatTok{1.2}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Simulate survival times \(T\) based on the all causes hazard
+  \(\lambda_.(t) = \lambda_1(t) + \lambda_2(t)\).
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lambda    <-}\StringTok{ }\NormalTok{lambda_1 +}\StringTok{ }\NormalTok{lambda_2 }
+\NormalTok{surv_time <-}\StringTok{ }\KeywordTok{rexp}\NormalTok{(n,}
+  \DataTypeTok{rate =} \DecValTok{1} \NormalTok{/}\StringTok{ }\NormalTok{lambda}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  Generate Bernoulli \(B(p)\) random variables, with
+  \(p = \lambda_1(t) / \lambda_.(t)\), i.e.~is the probability of
+  occurrence of the event of type 1.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{p_cens     <-}\StringTok{ }\NormalTok{lambda_1 /}\StringTok{ }\NormalTok{lambda}
+\NormalTok{transition <-}\StringTok{ }\KeywordTok{rbinom}\NormalTok{(n,}
+  \DataTypeTok{size =} \DecValTok{1}\NormalTok{,}
+  \DataTypeTok{prob =} \NormalTok{p_cens}
+\NormalTok{) %>%}
+\StringTok{  }\NormalTok{as.logical     }\CommentTok{# Set as logical to use the variable for conditional statements}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{3}
+\tightlist
+\item
+  Simulate uniform censoring times over \([0, 1]\).
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{censor_time <-}\StringTok{ }\KeywordTok{runif}\NormalTok{(n,}
+  \DataTypeTok{min =} \DecValTok{0}\NormalTok{,}
+  \DataTypeTok{max =} \DecValTok{1}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{4}
+\tightlist
+\item
+  Estimate the Cumulative Incidence of each competing event, with and
+  without censoring; discuss the results.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# create the dataset}
+\NormalTok{sim_data <-}\StringTok{ }\KeywordTok{data_frame}\NormalTok{(}
+  \DataTypeTok{id         =} \KeywordTok{seq_len}\NormalTok{(n),}
+  \DataTypeTok{transition =} \NormalTok{transition,}
+  \DataTypeTok{surv_t     =} \NormalTok{surv_time,}
+  \DataTypeTok{cens_t     =} \NormalTok{censor_time,}
+  \DataTypeTok{time_t     =} \KeywordTok{pmin}\NormalTok{(surv_t, cens_t),}
+  \DataTypeTok{status     =} \KeywordTok{case_when}\NormalTok{(}
+    \NormalTok{time_t ==}\StringTok{ }\NormalTok{cens_t ~}\StringTok{ }\NormalTok{0L,              }\CommentTok{# All the censored patients has status 0}
+    \NormalTok{transition       ~}\StringTok{ }\NormalTok{1L,    }\CommentTok{# Among the other, the ones which has a transition}
+                              \CommentTok{# have state 1}
+    \OtherTok{TRUE}             \NormalTok{~}\StringTok{ }\NormalTok{2L     }\CommentTok{# All the other were dead (before the end of f-up)}
+  \NormalTok{)}
+\NormalTok{)}
+
+\CommentTok{# Explore a (random) sample of three cases for each staus}
+\NormalTok{sim_data %>%}\StringTok{ }
+\StringTok{  }\KeywordTok{group_by}\NormalTok{(status) %>%}\StringTok{ }
+\StringTok{  }\KeywordTok{sample_n}\NormalTok{(}\DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 9 x 6
+## # Groups:   status [3]
+##      id transition      surv_t    cens_t      time_t status
+##   <int>      <lgl>       <dbl>     <dbl>       <dbl>  <int>
+## 1  6759      FALSE 6.844765752 0.5175084 0.517508388      0
+## 2   906       TRUE 1.378642827 0.5063402 0.506340163      0
+## 3  3568       TRUE 0.623047318 0.5752797 0.575279657      0
+## 4  2196       TRUE 0.506380841 0.9344626 0.506380841      1
+## 5  8119       TRUE 0.157231928 0.9007847 0.157231928      1
+## 6  5854       TRUE 0.742379822 0.8771130 0.742379822      1
+## 7  1685      FALSE 0.539729742 0.9635529 0.539729742      2
+## 8  4550      FALSE 0.001042022 0.3692372 0.001042022      2
+## 9  6893      FALSE 0.410360153 0.9322769 0.410360153      2
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Using survival}
+\KeywordTok{cuminc}\NormalTok{(sim_data$time_t, sim_data$status) %>%}\StringTok{                  }\CommentTok{# ?cmprsk::cuminc}
+\StringTok{  }\KeywordTok{plot}\NormalTok{(                                                  }\CommentTok{# ?cmprsk:::plot.cuminc}
+    \DataTypeTok{main    =} \StringTok{'Cumulative Incidence Estimates curves'}\NormalTok{,}
+    \DataTypeTok{col     =} \KeywordTok{c}\NormalTok{(}\StringTok{'blue'}\NormalTok{, }\StringTok{'red'}\NormalTok{),}
+    \DataTypeTok{xlab    =} \StringTok{'Time (normalized [0, 1])'}\NormalTok{,}
+    \DataTypeTok{curvlab =} \KeywordTok{c}\NormalTok{(}\StringTok{'Transition'}\NormalTok{, }\StringTok{'Event'}\NormalTok{),}
+    \DataTypeTok{wh      =} \KeywordTok{c}\NormalTok{(}\FloatTok{0.01}\NormalTok{, }\DecValTok{1}\NormalTok{)                                          }\CommentTok{# legend position}
+\NormalTok{)}
+
+\KeywordTok{survfit}\NormalTok{(}\KeywordTok{Surv}\NormalTok{(time_t, transition) ~}\StringTok{ }\DecValTok{1}\NormalTok{,        }\CommentTok{# using `rms::npsurv()` is the same}
+  \DataTypeTok{data =} \NormalTok{sim_data}
+  \NormalTok{) %>%}\StringTok{ }
+\StringTok{  }\KeywordTok{lines}\NormalTok{(                          }\CommentTok{# Use `lines()` to draw over the previous plot}
+    \DataTypeTok{fun       =} \StringTok{'event'}\NormalTok{,                            }\CommentTok{# plot the cumulative events}
+    \DataTypeTok{conf.int   =} \OtherTok{FALSE}\NormalTok{,}
+    \DataTypeTok{col       =} \StringTok{'black'}\NormalTok{,}
+    \DataTypeTok{lty       =} \DecValTok{3}
+\NormalTok{)}
+\KeywordTok{legend}\NormalTok{(}\DataTypeTok{x =} \FloatTok{0.01}\NormalTok{, }\DataTypeTok{y =} \FloatTok{0.86}\NormalTok{,}
+  \DataTypeTok{legend =} \StringTok{'Naive K-M (overestimation of transitions)'}\NormalTok{,}
+  \DataTypeTok{col    =} \StringTok{'black'}\NormalTok{,}
+  \DataTypeTok{lty    =} \DecValTok{3}\NormalTok{,}
+  \DataTypeTok{bty    =} \StringTok{'n'} \CommentTok{# remove box arround the legend (because we have to add an entry)}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{SuDACDa-notes_files/figure-latex/unnamed-chunk-39-1.pdf}
+
+\section{Estimation of the effect of sex on MGUS
+incidence}\label{estimation-of-the-effect-of-sex-on-mgus-incidence}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Compare the results of Cox cause specific hazard model\ldots{}
+\end{enumerate}
+
+\begin{quote}
+For clinical questions, i.e.~cause specific risk to experiment the event
+without taking into account the other couse(s)
+\end{quote}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{dd <-}\StringTok{ }\KeywordTok{datadist}\NormalTok{(mgus_df)}
+
+\NormalTok{cox_sex <-}\StringTok{ }\KeywordTok{cph}\NormalTok{(}\KeywordTok{Surv}\NormalTok{(time_t, malignancy) ~}\StringTok{ }\NormalTok{sex,}
+  \DataTypeTok{data =} \NormalTok{mgus_df,}
+  \DataTypeTok{x    =} \OtherTok{TRUE}\NormalTok{,}
+  \DataTypeTok{y    =} \OtherTok{TRUE}
+\NormalTok{)}
+
+\KeywordTok{summary}\NormalTok{(cox_sex)                  }\CommentTok{# this is good for a clean view of the effects}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##              Effects              Response : Surv(time_t, malignancy) 
+## 
+##  Factor            Low High Diff. Effect   S.E.    Lower 0.95 Upper 0.95
+##  sex - female:male 2   1    NA    0.049342 0.25103 -0.44268   0.54136   
+##   Hazard Ratio     2   1    NA    1.050600      NA  0.64232   1.71830
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{cox_sex                    }\CommentTok{# Here there are more informations (and the p-values)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Cox Proportional Hazards Model
+##  
+##  cph(formula = Surv(time_t, malignancy) ~ sex, data = mgus_df, 
+##      x = TRUE, y = TRUE)
+##  
+##                      Model Tests       Discrimination    
+##                                           Indexes        
+##  Obs       241    LR chi2      0.04    R2       0.000    
+##  Events     64    d.f.            1    Dxy     -0.039    
+##  Center -0.028    Pr(> chi2) 0.8441    g        0.024    
+##                   Score chi2   0.04    gr       1.025    
+##                   Pr(> chi2) 0.8441                      
+##  
+##           Coef    S.E.   Wald Z Pr(>|Z|)
+##  sex=male -0.0493 0.2510 -0.20  0.8442  
+## 
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{Predict}\NormalTok{(cox_sex) %>%}\StringTok{      }\CommentTok{# It is necessary to have the predictions for the plot}
+\StringTok{  }\NormalTok{plot}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{SuDACDa-notes_files/figure-latex/unnamed-chunk-40-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{cox_sex_death <-}\StringTok{ }\KeywordTok{cph}\NormalTok{(}\KeywordTok{Surv}\NormalTok{(time_t, indicator ==}\StringTok{ }\DecValTok{2}\NormalTok{) ~}\StringTok{ }\NormalTok{sex,}
+  \DataTypeTok{data =} \NormalTok{mgus_df,}
+  \DataTypeTok{x    =} \OtherTok{TRUE}\NormalTok{,}
+  \DataTypeTok{y    =} \OtherTok{TRUE}
+\NormalTok{)}
+
+\KeywordTok{summary}\NormalTok{(cox_sex_death)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##              Effects              Response : Surv(time_t, indicator == 2) 
+## 
+##  Factor            Low High Diff. Effect   S.E.    Lower 0.95 Upper 0.95
+##  sex - female:male 2   1    NA    -0.44221 0.16183 -0.75939   -0.12502  
+##   Hazard Ratio     2   1    NA     0.64262      NA  0.46795    0.88248
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{cox_sex_death}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Cox Proportional Hazards Model
+##  
+##  cph(formula = Surv(time_t, indicator == 2) ~ sex, data = mgus_df, 
+##      x = TRUE, y = TRUE)
+##  
+##                      Model Tests       Discrimination    
+##                                           Indexes        
+##  Obs       241    LR chi2      7.65    R2       0.031    
+##  Events    163    d.f.            1    Dxy      0.124    
+##  Center 0.2514    Pr(> chi2) 0.0057    g        0.218    
+##                   Score chi2   7.59    gr       1.243    
+##                   Pr(> chi2) 0.0059                      
+##  
+##           Coef   S.E.   Wald Z Pr(>|Z|)
+##  sex=male 0.4422 0.1618 2.73   0.0063  
+## 
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{Predict}\NormalTok{(cox_sex_death) %>%}\StringTok{ }
+\StringTok{  }\NormalTok{plot}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{SuDACDa-notes_files/figure-latex/unnamed-chunk-40-2.pdf}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  \ldots{}to those of the Fine and Gray model
+\end{enumerate}
+
+\begin{quote}
+For administrative questions, i.e.~overall risk of experiment each event
+taking into account the competing risk
+\end{quote}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mgus_num <-}\StringTok{ }\NormalTok{mgus_df %>%}\StringTok{ }
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{sex =} \KeywordTok{as.numeric}\NormalTok{(sex))}
+
+\KeywordTok{crr}\NormalTok{(}
+  \DataTypeTok{ftime   =} \NormalTok{mgus_num$time_t,}
+  \DataTypeTok{fstatus =} \NormalTok{mgus_num$indicator,}
+  \DataTypeTok{cov1    =} \NormalTok{mgus_num$sex}
+\NormalTok{) %>%}
+\StringTok{  }\NormalTok{summary}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Competing Risks Regression
+## 
+## Call:
+## crr(ftime = mgus_num$time_t, fstatus = mgus_num$indicator, cov1 = mgus_num$sex)
+## 
+##                 coef exp(coef) se(coef)     z p-value
+## mgus_num$sex1 -0.339     0.713    0.249 -1.36    0.17
+## 
+##               exp(coef) exp(-coef)  2.5% 97.5%
+## mgus_num$sex1     0.713        1.4 0.437  1.16
+## 
+## Num. cases = 241
+## Pseudo Log-likelihood = -341 
+## Pseudo likelihood ratio test = 1.83  on 1 df,
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+                                             \CommentTok{# here we do not have a way to plot }
+\end{Highlighting}
+\end{Shaded}
 
 \chapter*{Software}\label{software}
 \addcontentsline{toc}{chapter}{Software}
@@ -4377,8 +4863,9 @@ All the exercise are solved using R (ver. 3.4.2) has been used provided
 with packages: \texttt{survival} (\citet{R-survival}) for the survival
 data analyses (reference package), \texttt{survminer}
 (\citet{R-survminer}) for advance survival plot using \texttt{ggplot2}
-(\citet{R-ggplot2}) package, \texttt{rms} (\citet{R-rms}) for additional
-features on regression modeling strategies (survival ones included).
+(\citet{R-ggplot2}) package, \texttt{cmprsk} (\citet{R-cmprsk}) for
+competing risk, \texttt{rms} (\citet{R-rms}) for additional features on
+regression modeling strategies (survival ones included).
 
 With regards to the data management, the collection of package
 \texttt{tidyverse} (\citet{R-tidyverse}) is loaded, which includes:
@@ -4428,7 +4915,7 @@ characteristics and loaded packages.
 ##  cellranger     1.1.0   2016-07-27 CRAN (R 3.4.1)
 ##  checkmate      1.8.3   2017-07-03 CRAN (R 3.4.1)
 ##  cluster        2.0.6   2017-03-16 CRAN (R 3.4.1)
-##  cmprsk         2.2-7   2014-06-17 CRAN (R 3.4.1)
+##  cmprsk       * 2.2-7   2014-06-17 CRAN (R 3.4.1)
 ##  codetools      0.2-15  2016-10-05 CRAN (R 3.4.0)
 ##  colorspace     1.3-2   2016-12-14 CRAN (R 3.4.1)
 ##  compiler       3.4.2   2017-09-28 local         

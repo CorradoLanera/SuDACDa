@@ -5,8 +5,9 @@
 All the exercise are solved using R (ver. 3.4.2) has been used provided with
 packages: `survival` (@R-survival) for the survival data analyses (reference
 package), `survminer` (@R-survminer) for advance survival plot using `ggplot2`
-(@R-ggplot2) package, `rms` (@R-rms) for additional features on regression
-modeling strategies (survival ones included).
+(@R-ggplot2) package, `cmprsk` (@R-cmprsk) for competing risk, `rms` (@R-rms)
+for additional features on regression modeling strategies (survival ones
+included).
 
 With regards to the data management, the collection of package `tidyverse`
 (@R-tidyverse) is loaded, which includes: `dplyr` (@R-dplyr) for data

@@ -42,9 +42,10 @@ For this part we will use the data `pbc` (`?pbc`) from the package __survival__.
 >        call `data(pbc)`. (We will use both data-sets.)
 
 ```{r data_load}
+set.seed(171003)
 data(pbc)                                                    # load the data-set
 # ?pbc
-pbc_df <- as.tibble(pbc)                       # create the tibble version of it
+pbc_df <- as_tibble(pbc)                       # create the tibble version of it
 dd <- datadist(pbc_df)     # store in the dd variable its `datadist()` for _rms_
 
 pbc_df                                                       # give a look at it
@@ -146,7 +147,8 @@ rcspline.plot(
   event   = pbc_df$status == 2,
   nk      = 3,                   # default are 5 knots, too mutch for this model
 #  model   = 'cox',          # If event is present, model is assumed to be "cox"
-  xlab    = 'Age'
+  xlab    = 'Age',
+  statloc = 'll'
 )
 ```
 
@@ -237,7 +239,8 @@ rcspline.plot(
   x       = log(pbc_df$ast),
   y       = pbc_df$time,
   event   = pbc_df$status == 2,
-  xlab    = 'ast'
+  xlab    = 'ast',
+  statloc = 'll'
 )
 ```
 
@@ -273,7 +276,8 @@ rcspline.plot(
   x       = pbc_df$platelet %>% as.numeric,
   y       = pbc_df$time,
   event   = pbc_df$status == 2,
-  xlab    = 'Platelet'
+  xlab    = 'Platelet',
+  statloc = 'll'
 )
 ```
 
@@ -397,7 +401,7 @@ Load a data-set, update the `datadist()` for the __rms__ package, and take a
 look at the data
 
 ```{r}
-pbcseq_df <- as.tibble(pbcseq)
+pbcseq_df <- as_tibble(pbcseq)
 dd <- datadist(pbcseq_df)
 
 pbcseq_df
