@@ -126,7 +126,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="2.4.2" data-path="cox.html"><a href="cox.html#ast_full2"><i class="fa fa-check"></i><b>2.4.2</b> Impact of ast</a></li>
 </ul></li>
 <li class="chapter" data-level="2.5" data-path="cox.html"><a href="cox.html#prognostic2"><i class="fa fa-check"></i><b>2.5</b> Prognostic model</a><ul>
-<li class="chapter" data-level="2.5.1" data-path="cox.html"><a href="cox.html#prognostic-model-with-ascites-edema-sex-bili-ast-platelet-stage"><i class="fa fa-check"></i><b>2.5.1</b> prognostic model with <code>àscites</code>, <code>edema</code>, <code>sex</code>, <code>bili</code>, <code>ast</code>, <code>platelet</code>, <code id="model2">stage</code></a></li>
+<li class="chapter" data-level="2.5.1" data-path="cox.html"><a href="cox.html#prognostic-model-w-ascites-edema-sex-bili-ast-platelet-stage"><i class="fa fa-check"></i><b>2.5.1</b> prognostic model w/ <code>àscites</code>, <code>edema</code>, <code>sex</code>, <code>bili</code>, <code>ast</code>, <code>platelet</code>, <code id="model2">stage</code></a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="competing-risk.html"><a href="competing-risk.html"><i class="fa fa-check"></i><b>3</b> <em>Wednesday</em>: Competing risk</a><ul>
@@ -190,7 +190,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>When performing categorization do not base it on the p-value: you have to explain why this choiche is clinically relevant and not statistically significant!</p>
 </blockquote>
 <ol start="4" style="list-style-type: decimal">
-<li>The biggest problem with databases with more observations for each patients is not the model but to produce a table with the right information in the right position. In particular we need the following columns</li>
+<li>The biggest problem w/ databases w/ more observations for each patients is not the model but to produce a table w/ the right information in the right position. In particular we need the following columns</li>
 </ol>
 <ul>
 <li>id</li>
@@ -394,8 +394,8 @@ pbc_df                                                       <span class="co"># 
 <h3><span class="header-section-number">2.2.1</span> Impact of sex on death {sex2}</h3>
 <p>First of all we have to ask to our self, and to the clinicians, some questions:</p>
 <ol style="list-style-type: decimal">
-<li><p>There are non-informative censoring? Yes, because there is a final data-independent date (i.e. July, 1986). This is completely non-informative with regards to the patients. So we can suspect a non-informative censoring and start investigations using Cox model.</p></li>
-<li><p>What we have to do with the transplant? I.e., <code>event</code> has three levels: censored, transplant, dead; how we have to consider transplanted patients? In this case, clinicians answered that the transplant status is completely random! So, we can believe that it is a non-informative censoring.<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></p></li>
+<li><p>There are non-informative censoring? Yes, because there is a final data-independent date (i.e. July, 1986). This is completely non-informative w/ regards to the patients. So we can suspect a non-informative censoring and start investigations using Cox model.</p></li>
+<li><p>What we have to do w/ the transplant? I.e., <code>event</code> has three levels: censored, transplant, dead; how we have to consider transplanted patients? In this case, clinicians answered that the transplant status is completely random! So, we can believe that it is a non-informative censoring.<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></p></li>
 </ol>
 <p>Moreover we have to consider, before to start, that <code>sex</code> is a categorical variable, so we have to check (only) the proportionality of the hazards.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Using _survival_ (Cox model for proportional hazard against sex)</span>
@@ -408,11 +408,11 @@ cox_sex &lt;-<span class="st"> </span><span class="kw">coxph</span>(<span class=
 ## sexf -0.0563 0.502 0.479</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cox.zph</span>(cox_sex) %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">plot</span>(
-    <span class="dt">main =</span> <span class="st">&#39;Graph of the scaled Schoenfeld residuals for sex, along with a smooth curve&#39;</span>,
+    <span class="dt">main =</span> <span class="st">&#39;Graph of the scaled Schoenfeld residuals for sex, along w/ a smooth curve&#39;</span>,
     <span class="dt">col =</span> <span class="st">&#39;blue&#39;</span>
 )</code></pre></div>
 <p><img src="SuDACDa-notes_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
-<p>The proportional hazard assumption is not invalidate so we can continue with the analyses.</p>
+<p>The proportional hazard assumption is not invalidate so we can continue w/ the analyses.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(cox_sex)</code></pre></div>
 <pre><code>## Call:
 ## coxph(formula = Surv(time, status == 2) ~ sex, data = pbc_df)
@@ -475,7 +475,7 @@ cox_age &lt;-<span class="st"> </span><span class="kw">coxph</span>(<span class=
 <p><img src="SuDACDa-notes_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 <p>The proportional hazard hypothesis is not invalidated</p>
 <blockquote>
-<p>The outputs of rcspline.plot are a plot and a very long matrix with the values of xe, lower, upper. The latters are not of our interest, but there are no options to not get them. So we include the command into <code>invisible(capture.output(.))</code> box.<a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a></p>
+<p>The outputs of rcspline.plot are a plot and a very long matrix w/ the values of xe, lower, upper. The latters are not of our interest, but there are no options to not get them. So we include the command into <code>invisible(capture.output(.))</code> box.<a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a></p>
 </blockquote>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">invisible</span>(<span class="kw">capture.output</span>(<span class="kw">rcspline.plot</span>(
   <span class="dt">x       =</span> pbc_df$age,
@@ -603,7 +603,7 @@ rms_age &lt;-<span class="st"> </span><span class="kw">cph</span>(<span class="k
 ##  Factor        Low  High  Diff. Effect  S.E.    Lower 0.95 Upper 0.95
 ##  ast           80.6 151.9 71.3  0.69872 0.12499 0.45374    0.9437    
 ##   Hazard Ratio 80.6 151.9 71.3  2.01120      NA 1.57420    2.5695</code></pre>
-<p>It is significantly protective, with doubling the effect between the borders of the IQR.</p>
+<p>It is significantly protective, w/ doubling the effect between the borders of the IQR.</p>
 </div>
 <div id="platelet2" class="section level3">
 <h3><span class="header-section-number">2.2.4</span> Impact of <strong>platelet</strong> on death</h3>
@@ -721,7 +721,7 @@ cox_relev_platelet &lt;-<span class="st"> </span><span class="kw">coxph</span>(<
 ##  trt           1   2    1     -0.057189 0.17916 -0.40835   0.29397   
 ##   Hazard Ratio 1   2    1      0.944420      NA  0.66475   1.34170</code></pre>
 <p>No significant effect for treatment.</p>
-<p>Clinician: an adjusted with edema?</p>
+<p>Clinician: an adjusted w/ edema?</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cph</span>(<span class="kw">Surv</span>(time, status ==<span class="st"> </span><span class="dv">2</span>) ~<span class="st"> </span>trt +<span class="st"> </span>edema,
   <span class="dt">data =</span> pbc_df
 ) %&gt;%<span class="st"> </span>
@@ -749,7 +749,7 @@ cox_relev_platelet &lt;-<span class="st"> </span><span class="kw">coxph</span>(<
 ## 
 ## Adjusted to: trt=1 edema=0.5</code></pre>
 <p>No effect.</p>
-<p>Clinicians: and what about adjusted with stage?</p>
+<p>Clinicians: and what about adjusted w/ stage?</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">adj_pbc &lt;-<span class="st"> </span>pbc_df %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">stage_fct =</span> <span class="kw">factor</span>(stage))
 
@@ -770,7 +770,7 @@ dd &lt;-<span class="st"> </span><span class="kw">datadist</span>(adj_pbc)
 ##   Hazard Ratio   3   2    NA     0.57795      NA  0.32517    1.02720  
 ##  stage_fct - 4:3 3   4    NA     0.91613 0.19771  0.52862    1.30360  
 ##   Hazard Ratio   3   4    NA     2.49960      NA  1.69660    3.68270</code></pre>
-<p>Treatment still with no significant effect. <code>stage</code> has some effects, i.e. from the 3 to 1 or to 4,</p>
+<p>Treatment still w/ no significant effect. <code>stage</code> has some effects, i.e. from the 3 to 1 or to 4,</p>
 <p>Clinicians: oh, so let’s look at the interactions!</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rms_trt_stage &lt;-<span class="st"> </span><span class="kw">cph</span>(<span class="kw">Surv</span>(time, status ==<span class="st"> </span><span class="dv">2</span>) ~<span class="st"> </span>trt *<span class="st"> </span>stage,
   <span class="dt">data =</span> adj_pbc
@@ -827,7 +827,7 @@ pbcseq_df</code></pre></div>
     <span class="dt">end    =</span> <span class="kw">lead</span>(day),           <span class="co"># the end is &quot;the next start&quot; (last will be NA)</span>
     <span class="dt">status =</span> <span class="kw">if_else</span>(<span class="kw">is.na</span>(end), status, 0L), 
     <span class="dt">end    =</span> <span class="kw">if_else</span>(<span class="kw">is.na</span>(end), futime, end) <span class="co"># fill the NA-ends (i.e. the lasts)</span>
-                                              <span class="co"># with the real end</span>
+                                              <span class="co"># w/ the real end</span>
 )</code></pre></div>
 <div id="bilurubine2" class="section level3">
 <h3><span class="header-section-number">2.4.1</span> Impact of bilurubine of death</h3>
@@ -878,7 +878,7 @@ pbcseq_df</code></pre></div>
   <span class="dt">col =</span> <span class="st">&#39;brown&#39;</span>
 )</code></pre></div>
 <p><img src="SuDACDa-notes_files/figure-html/unnamed-chunk-26-2.png" width="672" /></p>
-<p>What happen with the strange observations? We try to find which is that outlier.</p>
+<p>What happen w/ the strange observations? We try to find which is that outlier.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># look at the residual caracteristics</span>
 <span class="kw">residuals</span>(ast_mod, <span class="dt">type =</span> <span class="st">&#39;martingale&#39;</span>) %&gt;%
 <span class="st">  </span>describe</code></pre></div>
@@ -913,8 +913,8 @@ pbcseq_full$ast[[strange_id]]</code></pre></div>
 </div>
 <div id="prognostic2" class="section level2">
 <h2><span class="header-section-number">2.5</span> Prognostic model</h2>
-<div id="prognostic-model-with-ascites-edema-sex-bili-ast-platelet-stage" class="section level3">
-<h3><span class="header-section-number">2.5.1</span> prognostic model with <code>àscites</code>, <code>edema</code>, <code>sex</code>, <code>bili</code>, <code>ast</code>, <code>platelet</code>, <code id="model2">stage</code></h3>
+<div id="prognostic-model-w-ascites-edema-sex-bili-ast-platelet-stage" class="section level3">
+<h3><span class="header-section-number">2.5.1</span> prognostic model w/ <code>àscites</code>, <code>edema</code>, <code>sex</code>, <code>bili</code>, <code>ast</code>, <code>platelet</code>, <code id="model2">stage</code></h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># prepare an ad hoc data frame</span>
 pbc_updated &lt;-<span class="st"> </span>pbc_df %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">mutate</span>(
@@ -991,8 +991,8 @@ pbc_updated %&gt;%<span class="st"> </span>
 ## Frequency     21    92   155   144
 ## Proportion 0.051 0.223 0.376 0.350
 ## ---------------------------------------------------------------------------</code></pre>
-<p>There are 11 basic df (one each continuous variable and one-minus-n-level for the categorical one), so to use all of them we need at least <span class="math inline">\(110\)</span> obs. Data has <span class="math inline">\(418\)</span>, this allow us to use a more complex model, with some interaction, splines, etc (more or less other <span class="math inline">\(15 -- 30\)</span> df).</p>
-<p>We decide (following suggestions from <span class="citation">Harrell Jr (<a href="#ref-harrell2015regression">2015</a>)</span>) to consider splines for any continuous variable (with 3 knots) and consider sex interaction with them and the other numerical variables, leading to near <span class="math inline">\(20\)</span> df.</p>
+<p>There are 11 basic df (one each continuous variable and one-minus-n-level for the categorical one), so to use all of them we need at least <span class="math inline">\(110\)</span> obs. Data has <span class="math inline">\(418\)</span>, this allow us to use a more complex model, w/ some interaction, splines, etc (more or less other <span class="math inline">\(15 -- 30\)</span> df).</p>
+<p>We decide (following suggestions from <span class="citation">Harrell Jr (<a href="#ref-harrell2015regression">2015</a>)</span>) to consider splines for any continuous variable (w/ 3 knots) and consider sex interaction w/ them and the other numerical variables, leading to near <span class="math inline">\(20\)</span> df.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">data_used &lt;-<span class="st"> </span>pbc_updated %&gt;%<span class="st"> </span>
 <span class="st">  </span>dplyr::<span class="kw">select</span>(status, time,
     sex, ascites, edema, bili_log, ast_log, platelet_ref, stage_fct
@@ -1055,7 +1055,7 @@ dd &lt;-<span class="st"> </span><span class="kw">datadist</span>(data_used)
 ##       NA  1.219200   3.02400  
 ## 
 ## Adjusted to: sex=f ascites=0 edema=0.5 bili_log=0.3364722 ast_log=4.74232</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># without missing data, and with beckward stepwise variable selection</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># W/out missing data, and w/ beckward stepwise variable selection</span>
 <span class="kw">cph</span>(
   <span class="kw">Surv</span>(time, status ==<span class="st"> </span><span class="dv">2</span>) ~
 <span class="st">    </span>sex +<span class="st"> </span>ascites +<span class="st"> </span>edema +<span class="st"> </span>bili_log +<span class="st"> </span>ast_log +<span class="st"> </span>platelet_ref +<span class="st"> </span>stage_fct,

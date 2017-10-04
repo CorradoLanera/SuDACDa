@@ -126,7 +126,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="2.4.2" data-path="cox.html"><a href="cox.html#ast_full2"><i class="fa fa-check"></i><b>2.4.2</b> Impact of ast</a></li>
 </ul></li>
 <li class="chapter" data-level="2.5" data-path="cox.html"><a href="cox.html#prognostic2"><i class="fa fa-check"></i><b>2.5</b> Prognostic model</a><ul>
-<li class="chapter" data-level="2.5.1" data-path="cox.html"><a href="cox.html#prognostic-model-with-ascites-edema-sex-bili-ast-platelet-stage"><i class="fa fa-check"></i><b>2.5.1</b> prognostic model with <code>àscites</code>, <code>edema</code>, <code>sex</code>, <code>bili</code>, <code>ast</code>, <code>platelet</code>, <code id="model2">stage</code></a></li>
+<li class="chapter" data-level="2.5.1" data-path="cox.html"><a href="cox.html#prognostic-model-w-ascites-edema-sex-bili-ast-platelet-stage"><i class="fa fa-check"></i><b>2.5.1</b> prognostic model w/ <code>àscites</code>, <code>edema</code>, <code>sex</code>, <code>bili</code>, <code>ast</code>, <code>platelet</code>, <code id="model2">stage</code></a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="competing-risk.html"><a href="competing-risk.html"><i class="fa fa-check"></i><b>3</b> <em>Wednesday</em>: Competing risk</a><ul>
@@ -164,6 +164,45 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h1><span class="header-section-number">Chapter 3</span> <em>Wednesday</em>: Competing risk</h1>
 <div id="key3" class="section level2">
 <h2><span class="header-section-number">3.1</span> Key (operative) concepts</h2>
+<ol style="list-style-type: decimal">
+<li><p>Patient are exposed simultaneously to <span class="math inline">\(k (\geq2)\)</span> causes</p></li>
+<li><p>Effect Free Survival (EFS) is univariate, i.e. only the First Observed Event (FOE) is considered and of interest</p></li>
+<li><p>The interest is not in the survival model</p></li>
+</ol>
+<blockquote>
+<p>“At <span class="math inline">\(\infty\)</span> all individuals will not die in the ICU”</p>
+</blockquote>
+<ol start="4" style="list-style-type: decimal">
+<li>Type of observed time</li>
+</ol>
+<ul>
+<li>Cansored (conventionally coded w/ <span class="math inline">\(0\)</span>)</li>
+<li>Failure w/ a FOE different from the last absorbing one (coded w/ <span class="math inline">\(1 -- k-1\)</span>)</li>
+<li>Failure w/ the FOE as the last absorbing event (coded w/ <span class="math inline">\(k\)</span>)</li>
+<li><span class="math inline">\(T_k = min\Bigl(\tilde{T_k}^{D_k} |  D_k \in \{\textrm{causes of failure for }k\} \Bigr)\)</span></li>
+</ul>
+<ol start="5" style="list-style-type: decimal">
+<li><p>Cumulative Incidence Function (CIF) do not require independence between causes</p></li>
+<li><p>In competing risk, K-M is biased, i.e. overestimates the CIF (because it the independence assumption is violated)</p></li>
+<li>Tests</li>
+</ol>
+<ul>
+<li>w/out competing risk: log-rank</li>
+<li>w/ competing risk: modified <span class="math inline">\(\chi^2\)</span> <span class="citation">(Gray <a href="#ref-gray1988class">1988</a>)</span></li>
+</ul>
+<ol start="8" style="list-style-type: decimal">
+<li>Regression strategies for competing risk</li>
+</ol>
+<ul>
+<li>Case Specific Hazard Ratio (CS-HR) — Cox, useful for clinical interests (present it for each competing risk taken singularly)</li>
+<li>Subdistribution Hazard Ratio (SHR) — Fine-Gray, useful for administrative] interests (present it for the global risk considering the contribution of each competing one)</li>
+</ul>
+<blockquote>
+<p>Test the proportional hazard assumption for SHR</p>
+</blockquote>
+<blockquote>
+<p>There are formulas for the sample size calculation when considering competing risk</p>
+</blockquote>
 </div>
 <div id="data-manipulation" class="section level2">
 <h2><span class="header-section-number">3.2</span> Data manipulation</h2>
@@ -190,7 +229,7 @@ mgus_df</code></pre></div>
 ## 10    10    58   male    65   &lt;NA&gt;     NA   6155     1   3.5   1.0  14.8
 ## # ... with 231 more rows, and 1 more variables: mspike &lt;dbl&gt;</code></pre>
 <ol style="list-style-type: decimal">
-<li>Find number of patient with malignancy (AKA transition), death (w/out malignancy) and Free of Events.</li>
+<li>Find number of patient w/ malignancy (AKA transition), death (w/out malignancy) and Free of Events.</li>
 </ol>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mgus_df &lt;-<span class="st"> </span>mgus_df %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">mutate</span>(
@@ -208,7 +247,7 @@ mgus_df %&gt;%<span class="st"> </span>
 ## 2      FALSE     1   163
 ## 3       TRUE     0     2
 ## 4       TRUE     1    62</code></pre>
-<p>Patients with malignancy as a First Observed Event (FOE) are 64; patients which experiment death as FOE are 163, while the ones FoE are 14. 163.</p>
+<p>Patients w/ malignancy as a FOE are 64; patients which experiment death as FOE are 163, while the ones FoE are 14. 163.</p>
 <ol start="2" style="list-style-type: decimal">
 <li>Find the indicator for censored, malignancy and death (<code>indicator</code>)</li>
 <li>Find the time-to-event to use in the models (<code>time_t</code>)</li>
@@ -281,7 +320,7 @@ surv_time &lt;-<span class="st"> </span><span class="kw">rexp</span>(n,
   <span class="dt">rate =</span> <span class="dv">1</span> /<span class="st"> </span>lambda
 )</code></pre></div>
 <ol start="3" style="list-style-type: decimal">
-<li>Generate Bernoulli <span class="math inline">\(B(p)\)</span> random variables, with <span class="math inline">\(p = \lambda_1(t) / \lambda_.(t)\)</span>, i.e. is the probability of occurrence of the event of type 1.</li>
+<li>Generate Bernoulli <span class="math inline">\(B(p)\)</span> random variables, w/ <span class="math inline">\(p = \lambda_1(t) / \lambda_.(t)\)</span>, i.e. is the probability of occurrence of the event of type 1.</li>
 </ol>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p_cens     &lt;-<span class="st"> </span>lambda_1 /<span class="st"> </span>lambda
 transition &lt;-<span class="st"> </span><span class="kw">rbinom</span>(n,
@@ -297,7 +336,7 @@ transition &lt;-<span class="st"> </span><span class="kw">rbinom</span>(n,
   <span class="dt">max =</span> <span class="dv">1</span>
 )</code></pre></div>
 <ol start="5" style="list-style-type: decimal">
-<li>Estimate the Cumulative Incidence of each competing event, with and without censoring; discuss the results.</li>
+<li>Estimate the Cumulative Incidence of each competing event, w/ and w/out censoring; discuss the results.</li>
 </ol>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># create the dataset</span>
 sim_data &lt;-<span class="st"> </span><span class="kw">data_frame</span>(
@@ -364,7 +403,7 @@ sim_data %&gt;%<span class="st"> </span>
 <li>Compare the results of Cox cause specific hazard model…</li>
 </ol>
 <blockquote>
-<p>For clinical questions, i.e. cause specific risk to experiment the event without taking into account the other couse(s)</p>
+<p>For clinical questions, i.e. cause specific risk to experiment the event w/out taking into account the other couse(s)</p>
 </blockquote>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dd &lt;-<span class="st"> </span><span class="kw">datadist</span>(mgus_df)
 
@@ -441,7 +480,7 @@ cox_sex &lt;-<span class="st"> </span><span class="kw">cph</span>(<span class="k
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mgus_num &lt;-<span class="st"> </span>mgus_df %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sex =</span> <span class="kw">as.numeric</span>(sex))
 
-<span class="kw">crr</span>(
+<span class="kw">crr</span>(                                      <span class="co"># We do not have a plot method for crr</span>
   <span class="dt">ftime   =</span> mgus_num$time_t,
   <span class="dt">fstatus =</span> mgus_num$indicator,
   <span class="dt">cov1    =</span> mgus_num$sex
@@ -461,8 +500,13 @@ cox_sex &lt;-<span class="st"> </span><span class="kw">cph</span>(<span class="k
 ## Num. cases = 241
 ## Pseudo Log-likelihood = -341 
 ## Pseudo likelihood ratio test = 1.83  on 1 df,</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">                                             <span class="co"># here we do not have a way to plot </span></code></pre></div>
 
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references">
+<div id="ref-gray1988class">
+<p>Gray, Robert J. 1988. “A Class of K-Sample Tests for Comparing the Cumulative Incidence of a Competing Risk.” <em>The Annals of Statistics</em>. JSTOR, 1141–54.</p>
 </div>
 </div>
             </section>

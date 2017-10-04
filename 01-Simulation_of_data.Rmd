@@ -30,7 +30,7 @@
 
 ## Simulated Data {#sumulation1}
 
-1. Simulate a sample of $n = 100$ or $1000$ exponential survival times, with
+1. Simulate a sample of $n = 100$ or $1000$ exponential survival times, w/
   mean $\theta = 5$.
 
   - Non censored
@@ -42,7 +42,7 @@ t              <- rexp(n, rate = 5)                   # random exponential times
 status_no_cens <- rep(1, times = n)         # no censored data --> all are cases
 ```
 
-  - Uniform censoring over $[0, a]$, with $a = 1, a = 0.5$ or $a = 2$
+  - Uniform censoring over $[0, a]$, w/ $a = 1, a = 0.5$ or $a = 2$
 
 ```{r}
 a              <- c(cens_05 = 0.5)   # upper bound of the uniform censoring dist
@@ -89,7 +89,7 @@ hist(t_cens,
 # 
 # R formula: y ~ x <--> math formula: y = f(x)
 # 
-# Here we want to model the response (labelled time) as they are, without any
+# Here we want to model the response (labelled time) as they are, w/out any
 # furter investigation on the effect on them from some other variable
 survreg(Surv(t, status_no_cens) ~ 1,
   dist = 'exponential'
@@ -289,7 +289,7 @@ cox_model <- cph(Surv(futime, death) ~ sex,
   data  = mgus_df
 )
 
-summary(cox_model)                           # return effect size and HR with CI
+summary(cox_model)                             # return effect size and HR w/ CI
 
 Predict(cox_model) %>%          # Compute predicted values and confidence limits
                                 #

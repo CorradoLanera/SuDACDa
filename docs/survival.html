@@ -126,7 +126,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="2.4.2" data-path="cox.html"><a href="cox.html#ast_full2"><i class="fa fa-check"></i><b>2.4.2</b> Impact of ast</a></li>
 </ul></li>
 <li class="chapter" data-level="2.5" data-path="cox.html"><a href="cox.html#prognostic2"><i class="fa fa-check"></i><b>2.5</b> Prognostic model</a><ul>
-<li class="chapter" data-level="2.5.1" data-path="cox.html"><a href="cox.html#prognostic-model-with-ascites-edema-sex-bili-ast-platelet-stage"><i class="fa fa-check"></i><b>2.5.1</b> prognostic model with <code>àscites</code>, <code>edema</code>, <code>sex</code>, <code>bili</code>, <code>ast</code>, <code>platelet</code>, <code id="model2">stage</code></a></li>
+<li class="chapter" data-level="2.5.1" data-path="cox.html"><a href="cox.html#prognostic-model-w-ascites-edema-sex-bili-ast-platelet-stage"><i class="fa fa-check"></i><b>2.5.1</b> prognostic model w/ <code>àscites</code>, <code>edema</code>, <code>sex</code>, <code>bili</code>, <code>ast</code>, <code>platelet</code>, <code id="model2">stage</code></a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="competing-risk.html"><a href="competing-risk.html"><i class="fa fa-check"></i><b>3</b> <em>Wednesday</em>: Competing risk</a><ul>
@@ -199,7 +199,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="sumulation1" class="section level2">
 <h2><span class="header-section-number">1.2</span> Simulated Data</h2>
 <ol style="list-style-type: decimal">
-<li>Simulate a sample of <span class="math inline">\(n = 100\)</span> or <span class="math inline">\(1000\)</span> exponential survival times, with mean <span class="math inline">\(\theta = 5\)</span>.</li>
+<li>Simulate a sample of <span class="math inline">\(n = 100\)</span> or <span class="math inline">\(1000\)</span> exponential survival times, w/ mean <span class="math inline">\(\theta = 5\)</span>.</li>
 </ol>
 <ul>
 <li>Non censored</li>
@@ -209,7 +209,7 @@ n              &lt;-<span class="st"> </span><span class="kw">c</span>(<span cla
 t              &lt;-<span class="st"> </span><span class="kw">rexp</span>(n, <span class="dt">rate =</span> <span class="dv">5</span>)                   <span class="co"># random exponential times</span>
 status_no_cens &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">1</span>, <span class="dt">times =</span> n)         <span class="co"># no censored data --&gt; all are cases</span></code></pre></div>
 <ul>
-<li>Uniform censoring over <span class="math inline">\([0, a]\)</span>, with <span class="math inline">\(a = 1, a = 0.5\)</span> or <span class="math inline">\(a = 2\)</span></li>
+<li>Uniform censoring over <span class="math inline">\([0, a]\)</span>, w/ <span class="math inline">\(a = 1, a = 0.5\)</span> or <span class="math inline">\(a = 2\)</span></li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">a              &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dt">cens_05 =</span> <span class="fl">0.5</span>)   <span class="co"># upper bound of the uniform censoring dist</span>
 cens           &lt;-<span class="st"> </span><span class="kw">runif</span>(n, <span class="dt">min =</span> <span class="dv">0</span>, <span class="dt">max =</span> a)                    <span class="co"># censored times</span>
@@ -249,7 +249,7 @@ status_cens    &lt;-<span class="st"> </span>status_no_cens -<span class="st"> <
 <span class="co"># </span>
 <span class="co"># R formula: y ~ x &lt;--&gt; math formula: y = f(x)</span>
 <span class="co"># </span>
-<span class="co"># Here we want to model the response (labelled time) as they are, without any</span>
+<span class="co"># Here we want to model the response (labelled time) as they are, w/out any</span>
 <span class="co"># furter investigation on the effect on them from some other variable</span>
 <span class="kw">survreg</span>(<span class="kw">Surv</span>(t, status_no_cens) ~<span class="st"> </span><span class="dv">1</span>,
   <span class="dt">dist =</span> <span class="st">&#39;exponential&#39;</span>
@@ -644,7 +644,7 @@ cox_model &lt;-<span class="st"> </span><span class="kw">cph</span>(<span class=
   <span class="dt">data  =</span> mgus_df
 )
 
-<span class="kw">summary</span>(cox_model)                           <span class="co"># return effect size and HR with CI</span></code></pre></div>
+<span class="kw">summary</span>(cox_model)                             <span class="co"># return effect size and HR w/ CI</span></code></pre></div>
 <pre><code>##              Effects              Response : Surv(futime, death) 
 ## 
 ##  Factor            Low High Diff. Effect   S.E.    Lower 0.95 Upper 0.95

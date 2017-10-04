@@ -2,9 +2,43 @@
 
 ## Key (operative) concepts {#key3}
 
+1. Patient are exposed simultaneously to $k (\geq2)$ causes
 
+2. Effect Free Survival (EFS) is univariate, i.e. only the First Observed Event
+   (FOE) is considered and of interest
 
+3. The interest is not in the survival model
 
+> "At $\infty$ all  individuals will not die in the ICU"
+
+4. Type of observed time
+  - Cansored (conventionally coded w/ $0$)
+  - Failure w/ a FOE different from the last absorbing one (coded w/ $1 -- k-1$)
+  - Failure w/ the FOE as the last absorbing event (coded w/ $k$)
+  - $T_k = min\Bigl(\tilde{T_k}^{D_k} |
+      D_k \in \{\textrm{causes of failure for }k\}
+    \Bigr)$
+
+5. Cumulative Incidence Function (CIF) do not require independence between
+   causes
+
+6. In competing risk, K-M is biased, i.e. overestimates the CIF (because it the
+   independence assumption is violated)
+
+7. Tests
+  - w/out competing risk: log-rank
+  - w/ competing risk: modified $\chi^2$ [@gray1988class]
+
+8. Regression strategies for competing risk
+  - Case Specific Hazard Ratio (CS-HR) --- Cox, useful for clinical interests (present it for each competing risk taken singularly)
+  - Subdistribution Hazard Ratio (SHR) --- Fine-Gray, useful for administrative]
+    interests (present it for the global risk considering the contribution of
+    each competing one)
+
+> Test the proportional hazard assumption for SHR
+
+> There are formulas for the sample size calculation when considering competing
+  risk
 
 ## Data manipulation
 
@@ -20,7 +54,7 @@ mgus_df
 ```
 
 
-1. Find number of patient with malignancy (AKA transition), death
+1. Find number of patient w/ malignancy (AKA transition), death
    (w/out malignancy) and Free of Events.
 
 ```{r}
@@ -34,7 +68,7 @@ mgus_df %>%
   summarise(n = n())
 ```
 
-Patients with malignancy as a First Observed Event (FOE) are 64; patients which experiment death as FOE are 163, while the ones FoE are 14.
+Patients w/ malignancy as a FOE are 64; patients which experiment death as FOE are 163, while the ones FoE are 14.
 163.
 
 2. Find the indicator for censored, malignancy and death (`indicator`)
@@ -105,7 +139,7 @@ surv_time <- rexp(n,
 ```
 
 
-3. Generate Bernoulli $B(p)$ random variables, with
+3. Generate Bernoulli $B(p)$ random variables, w/
    $p = \lambda_1(t) / \lambda_.(t)$, i.e. is the probability of occurrence of
    the event of type 1.
 
@@ -129,7 +163,7 @@ censor_time <- runif(n,
 ```
 
 
-5. Estimate the Cumulative Incidence of each competing event, with and without
+5. Estimate the Cumulative Incidence of each competing event, w/ and w/out
    censoring; discuss the results.
 
 ```{r}
@@ -190,7 +224,7 @@ legend(x = 0.01, y = 0.86,
 1. Compare the results of Cox cause specific hazard model...
 
 > For clinical questions, i.e. cause specific risk to experiment the event
-  without taking into account the other couse(s)
+  w/out taking into account the other couse(s)
 
 ```{r}
 dd <- datadist(mgus_df)
@@ -231,13 +265,11 @@ Predict(cox_sex_death) %>%
 mgus_num <- mgus_df %>% 
   mutate(sex = as.numeric(sex))
 
-crr(
+crr(                                      # We do not have a plot method for crr
   ftime   = mgus_num$time_t,
   fstatus = mgus_num$indicator,
   cov1    = mgus_num$sex
 ) %>%
   summary
-
-                                             # here we do not have a way to plot 
 ```
 

@@ -21,8 +21,8 @@
   explain why this choiche is clinically relevant and not statistically 
   significant!
 
-4. The biggest problem with databases with more observations for each patients
-   is not the model but to produce a table with the right information in the
+4. The biggest problem w/ databases w/ more observations for each patients
+   is not the model but to produce a table w/ the right information in the
    right position. In particular we need the  following columns
    - id
    - start
@@ -58,10 +58,10 @@ First of all we have to ask to our self, and to the clinicians, some questions:
 
 1. There are non-informative censoring? Yes, because there is a final
    data-independent date (i.e. July, 1986). This is completely non-informative
-   with regards to the patients. So we can suspect a non-informative censoring
+   w/ regards to the patients. So we can suspect a non-informative censoring
    and start investigations using Cox model.
 
-2. What we have to do with the transplant? I.e., `event` has three levels:
+2. What we have to do w/ the transplant? I.e., `event` has three levels:
    censored, transplant, dead; how we have to consider transplanted patients?
    In this case, clinicians answered that the transplant status is completely
    random! So, we can believe that it is a non-informative censoring.^[In reality
@@ -80,12 +80,12 @@ cox.zph(cox_sex)                           # test for proportionality of hazards
 
 cox.zph(cox_sex) %>% 
   plot(
-    main = 'Graph of the scaled Schoenfeld residuals for sex, along with a smooth curve',
+    main = 'Graph of the scaled Schoenfeld residuals for sex, along w/ a smooth curve',
     col = 'blue'
 )
 ```
 
-The proportional hazard assumption is not invalidate so we can continue with the
+The proportional hazard assumption is not invalidate so we can continue w/ the
 analyses.
 
 ```{r}
@@ -137,7 +137,7 @@ cox.zph(cox_age) %>%
 
 The proportional hazard hypothesis is not invalidated
 
-> The outputs of rcspline.plot are a plot and a very long matrix with the values
+> The outputs of rcspline.plot are a plot and a very long matrix w/ the values
   of xe, lower, upper. The latters are not of our interest, but there are no
   options to not get them. So we include the command into
   `invisible(capture.output(.))` box.^[As suggested by *couthcommander* in
@@ -255,7 +255,7 @@ Finally, look at the effect of the log of `ast`
 summary(log_ast)
 ```
 
-It is significantly protective, with doubling the effect between the borders of
+It is significantly protective, w/ doubling the effect between the borders of
 the IQR.
 
 
@@ -339,7 +339,7 @@ cph(Surv(time, status == 2) ~ trt,
 
 No significant effect for treatment.
 
-Clinician: an adjusted with edema?
+Clinician: an adjusted w/ edema?
 
 ```{r}
 cph(Surv(time, status == 2) ~ trt + edema,
@@ -363,7 +363,7 @@ cph(Surv(time, status == 2) ~ trt * edema,
 
 No effect.
 
-Clinicians: and what about adjusted with stage?
+Clinicians: and what about adjusted w/ stage?
 
 ```{r}
 adj_pbc <- pbc_df %>% 
@@ -377,7 +377,7 @@ cph(Surv(time, status == 2) ~ trt + stage_fct,
   summary
 ```
 
-Treatment still with no significant effect. `stage` has some effects, i.e. from
+Treatment still w/ no significant effect. `stage` has some effects, i.e. from
 the 3 to 1 or to 4, 
 
 Clinicians: oh, so let's look at the interactions!
@@ -421,7 +421,7 @@ pbcseq_full <- pbcseq_df %>%
     end    = lead(day),           # the end is "the next start" (last will be NA)
     status = if_else(is.na(end), status, 0L), 
     end    = if_else(is.na(end), futime, end) # fill the NA-ends (i.e. the lasts)
-                                              # with the real end
+                                              # w/ the real end
 )
 ```
 
@@ -470,7 +470,7 @@ plot(
 )
 ```
 
-What happen with the strange observations? We try to find which is that outlier.
+What happen w/ the strange observations? We try to find which is that outlier.
 
 ```{r}
 # look at the residual caracteristics
@@ -496,7 +496,7 @@ we cannot decide if ignore outliers, which ones, etc
 
 ## Prognostic model {#prognostic2}
 
-### prognostic model with `àscites`, `edema`, `sex`, `bili`, `ast`, `platelet`, `stage` {#model2}
+### prognostic model w/ `àscites`, `edema`, `sex`, `bili`, `ast`, `platelet`, `stage` {#model2}
 
 ```{r}
 # prepare an ad hoc data frame
@@ -520,12 +520,12 @@ pbc_updated %>%
 
 There are 11 basic df (one each continuous variable and one-minus-n-level for
 the categorical one), so to use all of them we need at least $110$ obs. Data has
-$418$, this allow us to use a more complex model, with some interaction, splines,
+$418$, this allow us to use a more complex model, w/ some interaction, splines,
 etc (more or less other $15 -- 30$ df).
 
 We decide (following suggestions from @harrell2015regression) to consider
-splines for any continuous variable (with 3 knots) and consider sex interaction 
-with them and the other numerical variables, leading to near $20$ df.
+splines for any continuous variable (w/ 3 knots) and consider sex interaction 
+w/ them and the other numerical variables, leading to near $20$ df.
 
 ```{r}
 data_used <- pbc_updated %>% 
@@ -546,7 +546,7 @@ cph(
   summary
 
 
-# without missing data, and with beckward stepwise variable selection
+# W/out missing data, and w/ beckward stepwise variable selection
 cph(
   Surv(time, status == 2) ~
     sex + ascites + edema + bili_log + ast_log + platelet_ref + stage_fct,

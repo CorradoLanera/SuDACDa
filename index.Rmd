@@ -44,9 +44,9 @@ If you find any mistake/typo or want to share ideas, you can help improve the bo
 
 ## Settings {-}
 
-Here, there are the libraries loaded during the course, with the relative
-options, plus some packages and options useful to write code more understandable
-by humans obtaining nicer output.
+Here, there are the libraries loaded during the course, w/ the relative options,
+plus some packages and options useful to write code more understandable by
+humans obtaining nicer output.
 
 ```{r setup, message=FALSE, warning=FALSE}
 # Packages for the analyses
@@ -56,7 +56,7 @@ library(cmprsk)                                                 # Competing risk
 library(rms)              # Regression Modeling Strategy (include Hmisc package)
   options(datadist = 'dd')                  # Distribution Summaries used by rms
 
-# Packages for data management 
+# Package(s) for data management 
 library(tidyverse)                    # Imports the principal tidyverse packages
 
 # Document output options

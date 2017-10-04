@@ -195,9 +195,9 @@ improve the book in the following way:
 \section*{Settings}\label{settings}
 \addcontentsline{toc}{section}{Settings}
 
-Here, there are the libraries loaded during the course, with the
-relative options, plus some packages and options useful to write code
-more understandable by humans obtaining nicer output.
+Here, there are the libraries loaded during the course, w/ the relative
+options, plus some packages and options useful to write code more
+understandable by humans obtaining nicer output.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -208,7 +208,7 @@ more understandable by humans obtaining nicer output.
 \KeywordTok{library}\NormalTok{(rms)              }\CommentTok{# Regression Modeling Strategy (include Hmisc package)}
   \KeywordTok{options}\NormalTok{(}\DataTypeTok{datadist =} \StringTok{'dd'}\NormalTok{)                  }\CommentTok{# Distribution Summaries used by rms}
 
-\CommentTok{# Packages for data management }
+\CommentTok{# Package(s) for data management }
 \KeywordTok{library}\NormalTok{(tidyverse)                    }\CommentTok{# Imports the principal tidyverse packages}
 
 \CommentTok{# Document output options}
@@ -319,7 +319,7 @@ data}{Monday: Introduction to Survival Analyses and simulation of data}}\label{s
 \tightlist
 \item
   Simulate a sample of \(n = 100\) or \(1000\) exponential survival
-  times, with mean \(\theta = 5\).
+  times, w/ mean \(\theta = 5\).
 \end{enumerate}
 
 \begin{itemize}
@@ -340,8 +340,7 @@ data}{Monday: Introduction to Survival Analyses and simulation of data}}\label{s
 \begin{itemize}
 \tightlist
 \item
-  Uniform censoring over \([0, a]\), with \(a = 1, a = 0.5\) or
-  \(a = 2\)
+  Uniform censoring over \([0, a]\), w/ \(a = 1, a = 0.5\) or \(a = 2\)
 \end{itemize}
 
 \begin{Shaded}
@@ -412,7 +411,7 @@ data}{Monday: Introduction to Survival Analyses and simulation of data}}\label{s
 \CommentTok{# }
 \CommentTok{# R formula: y ~ x <--> math formula: y = f(x)}
 \CommentTok{# }
-\CommentTok{# Here we want to model the response (labelled time) as they are, without any}
+\CommentTok{# Here we want to model the response (labelled time) as they are, w/out any}
 \CommentTok{# furter investigation on the effect on them from some other variable}
 \KeywordTok{survreg}\NormalTok{(}\KeywordTok{Surv}\NormalTok{(t, status_no_cens) ~}\StringTok{ }\DecValTok{1}\NormalTok{,}
   \DataTypeTok{dist =} \StringTok{'exponential'}
@@ -961,7 +960,7 @@ Note: No female reaches the end of the f-up!
   \DataTypeTok{data  =} \NormalTok{mgus_df}
 \NormalTok{)}
 
-\KeywordTok{summary}\NormalTok{(cox_model)                           }\CommentTok{# return effect size and HR with CI}
+\KeywordTok{summary}\NormalTok{(cox_model)                             }\CommentTok{# return effect size and HR w/ CI}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1145,8 +1144,8 @@ significant!
 \setcounter{enumi}{3}
 \tightlist
 \item
-  The biggest problem with databases with more observations for each
-  patients is not the model but to produce a table with the right
+  The biggest problem w/ databases w/ more observations for each
+  patients is not the model but to produce a table w/ the right
   information in the right position. In particular we need the following
   columns
 \end{enumerate}
@@ -1394,10 +1393,10 @@ questions:
 \item
   There are non-informative censoring? Yes, because there is a final
   data-independent date (i.e.~July, 1986). This is completely
-  non-informative with regards to the patients. So we can suspect a
+  non-informative w/ regards to the patients. So we can suspect a
   non-informative censoring and start investigations using Cox model.
 \item
-  What we have to do with the transplant? I.e., \texttt{event} has three
+  What we have to do w/ the transplant? I.e., \texttt{event} has three
   levels: censored, transplant, dead; how we have to consider
   transplanted patients? In this case, clinicians answered that the
   transplant status is completely random! So, we can believe that it is
@@ -1429,7 +1428,7 @@ the hazards.
 \begin{Highlighting}[]
 \KeywordTok{cox.zph}\NormalTok{(cox_sex) %>%}\StringTok{ }
 \StringTok{  }\KeywordTok{plot}\NormalTok{(}
-    \DataTypeTok{main =} \StringTok{'Graph of the scaled Schoenfeld residuals for sex, along with a smooth curve'}\NormalTok{,}
+    \DataTypeTok{main =} \StringTok{'Graph of the scaled Schoenfeld residuals for sex, along w/ a smooth curve'}\NormalTok{,}
     \DataTypeTok{col =} \StringTok{'blue'}
 \NormalTok{)}
 \end{Highlighting}
@@ -1438,7 +1437,7 @@ the hazards.
 \includegraphics{SuDACDa-notes_files/figure-latex/unnamed-chunk-3-1.pdf}
 
 The proportional hazard assumption is not invalidate so we can continue
-with the analyses.
+w/ the analyses.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1557,7 +1556,7 @@ men.
 The proportional hazard hypothesis is not invalidated
 
 \begin{quote}
-The outputs of rcspline.plot are a plot and a very long matrix with the
+The outputs of rcspline.plot are a plot and a very long matrix w/ the
 values of xe, lower, upper. The latters are not of our interest, but
 there are no options to not get them. So we include the command into
 \texttt{invisible(capture.output(.))} box.\footnote{As suggested by
@@ -1798,7 +1797,7 @@ Finally, look at the effect of the log of \texttt{ast}
 ##   Hazard Ratio 80.6 151.9 71.3  2.01120      NA 1.57420    2.5695
 \end{verbatim}
 
-It is significantly protective, with doubling the effect between the
+It is significantly protective, w/ doubling the effect between the
 borders of the IQR.
 
 \subsection{\texorpdfstring{Impact of \textbf{platelet} on
@@ -1991,7 +1990,7 @@ Clinician: what is the effect of treatment (\texttt{trt}) on death?
 
 No significant effect for treatment.
 
-Clinician: an adjusted with edema?
+Clinician: an adjusted w/ edema?
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -2041,7 +2040,7 @@ Clinicians: and what about their interaction?\footnote{The answer here
 
 No effect.
 
-Clinicians: and what about adjusted with stage?
+Clinicians: and what about adjusted w/ stage?
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -2071,7 +2070,7 @@ Clinicians: and what about adjusted with stage?
 ##   Hazard Ratio   3   4    NA     2.49960      NA  1.69660    3.68270
 \end{verbatim}
 
-Treatment still with no significant effect. \texttt{stage} has some
+Treatment still w/ no significant effect. \texttt{stage} has some
 effects, i.e.~from the 3 to 1 or to 4,
 
 Clinicians: oh, so let's look at the interactions!
@@ -2167,7 +2166,7 @@ package, and take a look at the data
     \DataTypeTok{end    =} \KeywordTok{lead}\NormalTok{(day),           }\CommentTok{# the end is "the next start" (last will be NA)}
     \DataTypeTok{status =} \KeywordTok{if_else}\NormalTok{(}\KeywordTok{is.na}\NormalTok{(end), status, 0L), }
     \DataTypeTok{end    =} \KeywordTok{if_else}\NormalTok{(}\KeywordTok{is.na}\NormalTok{(end), futime, end) }\CommentTok{# fill the NA-ends (i.e. the lasts)}
-                                              \CommentTok{# with the real end}
+                                              \CommentTok{# w/ the real end}
 \NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -2254,7 +2253,7 @@ package, and take a look at the data
 
 \includegraphics{SuDACDa-notes_files/figure-latex/unnamed-chunk-26-2.pdf}
 
-What happen with the strange observations? We try to find which is that
+What happen w/ the strange observations? We try to find which is that
 outlier.
 
 \begin{Shaded}
@@ -2315,10 +2314,10 @@ mandatory, i.e.~we cannot decide if ignore outliers, which ones, etc
 
 \section{Prognostic model}\label{prognostic2}
 
-\subsection{\texorpdfstring{prognostic model with \texttt{àscites},
+\subsection{\texorpdfstring{prognostic model w/ \texttt{àscites},
 \texttt{edema}, \texttt{sex}, \texttt{bili}, \texttt{ast},
 \texttt{platelet},
-\texttt{stage}}{prognostic model with àscites, edema, sex, bili, ast, platelet, stage}}\label{prognostic-model-with-ascites-edema-sex-bili-ast-platelet-stage}
+\texttt{stage}}{prognostic model w/ àscites, edema, sex, bili, ast, platelet, stage}}\label{prognostic-model-w-ascites-edema-sex-bili-ast-platelet-stage}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -2407,12 +2406,12 @@ mandatory, i.e.~we cannot decide if ignore outliers, which ones, etc
 There are 11 basic df (one each continuous variable and
 one-minus-n-level for the categorical one), so to use all of them we
 need at least \(110\) obs. Data has \(418\), this allow us to use a more
-complex model, with some interaction, splines, etc (more or less other
+complex model, w/ some interaction, splines, etc (more or less other
 \(15 -- 30\) df).
 
 We decide (following suggestions from \citet{harrell2015regression}) to
-consider splines for any continuous variable (with 3 knots) and consider
-sex interaction with them and the other numerical variables, leading to
+consider splines for any continuous variable (w/ 3 knots) and consider
+sex interaction w/ them and the other numerical variables, leading to
 near \(20\) df.
 
 \begin{Shaded}
@@ -2487,7 +2486,7 @@ near \(20\) df.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# without missing data, and with beckward stepwise variable selection}
+\CommentTok{# W/out missing data, and w/ beckward stepwise variable selection}
 \KeywordTok{cph}\NormalTok{(}
   \KeywordTok{Surv}\NormalTok{(time, status ==}\StringTok{ }\DecValTok{2}\NormalTok{) ~}
 \StringTok{    }\NormalTok{sex +}\StringTok{ }\NormalTok{ascites +}\StringTok{ }\NormalTok{edema +}\StringTok{ }\NormalTok{bili_log +}\StringTok{ }\NormalTok{ast_log +}\StringTok{ }\NormalTok{platelet_ref +}\StringTok{ }\NormalTok{stage_fct,}
@@ -2539,6 +2538,91 @@ risk}{Wednesday: Competing risk}}\label{competing-risk}
 
 \section{Key (operative) concepts}\label{key3}
 
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Patient are exposed simultaneously to \(k (\geq2)\) causes
+\item
+  Effect Free Survival (EFS) is univariate, i.e.~only the First Observed
+  Event (FOE) is considered and of interest
+\item
+  The interest is not in the survival model
+\end{enumerate}
+
+\begin{quote}
+``At \(\infty\) all individuals will not die in the ICU''
+\end{quote}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{3}
+\tightlist
+\item
+  Type of observed time
+\end{enumerate}
+
+\begin{itemize}
+\tightlist
+\item
+  Cansored (conventionally coded w/ \(0\))
+\item
+  Failure w/ a FOE different from the last absorbing one (coded w/
+  \(1 -- k-1\))
+\item
+  Failure w/ the FOE as the last absorbing event (coded w/ \(k\))
+\item
+  \(T_k = min\Bigl(\tilde{T_k}^{D_k} |  D_k \in \{\textrm{causes of failure for }k\} \Bigr)\)
+\end{itemize}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{4}
+\item
+  Cumulative Incidence Function (CIF) do not require independence
+  between causes
+\item
+  In competing risk, K-M is biased, i.e.~overestimates the CIF (because
+  it the independence assumption is violated)
+\item
+  Tests
+\end{enumerate}
+
+\begin{itemize}
+\tightlist
+\item
+  w/out competing risk: log-rank
+\item
+  w/ competing risk: modified \(\chi^2\) \citep{gray1988class}
+\end{itemize}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{7}
+\tightlist
+\item
+  Regression strategies for competing risk
+\end{enumerate}
+
+\begin{itemize}
+\tightlist
+\item
+  Case Specific Hazard Ratio (CS-HR) --- Cox, useful for clinical
+  interests (present it for each competing risk taken singularly)
+\item
+  Subdistribution Hazard Ratio (SHR) --- Fine-Gray, useful for
+  administrative{]} interests (present it for the global risk
+  considering the contribution of each competing one)
+\end{itemize}
+
+\begin{quote}
+Test the proportional hazard assumption for SHR
+\end{quote}
+
+\begin{quote}
+There are formulas for the sample size calculation when considering
+competing risk
+\end{quote}
+
 \section{Data manipulation}\label{data-manipulation}
 
 \begin{Shaded}
@@ -2575,7 +2659,7 @@ risk}{Wednesday: Competing risk}}\label{competing-risk}
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
-  Find number of patient with malignancy (AKA transition), death (w/out
+  Find number of patient w/ malignancy (AKA transition), death (w/out
   malignancy) and Free of Events.
 \end{enumerate}
 
@@ -2603,9 +2687,8 @@ risk}{Wednesday: Competing risk}}\label{competing-risk}
 ## 4       TRUE     1    62
 \end{verbatim}
 
-Patients with malignancy as a First Observed Event (FOE) are 64;
-patients which experiment death as FOE are 163, while the ones FoE are
-14. 163.
+Patients w/ malignancy as a FOE are 64; patients which experiment death
+as FOE are 163, while the ones FoE are 14. 163.
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -2731,7 +2814,7 @@ risk}\label{simulation-of-competing-risk}
 \setcounter{enumi}{2}
 \tightlist
 \item
-  Generate Bernoulli \(B(p)\) random variables, with
+  Generate Bernoulli \(B(p)\) random variables, w/
   \(p = \lambda_1(t) / \lambda_.(t)\), i.e.~is the probability of
   occurrence of the event of type 1.
 \end{enumerate}
@@ -2769,8 +2852,8 @@ risk}\label{simulation-of-competing-risk}
 \setcounter{enumi}{4}
 \tightlist
 \item
-  Estimate the Cumulative Incidence of each competing event, with and
-  without censoring; discuss the results.
+  Estimate the Cumulative Incidence of each competing event, w/ and
+  w/out censoring; discuss the results.
 \end{enumerate}
 
 \begin{Shaded}
@@ -2857,7 +2940,7 @@ incidence}\label{estimation-of-the-effect-of-sex-on-mgus-incidence}
 
 \begin{quote}
 For clinical questions, i.e.~cause specific risk to experiment the event
-without taking into account the other couse(s)
+w/out taking into account the other couse(s)
 \end{quote}
 
 \begin{Shaded}
@@ -2988,7 +3071,7 @@ taking into account the competing risk
 \NormalTok{mgus_num <-}\StringTok{ }\NormalTok{mgus_df %>%}\StringTok{ }
 \StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{sex =} \KeywordTok{as.numeric}\NormalTok{(sex))}
 
-\KeywordTok{crr}\NormalTok{(}
+\KeywordTok{crr}\NormalTok{(                                      }\CommentTok{# We do not have a plot method for crr}
   \DataTypeTok{ftime   =} \NormalTok{mgus_num$time_t,}
   \DataTypeTok{fstatus =} \NormalTok{mgus_num$indicator,}
   \DataTypeTok{cov1    =} \NormalTok{mgus_num$sex}
@@ -3013,12 +3096,6 @@ taking into account the competing risk
 ## Pseudo Log-likelihood = -341 
 ## Pseudo likelihood ratio test = 1.83  on 1 df,
 \end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-                                             \CommentTok{# here we do not have a way to plot }
-\end{Highlighting}
-\end{Shaded}
 
 \chapter*{Software}\label{software}
 \addcontentsline{toc}{chapter}{Software}
